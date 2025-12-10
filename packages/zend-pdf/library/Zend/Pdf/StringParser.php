@@ -134,18 +134,18 @@ class Zend_Pdf_StringParser
     {
         if ($skipComment) {
             while (true) {
-                $this->offset += strspn($this->data, "\x00\t\n\f\r ", $this->offset);
+                $this->offset += strspn((string) $this->data, "\x00\t\n\f\r ", $this->offset);
 
-                if ($this->offset < strlen($this->data)  &&  $this->data[$this->offset] == '%') {
+                if ($this->offset < strlen((string) $this->data)  &&  $this->data[$this->offset] == '%') {
                     // Skip comment
-                    $this->offset += strcspn($this->data, "\r\n", $this->offset);
+                    $this->offset += strcspn((string) $this->data, "\r\n", $this->offset);
                 } else {
                     // Non white space character not equal to '%' is found
                     return;
                 }
             }
         } else {
-            $this->offset += strspn($this->data, "\x00\t\n\f\r ", $this->offset);
+            $this->offset += strspn((string) $this->data, "\x00\t\n\f\r ", $this->offset);
         }
 
 //        /** Original (non-optimized) implementation. */
@@ -167,7 +167,7 @@ class Zend_Pdf_StringParser
      */
     public function skipComment()
     {
-        while ($this->offset < strlen($this->data))
+        while ($this->offset < strlen((string) $this->data))
         {
             if (ord($this->data[$this->offset]) != 0x0A || // Line feed
                 ord($this->data[$this->offset]) != 0x0d    // Carriage return
@@ -195,7 +195,7 @@ class Zend_Pdf_StringParser
         }
 
         for ($start = $this->offset;
-             $this->offset < strlen($this->data);
+             $this->offset < strlen((string) $this->data);
              $this->offset++) {
             if (ord($this->data[$this->offset]) == 0x0A || // Line feed
                 ord($this->data[$this->offset]) == 0x0d    // Carriage return
@@ -204,7 +204,7 @@ class Zend_Pdf_StringParser
             }
         }
 
-        return substr($this->data, $start, $this->offset-$start);
+        return substr((string) $this->data, $start, $this->offset-$start);
     }
 
 
@@ -217,23 +217,23 @@ class Zend_Pdf_StringParser
     {
         // $this->skipWhiteSpace();
         while (true) {
-            $this->offset += strspn($this->data, "\x00\t\n\f\r ", $this->offset);
+            $this->offset += strspn((string) $this->data, "\x00\t\n\f\r ", $this->offset);
 
-            if ($this->offset < strlen($this->data)  &&  $this->data[$this->offset] == '%') {
-                $this->offset += strcspn($this->data, "\r\n", $this->offset);
+            if ($this->offset < strlen((string) $this->data)  &&  $this->data[$this->offset] == '%') {
+                $this->offset += strcspn((string) $this->data, "\r\n", $this->offset);
             } else {
                 break;
             }
         }
 
-        if ($this->offset >= strlen($this->data)) {
+        if ($this->offset >= strlen((string) $this->data)) {
             return '';
         }
 
         if ( /* self::isDelimiter( ord($this->data[$start]) ) */
-             str_contains('()<>[]{}/%', $this->data[$this->offset]) ) {
+             str_contains('()<>[]{}/%', (string) $this->data[$this->offset]) ) {
 
-            switch (substr($this->data, $this->offset, 2)) {
+            switch (substr((string) $this->data, $this->offset, 2)) {
                 case '<<':
                     $this->offset += 2;
                     return '<<';
@@ -252,9 +252,9 @@ class Zend_Pdf_StringParser
             $start = $this->offset;
             $compare = "()<>[]{}/%\x00\t\n\f\r ";
 
-            $this->offset += strcspn($this->data, $compare, $this->offset);
+            $this->offset += strcspn((string) $this->data, $compare, $this->offset);
 
-            return substr($this->data, $start, $this->offset - $start);
+            return substr((string) $this->data, $start, $this->offset - $start);
         }
     }
 
@@ -340,9 +340,9 @@ class Zend_Pdf_StringParser
         $start = $this->offset;
         $openedBrackets = 1;
 
-        $this->offset += strcspn($this->data, '()\\', $this->offset);
+        $this->offset += strcspn((string) $this->data, '()\\', $this->offset);
 
-        while ($this->offset < strlen($this->data)) {
+        while ($this->offset < strlen((string) $this->data)) {
             switch (ord( $this->data[$this->offset] )) {
                 case 0x28: // '(' - opened bracket in the string, needs balanced pair.
                     $this->offset++;
@@ -362,14 +362,14 @@ class Zend_Pdf_StringParser
                 break; // end of string
             }
 
-            $this->offset += strcspn($this->data, '()\\', $this->offset);
+            $this->offset += strcspn((string) $this->data, '()\\', $this->offset);
         }
         if ($openedBrackets != 0) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception(sprintf('PDF file syntax error. Unexpected end of file while string reading. Offset - 0x%X. \')\' expected.', $start));
         }
 
-        return new Zend_Pdf_Element_String(Zend_Pdf_Element_String::unescape( substr($this->data,
+        return new Zend_Pdf_Element_String(Zend_Pdf_Element_String::unescape( substr((string) $this->data,
                                                                                      $start,
                                                                                      $this->offset - $start - 1) ));
     }
@@ -386,9 +386,9 @@ class Zend_Pdf_StringParser
     {
         $start = $this->offset;
 
-        $this->offset += strspn($this->data, "\x00\t\n\f\r 0123456789abcdefABCDEF", $this->offset);
+        $this->offset += strspn((string) $this->data, "\x00\t\n\f\r 0123456789abcdefABCDEF", $this->offset);
 
-        if ($this->offset >= strlen($this->data) - 1) {
+        if ($this->offset >= strlen((string) $this->data) - 1) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception(sprintf('PDF file syntax error. Unexpected end of file while reading binary string. Offset - 0x%X. \'>\' expected.', $start));
         }
@@ -399,7 +399,7 @@ class Zend_Pdf_StringParser
         }
 
         return new Zend_Pdf_Element_String_Binary(
-                       Zend_Pdf_Element_String_Binary::unescape( substr($this->data,
+                       Zend_Pdf_Element_String_Binary::unescape( substr((string) $this->data,
                                                                         $start,
                                                                         $this->offset - $start - 1) ));
     }
@@ -624,7 +624,7 @@ class Zend_Pdf_StringParser
             throw new Zend_Pdf_Exception(sprintf('PDF file syntax error. Offset - 0x%X. \'endobj\' keyword expected.', $this->offset - strlen($nextLexeme)));
         }
 
-        $obj = new Zend_Pdf_Element_Object_Stream(substr($this->data,
+        $obj = new Zend_Pdf_Element_Object_Stream(substr((string) $this->data,
                                                          $dataOffset,
                                                          $streamLength),
                                                   (int)$objNum,
@@ -650,7 +650,7 @@ class Zend_Pdf_StringParser
      */
     public function getLength()
     {
-        return strlen($this->data);
+        return strlen((string) $this->data);
     }
 
     /**

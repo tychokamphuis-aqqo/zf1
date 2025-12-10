@@ -380,7 +380,7 @@ EOB;
             $json = '[a"],["a]';
             $test = Zend_Json_Decoder::decode($json);
             $this->fail("Should not be able to decode '$json'");
-        } catch (Exception $e) {
+        } catch (Exception) {
             // success
         }
 
@@ -408,7 +408,7 @@ EOB;
 
         try {
             $encoded = Zend_Json_Encoder::encode($everything);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('Object cycling checks should check for recursion, not duplicate usage of an item');
         }
 

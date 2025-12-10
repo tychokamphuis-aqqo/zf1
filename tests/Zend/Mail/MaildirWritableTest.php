@@ -284,7 +284,7 @@ class Zend_Mail_MaildirWritableTest extends PHPUnit_Framework_TestCase
         try {
             $mail->renameFolder('INBOX.subfolder', 'INBOX.foo');
             $mail->renameFolder($mail->getFolders()->foo, 'subfolder');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('renaming failed');
         }
 
@@ -542,7 +542,7 @@ class Zend_Mail_MaildirWritableTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($mail->checkQuota());
         try {
             $mail->appendMessage("Subject: test\r\n\r\n");
-        } catch(Zend_Mail_Exception $e) {
+        } catch(Zend_Mail_Exception) {
             $this->fail('appending should not fail if quota check is not active');
         }
 

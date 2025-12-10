@@ -136,10 +136,7 @@ class Zend_Cache_FileFrontendTest extends PHPUnit_Framework_TestCase {
 
     private function _getTmpDirUnix()
     {
-        if (isset($_ENV['TMPDIR'])) {
-            return $_ENV['TMPDIR'];
-        }
-        return $_SERVER['TMPDIR'] ?? '/tmp';
+        return $_ENV['TMPDIR'] ?? $_SERVER['TMPDIR'] ?? '/tmp';
     }
 
     public function testConstructorCorrectCall()

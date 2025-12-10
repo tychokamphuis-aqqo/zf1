@@ -178,13 +178,13 @@ class Zend_CurrencyTest extends PHPUnit_Framework_TestCase
         try {
             $currency = new Zend_Currency('XXX', 'Latin', $locale);
             $this->fail("unknown shortname should not have been recognised");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
         try {
             $currency = new Zend_Currency('USD', 'Xyzz', $locale);
             $this->fail("unknown script should not have been recognised");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
         try {
@@ -237,26 +237,26 @@ class Zend_CurrencyTest extends PHPUnit_Framework_TestCase
         try {
             $currency = new Zend_Currency('de_AT', 'en_US');
             $this->fail("exception expected");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
         try {
             $currency = new Zend_Currency('USD', 'EUR');
             $this->fail("exception expected");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
         try {
             $currency = new Zend_Currency('Arab', 'Latn');
             $this->fail("exception expected");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
         try {
             $currency = new Zend_Currency('EUR');
             $currency->toCurrency('value');
             $this->fail("exception expected");
-        } catch (Zend_Currency_Exception $e) {
+        } catch (Zend_Currency_Exception) {
             // success
         }
 

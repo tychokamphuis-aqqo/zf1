@@ -635,7 +635,7 @@ class Zend_Mail_ImapTest extends PHPUnit_Framework_TestCase
         try {
             $mail->renameFolder('subfolder/test', 'subfolder/test1');
             $mail->renameFolder($mail->getFolders()->subfolder->test1, 'subfolder/test');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('renaming failed');
         }
 

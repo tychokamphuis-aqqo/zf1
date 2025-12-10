@@ -138,7 +138,7 @@ class Zend_Auth_Adapter_Http_ObjectTest extends PHPUnit_Framework_TestCase
     {
         try {
             $t = new Zend_Auth_Adapter_Http($this->_basicConfig);
-        } catch (Zend_Auth_Adapter_Exception $e) {
+        } catch (Zend_Auth_Adapter_Exception) {
             $this->fail('Valid config deemed invalid');
         }
         $this->assertFalse(empty($t));
@@ -147,7 +147,7 @@ class Zend_Auth_Adapter_Http_ObjectTest extends PHPUnit_Framework_TestCase
 
         try {
             $t = new Zend_Auth_Adapter_Http($this->_digestConfig);
-        } catch (Zend_Auth_Adapter_Exception $e) {
+        } catch (Zend_Auth_Adapter_Exception) {
             $this->fail('Valid config deemed invalid');
         }
         $this->assertFalse(empty($t));
@@ -239,7 +239,7 @@ class Zend_Auth_Adapter_Http_ObjectTest extends PHPUnit_Framework_TestCase
               ->setResponse($response);
             $result = $a->authenticate();
             $this->fail("Tried Basic authentication without a resolver.\n" . Zend_Debug::dump($result->getMessages(),null,false));
-        } catch (Zend_Auth_Adapter_Exception $e) {
+        } catch (Zend_Auth_Adapter_Exception) {
             // Good, it threw an exception
             unset($a);
         }

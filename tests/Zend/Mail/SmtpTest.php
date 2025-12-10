@@ -58,7 +58,7 @@ class Zend_Mail_SmtpTest extends PHPUnit_Framework_TestCase
     {
         try {
             $this->_transport = new Zend_Mail_Transport_Smtp($this->_params['host'], $this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while creating smtp transport');
         }
 

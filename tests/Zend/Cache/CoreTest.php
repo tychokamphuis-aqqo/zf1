@@ -154,7 +154,7 @@ class Zend_Cache_CoreTest extends PHPUnit_Framework_TestCase
         try {
             $this->_instance->setOption(0, 1200);
             $this->fail('Zend_Cache_Exception was expected but not thrown');
-        } catch (Zend_Cache_Exception $e) {
+        } catch (Zend_Cache_Exception) {
         }
 
         try {

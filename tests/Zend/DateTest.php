@@ -2321,7 +2321,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RFC_1036);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RFC_1036);
@@ -2334,7 +2334,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RFC_1123);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RFC_1123);
@@ -2347,7 +2347,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RFC_3339);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RFC_3339);
@@ -2360,7 +2360,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RSS);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RSS);
@@ -2379,7 +2379,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::W3C);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::W3C);
@@ -2395,7 +2395,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', 'xx');
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         try {
@@ -2640,7 +2640,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::DAYLIGHT);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2648,7 +2648,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::GMT_DIFF);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2656,7 +2656,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::GMT_DIFF_SEP);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2664,7 +2664,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::TIMEZONE);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2672,7 +2672,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::TIMEZONE_SECS);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2692,7 +2692,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::ERA);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3035,7 +3035,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::DAYLIGHT);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3043,7 +3043,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::GMT_DIFF);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3051,7 +3051,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::GMT_DIFF_SEP);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3059,7 +3059,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::TIMEZONE);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3067,7 +3067,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::TIMEZONE_SECS);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3090,7 +3090,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::ERA);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3921,7 +3921,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $result = $date->getSunrise($result);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3930,7 +3930,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $result = $date->getSunrise($result);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3939,7 +3939,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $result = $date->getSunrise($result);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3948,7 +3948,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $result = $date->getSunrise($result);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3957,7 +3957,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $result = $date->getSunrise($result);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -4975,42 +4975,42 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->addSecond(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->subSecond(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->compareSecond(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->setWeek(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->addWeek(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->subWeek(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -5276,20 +5276,20 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             Zend_Date::setOptions(['format_type' => 'non']);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             Zend_Date::setOptions(['unknown' => 'non']);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         try {
             Zend_Date::setOptions(['fix_dst' => 2]);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 

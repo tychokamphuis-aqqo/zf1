@@ -2012,7 +2012,7 @@ class Zend_Filter_InputTest extends PHPUnit_Framework_TestCase
         try {
             $filter->process();
             $this->assertEquals("2000-01-01", $filter->date1);
-        } catch(Zend_Filter_Exception $e) {
+        } catch(Zend_Filter_Exception) {
             $this->fail();
         }
 

@@ -770,7 +770,7 @@ class Zend_LocaleTest extends PHPUnit_Framework_TestCase
             Zend_LocaleTestHelper::setDefault('de', 90);
             $locale = new Zend_LocaleTestHelper();
             $this->assertTrue($locale instanceof Zend_Locale); // should defer to 'de' or any other standard locale
-        } catch (Zend_Locale_Exception $e) {
+        } catch (Zend_Locale_Exception) {
             $this->fail();
         }
 

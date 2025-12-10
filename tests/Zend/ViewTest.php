@@ -626,7 +626,7 @@ class Zend_ViewTest extends PHPUnit_Framework_TestCase
         try {
             $view->assign('_path', __DIR__ . '/View/_stubs/HelperDir2/');
             $this->fail('Protected/private properties cannot be assigned');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // success
             // @todo  assert something?
         }
@@ -634,7 +634,7 @@ class Zend_ViewTest extends PHPUnit_Framework_TestCase
         try {
             $view->assign(['_path' => __DIR__ . '/View/_stubs/HelperDir2/']);
             $this->fail('Protected/private properties cannot be assigned');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // success
             // @todo  assert something?
         }
