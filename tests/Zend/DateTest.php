@@ -2295,7 +2295,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RFC_822);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RFC_822);
@@ -2308,7 +2308,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->set('noday', Zend_Date::RFC_850);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
         $date->set($d2, Zend_Date::RFC_850);
@@ -2564,7 +2564,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::MERIDIEM);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2632,7 +2632,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->add('noday', Zend_Date::TIMEZONE_NAME);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -2959,7 +2959,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::MERIDIEM);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -3027,7 +3027,7 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->sub('noday', Zend_Date::TIMEZONE_NAME);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
@@ -4961,14 +4961,14 @@ class Zend_DateTest extends PHPUnit_Framework_TestCase
         try {
             $date->compareMinute(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 
         try {
             $date->setSecond(null);
             $this->fail();
-        } catch (Zend_Date_Exception $e) {
+        } catch (Zend_Date_Exception) {
             // success
         }
 

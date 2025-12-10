@@ -40,11 +40,13 @@ class Zend_OpenId_ResponseHelper extends Zend_Controller_Response_Abstract
     {
     }
 
+    #[\Override]
     public function canSendHeaders($throw = false)
     {
         return $this->_canSendHeaders;
     }
 
+    #[\Override]
     public function sendResponse()
     {
     }

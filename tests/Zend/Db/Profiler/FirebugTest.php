@@ -202,6 +202,7 @@ class Zend_Db_Profiler_FirebugTest extends PHPUnit_Framework_TestCase
 
 class Zend_Db_Profiler_FirebugTest_Request extends Zend_Controller_Request_Http
 {
+    #[\Override]
     public function getHeader($header)
     {
         if ($header == 'User-Agent') {
@@ -212,6 +213,7 @@ class Zend_Db_Profiler_FirebugTest_Request extends Zend_Controller_Request_Http
 
 class Zend_Db_Profiler_FirebugTest_Response extends Zend_Controller_Response_Http
 {
+    #[\Override]
     public function canSendHeaders($throw = false)
     {
         return true;

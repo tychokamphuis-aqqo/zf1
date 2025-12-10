@@ -92,6 +92,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
     /**
      * Instantiates route based on passed Zend_Config structure
      */
+    #[\Override]
     public static function getInstance(Zend_Config $config)
     {
         $frontController = Zend_Controller_Front::getInstance();
@@ -121,6 +122,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
      * @param Zend_Controller_Request_Http $request Request used to match against this routing ruleset
      * @return array An array of assigned values or a false on a mismatch
      */
+    #[\Override]
     public function match($request, $partial = false)
     {
         if (!$request instanceof Zend_Controller_Request_Http) {
@@ -196,7 +198,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
             $requestMethod = strtolower($request->getMethod());
             if ($requestMethod != 'get') {
                 if ($request->getParam('_method')) {
-                    $values[$this->_actionKey] = strtolower($request->getParam('_method'));
+                    $values[$this->_actionKey] = strtolower((string) $request->getParam('_method'));
                 } elseif ( $request->getHeader('X-HTTP-Method-Override') ) {
                     $values[$this->_actionKey] = strtolower($request->getHeader('X-HTTP-Method-Override'));
                 } else {
@@ -242,6 +244,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
      * @param boolean $partial
      * @return string Route path with user submitted parameters
      */
+    #[\Override]
     public function assemble($data = [], $reset = false, $encode = true, $partial = false)
     {
         if (!$this->_keysSet) {
@@ -265,7 +268,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
 
         $url = '';
 
-        if ($this->_moduleValid || array_key_exists($this->_moduleKey, $data)) {
+        if ($this->_moduleValid || array_key_exists((string) $this->_moduleKey, $data)) {
             if ($params[$this->_moduleKey] != $this->_defaults[$this->_moduleKey]) {
                 $module = $params[$this->_moduleKey];
             }
@@ -316,6 +319,7 @@ class Zend_Rest_Route extends Zend_Controller_Router_Route_Module
      *
      * @return int Route "version"
      */
+    #[\Override]
     public function getVersion()
     {
         return 2;

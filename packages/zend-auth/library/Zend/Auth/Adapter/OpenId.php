@@ -53,13 +53,6 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
     private $_storage = null;
 
     /**
-     * The response object to perform HTTP or HTML form redirection
-     *
-     * @var Zend_Controller_Response_Abstract
-     */
-    private $_response = null;
-
-    /**
      * Enables or disables interaction with user during authentication on
      * OpenID provider.
      *
@@ -83,7 +76,7 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
      * @param string $_returnTo HTTP URL to redirect response from server to
      * @param string $_root HTTP URL to identify consumer on server
      * @param mixed $_extensions extension object or array of extensions objects
-     * @param Zend_Controller_Response_Abstract $response an optional response
+     * @param Zend_Controller_Response_Abstract $_response an optional response
      *        object to perform HTTP or HTML form redirection
      */
     public function __construct(/**
@@ -103,9 +96,11 @@ class Zend_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                                  * Extension object or array of extensions objects
                                  */
                                 private $_extensions = null,
-                                ?Zend_Controller_Response_Abstract $response = null) {
+                                /**
+                                 * The response object to perform HTTP or HTML form redirection
+                                 */
+                                private ?Zend_Controller_Response_Abstract $_response = null) {
         $this->_storage    = $storage;
-        $this->_response   = $response;
     }
 
     /**

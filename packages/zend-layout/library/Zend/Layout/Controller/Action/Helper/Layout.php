@@ -88,6 +88,7 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
      *
      * @return Zend_Controller_Front
      */
+    #[\Override]
     public function getFrontController()
     {
         if (null === $this->_frontController) {

@@ -669,15 +669,10 @@ abstract class Zend_Pdf_Font
              */
             $fontParser = null;
             // require_once 'Zend/Pdf/Exception.php';
-            switch ($e->getCode()) {
-                case Zend_Pdf_Exception::WRONG_FONT_TYPE:    // break intentionally omitted
-                case Zend_Pdf_Exception::BAD_TABLE_COUNT:    // break intentionally omitted
-                case Zend_Pdf_Exception::BAD_MAGIC_NUMBER:
-                    return null;
-
-                default:
-                    throw new Zend_Pdf_Exception($e->getMessage(), $e->getCode(), $e);
-            }
+            return match ($e->getCode()) {
+                Zend_Pdf_Exception::WRONG_FONT_TYPE, Zend_Pdf_Exception::BAD_TABLE_COUNT, Zend_Pdf_Exception::BAD_MAGIC_NUMBER => null,
+                default => throw new Zend_Pdf_Exception($e->getMessage(), $e->getCode(), $e),
+            };
         }
         return $font;
     }

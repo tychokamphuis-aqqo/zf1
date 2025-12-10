@@ -1,0 +1,29 @@
+{
+    "name": "zf1s/zend-config",
+    "description": "Zend Framework 1 Config package",
+    "keywords": ["framework", "zf1", "zend", "config"],
+    "homepage": "http://framework.zend.com/",
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": ">=5.3.3",
+        "zf1s/zend-exception": "^1.15.5",
+        "zf1s/zend-xml": "^1.15.5"
+    },
+    "autoload": {
+        "psr-0": {
+            "Zend_Config": "library/"
+        }
+    },
+    "suggest": {
+        "ext-simplexml": "Used in special situations or with special adapters (Zend_Config_Xml)",
+        "zf1s/zend-json": "Used in special situations or with special adapters"
+    },
+    "replace": {
+        "zf1/zend-config": "^1.12"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
