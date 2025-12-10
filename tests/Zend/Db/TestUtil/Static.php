@@ -38,11 +38,12 @@ require_once 'Zend/Db/TestUtil/Common.php';
 class Zend_Db_TestUtil_Static extends Zend_Db_TestUtil_Common
 {
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array(
+        $constants = [
             'dbname'   => 'dummy',
-        );
+        ];
         return $constants;
     }
 

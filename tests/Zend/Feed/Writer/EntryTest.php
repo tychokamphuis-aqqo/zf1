@@ -38,28 +38,28 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->_feedSamplePath = dirname(__FILE__) . '/_files';
+        $this->_feedSamplePath = __DIR__ . '/_files';
     }
 
     public function testAddsAuthorName()
     {
         $entry = new Zend_Feed_Writer_Entry;
         $entry->addAuthor('Joe');
-        $this->assertEquals(array(array('name'=>'Joe')), $entry->getAuthors());
+        $this->assertEquals([['name'=>'Joe']], $entry->getAuthors());
     }
 
     public function testAddsAuthorEmail()
     {
         $entry = new Zend_Feed_Writer_Entry;
         $entry->addAuthor('Joe', 'joe@example.com');
-        $this->assertEquals(array(array('name'=>'Joe', 'email' => 'joe@example.com')), $entry->getAuthors());
+        $this->assertEquals([['name'=>'Joe', 'email' => 'joe@example.com']], $entry->getAuthors());
     }
 
     public function testAddsAuthorUri()
     {
         $entry = new Zend_Feed_Writer_Entry;
         $entry->addAuthor('Joe', null, 'http://www.example.com');
-        $this->assertEquals(array(array('name'=>'Joe', 'uri' => 'http://www.example.com')), $entry->getAuthors());
+        $this->assertEquals([['name'=>'Joe', 'uri' => 'http://www.example.com']], $entry->getAuthors());
     }
 
     public function testAddAuthorThrowsExceptionOnInvalidName()
@@ -68,7 +68,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->addAuthor('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -78,7 +78,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->addAuthor('Joe', '');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -88,38 +88,38 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->addAuthor('Joe', null, 'notauri');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
     public function testAddsAuthorNameFromArray()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->addAuthor(array('name'=>'Joe'));
-        $this->assertEquals(array(array('name'=>'Joe')), $entry->getAuthors());
+        $entry->addAuthor(['name'=>'Joe']);
+        $this->assertEquals([['name'=>'Joe']], $entry->getAuthors());
     }
 
     public function testAddsAuthorEmailFromArray()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->addAuthor(array('name'=>'Joe','email'=>'joe@example.com'));
-        $this->assertEquals(array(array('name'=>'Joe', 'email' => 'joe@example.com')), $entry->getAuthors());
+        $entry->addAuthor(['name'=>'Joe','email'=>'joe@example.com']);
+        $this->assertEquals([['name'=>'Joe', 'email' => 'joe@example.com']], $entry->getAuthors());
     }
 
     public function testAddsAuthorUriFromArray()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->addAuthor(array('name'=>'Joe','uri'=>'http://www.example.com'));
-        $this->assertEquals(array(array('name'=>'Joe', 'uri' => 'http://www.example.com')), $entry->getAuthors());
+        $entry->addAuthor(['name'=>'Joe','uri'=>'http://www.example.com']);
+        $this->assertEquals([['name'=>'Joe', 'uri' => 'http://www.example.com']], $entry->getAuthors());
     }
 
     public function testAddAuthorThrowsExceptionOnInvalidNameFromArray()
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->addAuthor(array('name'=>''));
+            $entry->addAuthor(['name'=>'']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -127,9 +127,9 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->addAuthor(array('name'=>'Joe','email'=>''));
+            $entry->addAuthor(['name'=>'Joe','email'=>'']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -137,9 +137,9 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->addAuthor(array('name'=>'Joe','uri'=>'notauri'));
+            $entry->addAuthor(['name'=>'Joe','uri'=>'notauri']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -147,39 +147,39 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->addAuthor(array('uri'=>'notauri'));
+            $entry->addAuthor(['uri'=>'notauri']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
     public function testAddsAuthorsFromArrayOfAuthors()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->addAuthors(array(
-            array('name'=>'Joe','uri'=>'http://www.example.com'),
-            array('name'=>'Jane','uri'=>'http://www.example.com')
-        ));
-        $expected = array(
-            array('name'=>'Joe','uri'=>'http://www.example.com'),
-            array('name'=>'Jane','uri'=>'http://www.example.com')
-        );
+        $entry->addAuthors([
+            ['name'=>'Joe','uri'=>'http://www.example.com'],
+            ['name'=>'Jane','uri'=>'http://www.example.com']
+        ]);
+        $expected = [
+            ['name'=>'Joe','uri'=>'http://www.example.com'],
+            ['name'=>'Jane','uri'=>'http://www.example.com']
+        ];
         $this->assertEquals($expected, $entry->getAuthors());
     }
 
     public function testAddsEnclosure()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->setEnclosure(array(
+        $entry->setEnclosure([
             'type' => 'audio/mpeg',
             'uri' => 'http://example.com/audio.mp3',
             'length' => '1337'
-        ));
-        $expected = array(
+        ]);
+        $expected = [
             'type' => 'audio/mpeg',
             'uri' => 'http://example.com/audio.mp3',
             'length' => '1337'
-        );
+        ];
         $this->assertEquals($expected, $entry->getEnclosure());
     }
 
@@ -189,10 +189,10 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     public function testAddsEnclosureThrowsExceptionOnMissingUri()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->setEnclosure(array(
+        $entry->setEnclosure([
             'type' => 'audio/mpeg',
             'length' => '1337'
-        ));
+        ]);
     }
 
     /**
@@ -201,11 +201,11 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     public function testAddsEnclosureThrowsExceptionWhenUriIsInvalid()
     {
         $entry = new Zend_Feed_Writer_Entry;
-        $entry->setEnclosure(array(
+        $entry->setEnclosure([
             'type' => 'audio/mpeg',
             'uri' => 'http://',
             'length' => '1337'
-        ));
+        ]);
     }
 
     public function testSetsCopyright()
@@ -221,7 +221,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setCopyright('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -238,7 +238,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setContent('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -340,7 +340,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setDateCreated('abc');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -350,7 +350,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setDateModified('abc');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -391,7 +391,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setDescription('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -414,7 +414,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setId('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -437,7 +437,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setLink('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -447,7 +447,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setLink('http://');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -470,7 +470,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setCommentLink('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -480,7 +480,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setCommentLink('http://');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -494,17 +494,17 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
 
-        $entry->setCommentFeedLink(array('uri'=>'http://www.example.com/id/comments', 'type'=>'rdf'));
-        $this->assertEquals(array(array('uri'=>'http://www.example.com/id/comments', 'type'=>'rdf')), $entry->getCommentFeedLinks());
+        $entry->setCommentFeedLink(['uri'=>'http://www.example.com/id/comments', 'type'=>'rdf']);
+        $this->assertEquals([['uri'=>'http://www.example.com/id/comments', 'type'=>'rdf']], $entry->getCommentFeedLinks());
     }
 
     public function testSetCommentFeedLinkThrowsExceptionOnEmptyString()
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->setCommentFeedLink(array('uri'=>'', 'type'=>'rdf'));
+            $entry->setCommentFeedLink(['uri'=>'', 'type'=>'rdf']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -512,9 +512,9 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->setCommentFeedLink(array('uri'=>'http://', 'type'=>'rdf'));
+            $entry->setCommentFeedLink(['uri'=>'http://', 'type'=>'rdf']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -522,9 +522,9 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
     {
         $entry = new Zend_Feed_Writer_Entry;
         try {
-            $entry->setCommentFeedLink(array('uri'=>'http://www.example.com/id/comments', 'type'=>'foo'));
+            $entry->setCommentFeedLink(['uri'=>'http://www.example.com/id/comments', 'type'=>'foo']);
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -547,7 +547,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setTitle('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -580,7 +580,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setCommentCount('');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 
@@ -590,7 +590,7 @@ class Zend_Feed_Writer_EntryTest extends PHPUnit_Framework_TestCase
         try {
             $entry->setCommentCount('a');
             $this->fail();
-        } catch (Zend_Feed_Exception $e) {
+        } catch (Zend_Feed_Exception) {
         }
     }
 

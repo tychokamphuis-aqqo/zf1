@@ -45,7 +45,7 @@ class HelperBrokerController extends Zend_Controller_Action
     public function testGetRedirectorAction()
     {
         $redirector = $this->_helper->getHelper('Redirector');
-        $this->getResponse()->appendBody(get_class($redirector));
+        $this->getResponse()->appendBody($redirector::class);
     }
 
     /**
@@ -56,7 +56,7 @@ class HelperBrokerController extends Zend_Controller_Action
     public function testHelperViaMagicGetAction()
     {
         $redirector = $this->_helper->Redirector;
-        $this->getResponse()->appendBody(get_class($redirector));
+        $this->getResponse()->appendBody($redirector::class);
     }
 
     /**
@@ -90,14 +90,14 @@ class HelperBrokerController extends Zend_Controller_Action
      */
     public function testCustomHelperAction()
     {
-        $this->getResponse()->appendBody(get_class($this->_helper->TestHelper));
+        $this->getResponse()->appendBody($this->_helper->TestHelper::class);
     }
 
     public function testCanLoadNamespacedHelperAction()
     {
         try {
             $helper = $this->_helper->getHelper('NamespacedHelper');
-            $this->getResponse()->appendBody(get_class($helper));
+            $this->getResponse()->appendBody($helper::class);
         } catch (Exception $e) {
             $this->getResponse()->appendBody($e->getMessage());
         }

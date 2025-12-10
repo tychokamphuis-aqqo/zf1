@@ -35,10 +35,11 @@ require_once 'Zend/Db/Statement/TestCommon.php';
 class Zend_Db_Statement_SqlsrvTest extends Zend_Db_Statement_TestCommon
 {
     // http://msdn.microsoft.com/en-us/library/cc296197(SQL.90).aspx
-    protected $_getColumnMetaKeys = array(
+    protected $_getColumnMetaKeys = [
         'Name' , 'Type', 'Size', 'Precision', 'Scale', 'Nullable'
-    );
+    ];
 
+    #[\Override]
     public function testStatementExecuteWithParams()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -50,26 +51,31 @@ class Zend_Db_Statement_SqlsrvTest extends Zend_Db_Statement_TestCommon
         sqlsrv_query($this->_db->getConnection(), "SET IDENTITY_INSERT $products OFF");
     }
 
+    #[\Override]
     public function testStatementBindParamByName()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bind by name.');
     }
 
+    #[\Override]
     public function testStatementBindValueByName()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bind by name.');
     }
 
+    #[\Override]
     public function testStatementBindParamByPosition()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bind by position.');
     }
 
+    #[\Override]
     public function testStatementBindValueByPosition()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bind by position.');
     }
 
+    #[\Override]
     public function testStatementNextRowset()
     {
         $products   = $this->_db->quoteIdentifier('zfproducts');
@@ -118,7 +124,7 @@ class Zend_Db_Statement_SqlsrvTest extends Zend_Db_Statement_TestCommon
         // create procedure
         $this->_db->query($prodecure);
 
-        $stmt  = $this->_db->query('{call ' . $products_procedure .'(?)}', array('Product'));
+        $stmt  = $this->_db->query('{call ' . $products_procedure .'(?)}', ['Product']);
 
         $result1 = $stmt->rowCount();
 

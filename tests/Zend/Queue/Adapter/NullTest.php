@@ -38,7 +38,7 @@
 require_once 'MessageTestClass.php';
 
 /** Base Adapter test class */
-require_once dirname(__FILE__) . '/AdapterTest.php';
+require_once __DIR__ . '/AdapterTest.php';
 
 /**
  * @category   Zend
@@ -58,6 +58,7 @@ class Zend_Queue_Adapter_NullTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterName()
     {
         return 'Null';
@@ -72,17 +73,20 @@ class Zend_Queue_Adapter_NullTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterFullName()
     {
         return 'Zend_Queue_Adapter_' . $this->getAdapterName();
     }
 
+    #[\Override]
     public function getTestConfig()
     {
-        return array('driverOptions' => array());
+        return ['driverOptions' => []];
     }
 
     // test the constants
+    #[\Override]
     public function testConst()
     {
     }

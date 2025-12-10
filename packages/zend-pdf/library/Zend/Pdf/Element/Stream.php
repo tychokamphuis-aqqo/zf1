@@ -75,7 +75,7 @@ class Zend_Pdf_Element_Stream extends Zend_Pdf_Element
      */
     public function length()
     {
-        return strlen($this->value->getRef());
+        return strlen((string) $this->value->getRef());
     }
 
 
@@ -112,6 +112,7 @@ class Zend_Pdf_Element_Stream extends Zend_Pdf_Element
      * @param integer $mode  Cloning mode (defines filter for objects cloning)
      * @returns Zend_Pdf_Element
      */
+    #[\Override]
     public function makeClone(Zend_Pdf_ElementFactory $factory, array &$processed, $mode)
     {
         return new self($this->value->getRef());

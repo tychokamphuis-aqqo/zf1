@@ -67,7 +67,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Blog post content...',
                 $insertedEntry->content->text);
         $this->assertTrue(
-                strpos($insertedEntry->getEditLink()->href, 'http') === 0);
+                str_starts_with((string) $insertedEntry->getEditLink()->href, 'http'));
         $this->gdata->delete($insertedEntry);
     }
 
@@ -80,7 +80,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         $entry->content = $this->gdata->newContent('Blog post content...');
         $insertedEntry = $this->gdata->insertEntry($entry, $postUrl);
         $this->assertTrue(
-                strpos($insertedEntry->getEditLink()->href, 'http') === 0);
+                str_starts_with((string) $insertedEntry->getEditLink()->href, 'http'));
         $this->gdata->delete($insertedEntry->getEditLink()->href);
     }
 
@@ -106,7 +106,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
                 $insertedEntry->getSelfLink()->href);
         $retrievedEntry = $this->gdata->getEntry($retrievedEntryQuery);
         $this->assertTrue(
-                strpos($retrievedEntry->getEditLink()->href, 'http') === 0);
+                str_starts_with((string) $retrievedEntry->getEditLink()->href, 'http'));
         $this->gdata->delete($retrievedEntry);
     }
 
@@ -119,7 +119,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         $entry->content = $this->gdata->newContent('Blog post content...');
         $insertedEntry = $this->gdata->insertEntry($entry, $postUrl);
         $this->assertTrue(
-                strpos($insertedEntry->getEditLink()->href, 'http') === 0);
+                str_starts_with((string) $insertedEntry->getEditLink()->href, 'http'));
         $insertedEntry->title->text = 'PHP test blog post modified';
         $updatedEntry = $this->gdata->updateEntry($insertedEntry);
         $this->assertEquals('PHP test blog post modified',
@@ -166,7 +166,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         $feed = $this->gdata->newFeed();
         try {
             $returnedFeed = $this->gdata->getFeed($feed);
-        } catch (Zend_Gdata_App_InvalidArgumentException $e) {
+        } catch (Zend_Gdata_App_InvalidArgumentException) {
             // we're expecting to cause an exception here
         }
     }
@@ -176,7 +176,7 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         $entry = $this->gdata->newEntry();
         try {
             $returnedEntry = $this->gdata->getEntry($entry);
-        } catch (Zend_Gdata_App_InvalidArgumentException $e) {
+        } catch (Zend_Gdata_App_InvalidArgumentException) {
             // we're expecting to cause an exception here
         }
     }
@@ -202,10 +202,10 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
         // create a new picasa album
         $albumEntry = $gd->newEntry();
         $albumEntry->setTitle($gd->newTitle('My New Test Album'));
-        $albumEntry->setCategory(array($gd->newCategory(
+        $albumEntry->setCategory([$gd->newCategory(
                 'http://schemas.google.com/photos/2007#album',
                 'http://schemas.google.com/g/2005#kind'
-                )));
+                )]);
         $createdAlbumEntry = $gd->insertEntry($albumEntry,
                 'http://picasaweb.google.com/data/feed/api/user/default');
         $this->assertEquals('My New Test Album',
@@ -230,10 +230,10 @@ class Zend_Gdata_GdataOnlineTest extends PHPUnit_Framework_TestCase
 
         $mediaEntry->setTitle($gd->newTitle('My New Test Photo'));
         $mediaEntry->setSummary($gd->newSummary('My New Test Photo Summary'));
-        $mediaEntry->setCategory(array($gd->newCategory(
+        $mediaEntry->setCategory([$gd->newCategory(
                 'http://schemas.google.com/photos/2007#photo ',
                 'http://schemas.google.com/g/2005#kind'
-                )));
+                )]);
         $createdPhotoMultipart = $gd->insertEntry($mediaEntry, $albumUrl);
         $this->assertEquals('My New Test Photo',
                 $createdPhotoMultipart->title->text);

@@ -56,12 +56,12 @@ class Zend_Rest_ClientTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->path = dirname(__FILE__) . '/responses/';
+        $this->path = __DIR__ . '/responses/';
 
         $this->adapter = new Zend_Http_Client_Adapter_Test();
-        $client        = new Zend_Http_Client(null, array(
+        $client        = new Zend_Http_Client(null, [
             'adapter' => $this->adapter
-        ));
+        ]);
         Zend_Rest_Client::setHttpClient($client);
 
         $this->rest = new Zend_Rest_Client('http://framework.zend.com/');
@@ -91,7 +91,7 @@ class Zend_Rest_ClientTest extends PHPUnit_Framework_TestCase
         $client->setNoReset();
         $client->restPost('/file');
         $request = $httpClient->getLastRequest();
-        $this->assertTrue(strpos($request, $text) !== false, 'The file is not in the request');
+        $this->assertTrue(str_contains($request, $text), 'The file is not in the request');
     }
 
     public function testUri()
@@ -137,7 +137,7 @@ class Zend_Rest_ClientTest extends PHPUnit_Framework_TestCase
         try {
             $response = $rest->restGet('/rest/');
             $this->fail('Should throw exception if no URI in object');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // success
         }
     }
@@ -220,7 +220,7 @@ class Zend_Rest_ClientTest extends PHPUnit_Framework_TestCase
                   . $expXml;
         $this->adapter->setResponse($response);
 
-        $response = $this->rest->restPost('/rest/', array('foo' => 'bar', 'baz' => 'bat'));
+        $response = $this->rest->restPost('/rest/', ['foo' => 'bar', 'baz' => 'bat']);
         $this->assertTrue($response instanceof Zend_Http_Response);
         $body = $response->getBody();
         $this->assertContains($expXml, $response->getBody());
@@ -344,7 +344,7 @@ class Zend_Rest_ClientTest extends PHPUnit_Framework_TestCase
         try {
             $result = new Zend_Rest_Client_Result("invalidxml");
             $this->fail();
-        } catch(Zend_Rest_Client_Result_Exception $e) {
+        } catch(Zend_Rest_Client_Result_Exception) {
 
         }
     }

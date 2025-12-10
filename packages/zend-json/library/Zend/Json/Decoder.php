@@ -109,7 +109,7 @@ class Zend_Json_Decoder
         $this->_offset       = 0;
 
         // Normalize and set $decodeType
-        if (!in_array($decodeType, array(Zend_Json::TYPE_ARRAY, Zend_Json::TYPE_OBJECT)))
+        if (!in_array($decodeType, [Zend_Json::TYPE_ARRAY, Zend_Json::TYPE_OBJECT]))
         {
             $decodeType = Zend_Json::TYPE_ARRAY;
         }
@@ -207,7 +207,7 @@ class Zend_Json_Decoder
      */
     protected function _decodeObject()
     {
-        $members = array();
+        $members = [];
         $tok = $this->_getNextToken();
 
         while ($tok && $tok != self::RBRACE) {
@@ -270,7 +270,7 @@ class Zend_Json_Decoder
      */
     protected function _decodeArray()
     {
-        $result = array();
+        $result = [];
         $tok = $this->_getNextToken(); // Move past the '['
         $index  = 0;
 
@@ -371,39 +371,20 @@ class Zend_Json_Decoder
                             break;
                         }
                         $chr = $str[$i];
-                        switch ($chr) {
-                            case '"' :
-                                $result .= '"';
-                                break;
-                            case '\\':
-                                $result .= '\\';
-                                break;
-                            case '/' :
-                                $result .= '/';
-                                break;
-                            case 'b' :
-                                $result .= "\x08";
-                                break;
-                            case 'f' :
-                                $result .= "\x0c";
-                                break;
-                            case 'n' :
-                                $result .= "\x0a";
-                                break;
-                            case 'r' :
-                                $result .= "\x0d";
-                                break;
-                            case 't' :
-                                $result .= "\x09";
-                                break;
-                            case '\'' :
-                                $result .= '\'';
-                                break;
-                            default:
-                                // require_once 'Zend/Json/Exception.php';
-                                throw new Zend_Json_Exception('Illegal escape '
-                                    .  "sequence '" . $chr . "'");
-                        }
+                        match ($chr) {
+                            '"' => $result .= '"',
+                            '\\' => $result .= '\\',
+                            '/' => $result .= '/',
+                            'b' => $result .= "\x08",
+                            'f' => $result .= "\x0c",
+                            'n' => $result .= "\x0a",
+                            'r' => $result .= "\x0d",
+                            't' => $result .= "\x09",
+                            '\'' => $result .= '\'',
+                            // require_once 'Zend/Json/Exception.php';
+                            default => throw new Zend_Json_Exception('Illegal escape '
+                                .  "sequence '" . $chr . "'"),
+                        };
                     } elseif($chr == '"') {
                         break;
                     } else {
@@ -563,29 +544,22 @@ class Zend_Json_Decoder
         }
 
         $bytes = (ord($utf16[0]) << 8) | ord($utf16[1]);
-
-        switch (true) {
-            case ((0x7F & $bytes) == $bytes):
-                // this case should never be reached, because we are in ASCII range
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0x7F & $bytes);
-
-            case (0x07FF & $bytes) == $bytes:
-                // return a 2-byte UTF-8 character
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0xC0 | (($bytes >> 6) & 0x1F))
-                     . chr(0x80 | ($bytes & 0x3F));
-
-            case (0xFFFF & $bytes) == $bytes:
-                // return a 3-byte UTF-8 character
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0xE0 | (($bytes >> 12) & 0x0F))
-                     . chr(0x80 | (($bytes >> 6) & 0x3F))
-                     . chr(0x80 | ($bytes & 0x3F));
-        }
-
-        // ignoring UTF-32 for now, sorry
-        return '';
+        return match (true) {
+            // this case should never be reached, because we are in ASCII range
+            // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+            (0x7F & $bytes) == $bytes => chr(0x7F & $bytes),
+            // return a 2-byte UTF-8 character
+            // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+            (0x07FF & $bytes) == $bytes => chr(0xC0 | (($bytes >> 6) & 0x1F))
+                 . chr(0x80 | ($bytes & 0x3F)),
+            // return a 3-byte UTF-8 character
+            // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+            (0xFFFF & $bytes) == $bytes => chr(0xE0 | (($bytes >> 12) & 0x0F))
+                 . chr(0x80 | (($bytes >> 6) & 0x3F))
+                 . chr(0x80 | ($bytes & 0x3F)),
+            // ignoring UTF-32 for now, sorry
+            default => '',
+        };
     }
 }
 

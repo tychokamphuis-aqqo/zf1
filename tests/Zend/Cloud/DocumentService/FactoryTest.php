@@ -53,7 +53,7 @@ class Zend_Cloud_DocumentService_FactoryTest extends PHPUnit_Framework_TestCase
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -68,13 +68,13 @@ class Zend_Cloud_DocumentService_FactoryTest extends PHPUnit_Framework_TestCase
                                     new Zend_Config(Zend_Cloud_DocumentService_Adapter_SimpleDbTest::getConfigArray())
                                 );
 
-        $this->assertEquals('Zend_Cloud_DocumentService_Adapter_SimpleDb', get_class($simpleDbAdapter));
+        $this->assertEquals('Zend_Cloud_DocumentService_Adapter_SimpleDb', $simpleDbAdapter::class);
         // Azure adapter
         $azureAdapter = Zend_Cloud_DocumentService_Factory::getAdapter(
                                     new Zend_Config(Zend_Cloud_DocumentService_Adapter_WindowsAzureTest::getConfigArray())
                                 );
 
-        $this->assertEquals('Zend_Cloud_DocumentService_Adapter_WindowsAzure', get_class($azureAdapter));
+        $this->assertEquals('Zend_Cloud_DocumentService_Adapter_WindowsAzure', $azureAdapter::class);
     }
 }
 

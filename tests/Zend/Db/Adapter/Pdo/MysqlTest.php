@@ -45,7 +45,7 @@ require_once 'Zend/Db/Adapter/Pdo/TestCommon.php';
 class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -62,7 +62,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
         'DOUBLE PRECISION'   => Zend_Db::FLOAT_TYPE,
         'FIXED'              => Zend_Db::FLOAT_TYPE,
         'FLOAT'              => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Test AUTO_QUOTE_IDENTIFIERS option
@@ -71,13 +71,14 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * MySQL actually allows delimited identifiers to remain
      * case-insensitive, so this test overrides its parent.
      */
+    #[\Override]
     public function testAdapterAutoQuoteIdentifiersTrue()
     {
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::AUTO_QUOTE_IDENTIFIERS => true
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
         $db->getConnection();
 
@@ -95,8 +96,8 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
             $result2 = $stmt->fetchAll();
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
-            $this->fail('Unexpected exception '.get_class($e).' received: '.$e->getMessage());
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
+            $this->fail('Unexpected exception '.$e::class.' received: '.$e->getMessage());
         }
 
         $this->assertEquals($result1, $result2);
@@ -112,19 +113,20 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
     {
         $params = $this->_util->getParams();
 
-        $params['driver_options'] = array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true);
+        $params['driver_options'] = [\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true];
 
         $db = Zend_Db::factory($this->getDriver(), $params);
 
-        $this->assertTrue((boolean) $db->getConnection()->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY));
+        $this->assertTrue((bool) $db->getConnection()->getAttribute(\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY));
 
-        $params['driver_options'] = array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false);
+        $params['driver_options'] = [\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => false];
 
         $db = Zend_Db::factory($this->getDriver(), $params);
 
-        $this->assertFalse((boolean) $db->getConnection()->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY));
+        $this->assertFalse((bool) $db->getConnection()->getAttribute(\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY));
     }
 
+    #[\Override]
     public function testAdapterInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences');
@@ -135,6 +137,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * and an alias, and returns each as delimited
      * identifiers, with 'AS' in between.
      */
+    #[\Override]
     public function testAdapterQuoteColumnAs()
     {
         $string = "foo";
@@ -148,6 +151,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * and an alias, but ignores the alias if it is
      * the same as the base identifier in the string.
      */
+    #[\Override]
     public function testAdapterQuoteColumnAsSameString()
     {
         $string = 'foo.bar';
@@ -160,6 +164,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteIdentifier() accepts a string
      * and returns a delimited identifier.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifier()
     {
         $value = $this->_db->quoteIdentifier('table_name');
@@ -170,9 +175,10 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteIdentifier() accepts an array
      * and returns a qualified delimited identifier.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierArray()
     {
-        $array = array('foo', 'bar');
+        $array = ['foo', 'bar'];
         $value = $this->_db->quoteIdentifier($array);
         $this->assertEquals('`foo`.`bar`', $value);
     }
@@ -182,10 +188,11 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * containing a Zend_Db_Expr, and returns strings
      * as delimited identifiers, and Exprs as unquoted.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierArrayDbExpr()
     {
         $expr = new Zend_Db_Expr('*');
-        $array = array('foo', $expr);
+        $array = ['foo', $expr];
         $value = $this->_db->quoteIdentifier($array);
         $this->assertEquals('`foo`.*', $value);
     }
@@ -194,6 +201,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteIdentifer() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierDoubleQuote()
     {
         $string = 'table_"_name';
@@ -205,6 +213,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteIdentifer() accepts an integer
      * and returns a delimited identifier as with a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierInteger()
     {
         $int = 123;
@@ -219,6 +228,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * delimited identifers, and returns the imploded
      * string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierQualified()
     {
         $string = 'table.column';
@@ -230,6 +240,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteIdentifer() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierSingleQuote()
     {
         $string = "table_'_name";
@@ -254,6 +265,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * and returns each as delimited identifiers.
      * Most RDBMS want an 'AS' in between.
      */
+    #[\Override]
     public function testAdapterQuoteTableAs()
     {
         $string = "foo";
@@ -268,6 +280,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * @link   http://framework.zend.com/issues/browse/ZF-2059
      * @return void
      */
+    #[\Override]
     public function testZF2059()
     {
         $this->markTestIncomplete('Inconsistent test results');
@@ -283,7 +296,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
     public function testZF2101()
     {
         $params = $this->_util->getParams();
-        $params['driver_options'] = array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true);
+        $params['driver_options'] = [\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true];
         $db = Zend_Db::factory($this->getDriver(), $params);
 
         // Set default bound value
@@ -312,7 +325,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      */
     public function testAdapterIncludesCharsetInsideGeneratedPdoDsn()
     {
-        $adapter = new ZendTest_Db_Adapter_Pdo_Mysql(array('dbname' => 'foo', 'charset' => 'XYZ', 'username' => 'bar', 'password' => 'foo'));
+        $adapter = new ZendTest_Db_Adapter_Pdo_Mysql(['dbname' => 'foo', 'charset' => 'XYZ', 'username' => 'bar', 'password' => 'foo']);
         $this->assertEquals('mysql:dbname=foo;charset=XYZ', $adapter->_dsn());
     }
 
@@ -335,6 +348,7 @@ class Zend_Db_Adapter_Pdo_MysqlTest extends Zend_Db_Adapter_Pdo_TestCommon
 
 class ZendTest_Db_Adapter_Pdo_Mysql extends Zend_Db_Adapter_Pdo_Mysql
 {
+    #[\Override]
     public function _dsn()
     {
         return parent::_dsn();

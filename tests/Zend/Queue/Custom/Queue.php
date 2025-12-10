@@ -59,7 +59,7 @@ class Custom_Queue extends Zend_Queue
     public function __construct()
     {
         $args = func_get_args();
-        call_user_func_array(array($this, 'parent::__construct'), $args);
+        call_user_func_array([$this, 'parent::__construct'], $args);
 
         $this->setMessageClass('Custom_Message');
         $this->setMessageSetClass('Custom_Messages');
@@ -84,7 +84,7 @@ class Custom_Queue extends Zend_Queue
         if ($message instanceof Custom_Message) {
             $response = parent::send($message->__toString());
         } else {
-            foreach($message as $i => $one) {
+            foreach($message as $one) {
                 $response = parent::send($one->__toString());
             }
         }

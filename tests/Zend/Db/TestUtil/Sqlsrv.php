@@ -37,20 +37,22 @@ require_once 'Zend/Db/TestUtil/Common.php';
  */
 class Zend_Db_TestUtil_Sqlsrv extends Zend_Db_TestUtil_Common
 {
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array(
+        $constants = [
             'host'     => 'TESTS_ZEND_DB_ADAPTER_SQLSRV_HOSTNAME',
             'username' => 'TESTS_ZEND_DB_ADAPTER_SQLSRV_USERNAME',
             'password' => 'TESTS_ZEND_DB_ADAPTER_SQLSRV_PASSWORD',
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_SQLSRV_DATABASE',
-        );
+        ];
 
         $constants = parent::getParams($constants);
 
         return $constants;
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         if ($type == 'IDENTITY') {
@@ -59,19 +61,21 @@ class Zend_Db_TestUtil_Sqlsrv extends Zend_Db_TestUtil_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getColumnsDocuments()
     {
-        return array(
+        return [
             'doc_id'       => 'INTEGER NOT NULL',
             'doc_clob'     => 'VARCHAR(8000)',
             'doc_blob'     => 'VARCHAR(8000)',
             'PRIMARY KEY'  => 'doc_id',
-        );
+        ];
     }
 
+    #[\Override]
     protected function _getColumnsBugs()
     {
-        return array(
+        return [
             'bug_id'          => 'IDENTITY',
             'bug_description' => 'VARCHAR(100) NULL',
             'bug_status'      => 'VARCHAR(20) NULL',
@@ -80,9 +84,10 @@ class Zend_Db_TestUtil_Sqlsrv extends Zend_Db_TestUtil_Common
             'reported_by'     => 'VARCHAR(100) NULL',
             'assigned_to'     => 'VARCHAR(100) NULL',
             'verified_by'     => 'VARCHAR(100) NULL',
-        );
+        ];
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         $sql       = "exec sp_tables @table_name = " . $this->_db->quoteIdentifier($tableName, true);
@@ -107,22 +112,26 @@ class Zend_Db_TestUtil_Sqlsrv extends Zend_Db_TestUtil_Common
         return null;
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         return $this->_getSqlDropElement($tableName);
     }
 
+    #[\Override]
     protected function _getSqlDropView($viewName)
     {
         return $this->_getSqlDropElement($viewName, 'VIEW');
     }
 
+    #[\Override]
     public function getSchema()
     {
         $desc = $this->_db->describeTable('zfproducts');
         return $desc['product_id']['SCHEMA_NAME'];
     }
 
+    #[\Override]
     public function createView()
     {
         parent::dropView();

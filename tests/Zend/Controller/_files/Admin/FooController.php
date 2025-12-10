@@ -24,7 +24,7 @@
 
 
 // require_once 'Zend/Controller/Action.php';
-require_once dirname(__FILE__) . '/../FooController.php';
+require_once __DIR__ . '/../FooController.php';
 
 /**
  * Mock file for testbed
@@ -53,6 +53,7 @@ class Admin_FooController extends FooController
      *
      * @return void
      */
+    #[\Override]
     public function barAction()
     {
         $this->_response->appendBody("Admin_Foo::bar action called\n");

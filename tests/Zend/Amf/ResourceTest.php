@@ -71,7 +71,7 @@ class Zend_Amf_ResourceTest extends PHPUnit_Framework_TestCase
         $request = new Zend_Amf_Request();
         $request->setObjectEncoding(0x03);
         $this->_server->setClass($class);
-        $newBody = new Zend_Amf_Value_MessageBody("$class.$method","/1",array("test"));
+        $newBody = new Zend_Amf_Value_MessageBody("$class.$method","/1",["test"]);
         $request->addAmfBody($newBody);
         $this->_server->handle($request);
         $response = $this->_server->getResponse();
@@ -107,7 +107,7 @@ class Zend_Amf_ResourceTest extends PHPUnit_Framework_TestCase
      */
     public function testCtxLoader()
     {
-        Zend_Amf_Parse_TypeLoader::addResourceDirectory("Test_Resource", dirname(__FILE__)."/Resources");
+        Zend_Amf_Parse_TypeLoader::addResourceDirectory("Test_Resource", __DIR__."/Resources");
         $resp = $this->_callService("returnCtx");
         $this->assertContains("Accept-language:", $resp->getResponse());
         $this->assertContains("foo=bar", $resp->getResponse());
@@ -146,17 +146,17 @@ class Zend_Amf_ResourceTest extends PHPUnit_Framework_TestCase
 class Zend_Amf_Resource_testclass {
     function returnFile()
     {
-        return fopen(dirname(__FILE__)."/_files/testdata", "r");
+        return fopen(__DIR__."/_files/testdata", "r");
     }
     function returnCtx()
     {
-        $opts = array(
-            'http'=>array(
+        $opts = [
+            'http'=>[
             'method'=>"GET",
             'header'=>"Accept-language: en\r\n" .
                 "Cookie: foo=bar\r\n"
-            )
-        );
+            ]
+        ];
         $context = stream_context_create($opts);
         return $context;
     }
@@ -177,9 +177,8 @@ class StreamContext3
     }
 }
 class Zend_Amf_TestResourceLoader implements Zend_Loader_PluginLoader_Interface {
-    public $suffix;
-    public function __construct($suffix) {
-        $this->suffix = $suffix;
+    public function __construct(public $suffix)
+    {
     }
     public function addPrefixPath($prefix, $path) {}
     public function removePrefixPath($prefix, $path = null) {}

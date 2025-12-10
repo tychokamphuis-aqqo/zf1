@@ -145,7 +145,7 @@ class Zend_Mail_Protocol_Pop3
      */
     public function sendRequest($request)
     {
-        $result = @fputs($this->_socket, $request . "\r\n");
+        $result = @fwrite($this->_socket, $request . "\r\n");
         if (!$result) {
             /**
              * @see Zend_Mail_Protocol_Exception
@@ -176,7 +176,7 @@ class Zend_Mail_Protocol_Pop3
 
         $result = trim($result);
         if (strpos($result, ' ')) {
-            list($status, $message) = explode(' ', $result, 2);
+            [$status, $message] = explode(' ', $result, 2);
         } else {
             $status = $result;
             $message = '';
@@ -236,7 +236,7 @@ class Zend_Mail_Protocol_Pop3
 
         try {
             $this->request('QUIT');
-        } catch (Zend_Mail_Protocol_Exception $e) {
+        } catch (Zend_Mail_Protocol_Exception) {
             // ignore error - we're closing the socket anyway
         }
 
@@ -273,7 +273,7 @@ class Zend_Mail_Protocol_Pop3
             try {
                 $this->request("APOP $user " . md5($this->_timestamp . $password));
                 return;
-            } catch (Zend_Mail_Protocol_Exception $e) {
+            } catch (Zend_Mail_Protocol_Exception) {
                 // ignore
             }
         }
@@ -297,7 +297,7 @@ class Zend_Mail_Protocol_Pop3
         $octets = 0;
         $result = $this->request('STAT');
 
-        list($messages, $octets) = explode(' ', $result);
+        [$messages, $octets] = explode(' ', $result);
     }
 
 
@@ -313,15 +313,15 @@ class Zend_Mail_Protocol_Pop3
         if ($msgno !== null) {
             $result = $this->request("LIST $msgno");
 
-            list(, $result) = explode(' ', $result);
+            [, $result] = explode(' ', $result);
             return (int)$result;
         }
 
         $result = $this->request('LIST', true);
-        $messages = array();
+        $messages = [];
         $line = strtok($result, "\n");
         while ($line) {
-            list($no, $size) = explode(' ', trim($line));
+            [$no, $size] = explode(' ', trim($line));
             $messages[(int)$no] = (int)$size;
             $line = strtok("\n");
         }
@@ -342,19 +342,19 @@ class Zend_Mail_Protocol_Pop3
         if ($msgno !== null) {
             $result = $this->request("UIDL $msgno");
 
-            list(, $result) = explode(' ', $result);
+            [, $result] = explode(' ', $result);
             return $result;
         }
 
         $result = $this->request('UIDL', true);
 
         $result = explode("\n", $result);
-        $messages = array();
+        $messages = [];
         foreach ($result as $line) {
             if (!$line) {
                 continue;
             }
-            list($no, $id) = explode(' ', trim($line), 2);
+            [$no, $id] = explode(' ', trim($line), 2);
             $messages[(int)$no] = $id;
         }
 
@@ -411,11 +411,11 @@ class Zend_Mail_Protocol_Pop3
     /**
      * Make a RETR call for retrieving a full message with headers and body
      *
-     * @deprecated since 1.1.0; this method has a typo - please use retrieve()
      * @param  int $msgno  message number
      * @return string message
      * @throws Zend_Mail_Protocol_Exception
      */
+    #[\Deprecated(message: 'since 1.1.0; this method has a typo - please use retrieve()')]
     public function retrive($msgno)
     {
         return $this->retrieve($msgno);

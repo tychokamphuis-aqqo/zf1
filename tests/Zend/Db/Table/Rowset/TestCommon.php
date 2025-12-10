@@ -47,9 +47,9 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
     {
         $table = $this->_table['bugs'];
 
-        $rows = $table->find(array(1, 2));
+        $rows = $table->find([1, 2]);
         $this->assertTrue($rows instanceof Zend_Db_Table_Rowset_Abstract,
-            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.get_class($rows));
+            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.$rows::class);
 
         // see if we're at the beginning
         $this->assertEquals(0, $rows->key());
@@ -58,7 +58,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
         // get first row and see if it's the right one
         $row1 = $rows->current();
         $this->assertTrue($row1 instanceof Zend_Db_Table_Row_Abstract,
-            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.get_class($row1));
+            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.$row1::class);
         $bug_id = $this->_db->foldCase('bug_id');
         $this->assertEquals(1, $row1->$bug_id);
 
@@ -70,7 +70,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
         // get second row and see if it's the right one
         $row2 = $rows->current();
         $this->assertTrue($row2 instanceof Zend_Db_Table_Row_Abstract,
-            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.get_class($row2));
+            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.$row2::class);
         $this->assertEquals(2, $row2->$bug_id);
 
         // advance beyond last row
@@ -92,7 +92,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
         // the one we got earlier
         $row1Copy = $rows->current();
         $this->assertTrue($row1 instanceof Zend_Db_Table_Row_Abstract,
-            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.get_class($row1));
+            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.$row1::class);
         $this->assertEquals(1, $row1->$bug_id);
         $this->assertSame($row1, $row1Copy);
 
@@ -164,7 +164,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
         $table = $this->_table['bugs'];
         $bug_description = $this->_db->foldCase('bug_description');
 
-        $rows = $table->find(array(1, 2));
+        $rows = $table->find([1, 2]);
         $this->assertEquals(2, count($rows));
 
         // iterate through the rowset, because that's the only way
@@ -209,7 +209,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
         $bug_description = $this->_db->foldCase('bug_description');
 
         $rows = $table->find(1);
-        $this->assertEquals(get_class($table), $rows->getTableClass());
+        $this->assertEquals($table::class, $rows->getTableClass());
     }
 
     public function testTableSerializeRowset()
@@ -224,11 +224,11 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
 
         $this->assertFalse($rowsNew->isConnected());
         $this->assertTrue($rowsNew instanceof Zend_Db_Table_Rowset_Abstract,
-            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.get_class($rowsNew));
+            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.$rowsNew::class);
 
         $row1New = $rowsNew->current();
         $this->assertTrue($row1New instanceof Zend_Db_Table_Row_Abstract,
-            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.get_class($row1New));
+            'Expecting object of type Zend_Db_Table_Row_Abstract, got '.$row1New::class);
     }
 
     public function testTableSerializeRowsetExceptionWrongTable()
@@ -249,7 +249,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
 
         $rowsNew = unserialize($serRows);
         $this->assertTrue($rowsNew instanceof Zend_Db_Table_Rowset_Abstract,
-            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.get_class($rowsNew));
+            'Expecting object of type Zend_Db_Table_Rowset_Abstract, got '.$rowsNew::class);
 
         $table2 = $this->_table['products'];
         $connected = false;
@@ -258,7 +258,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
             $this->fail('Expected to catch Zend_Db_Table_Row_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Table_Row_Exception,
-                'Expecting object of type Zend_Db_Table_Row_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Table_Row_Exception, got '.$e::class);
             $this->assertEquals('The specified Table is of class My_ZendDbTable_TableProducts, expecting class to be instance of My_ZendDbTable_TableBugs', $e->getMessage());
         }
         $this->assertFalse($connected);
@@ -393,10 +393,10 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
     public function testFixForRowsetContainsDisconnectedRowObjectsWhenDeserializedDoesNotBreakPaginator()
     {
         $table = $this->_table['bugs'];
-        $tableClass = get_class($table);
+        $tableClass = $table::class;
 
         $select = $table->select();
-        $select->from('zfbugs', array('bug_id'));
+        $select->from('zfbugs', ['bug_id']);
 
         // require_once 'Zend/Paginator.php';
         $paginator = Zend_Paginator::factory($select);
@@ -412,7 +412,7 @@ abstract class Zend_Db_Table_Rowset_TestCommon extends Zend_Db_Table_TestSetup
     public function testFixForRowsetContainsDisconnectedRowObjectsWhenDeserializedDoesNotBreakTableJoin()
     {
         $table = $this->_table['bugs'];
-        $tableClass = get_class($table);
+        $tableClass = $table::class;
 
         $select = $table->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         $select->join('zfaccounts', 'zfaccounts.account_name = zfbugs.reported_by', 'account_name');

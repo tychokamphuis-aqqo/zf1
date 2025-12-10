@@ -38,16 +38,19 @@ require_once 'Zend/Db/Table/Row/TestCommon.php';
 class Zend_Db_Table_Row_SqlsrvTest extends Zend_Db_Table_Row_TestCommon
 {
 
+    #[\Override]
     public function testTableRowSaveInsert()
     {
         $this->markTestIncomplete($this->getDriver() . ': DEFAULT or NULL are not allowed as explicit identity values.');
     }
 
+    #[\Override]
     public function testTableRowSetPrimaryKey()
     {
         $this->markTestSkipped($this->getDriver() . ' cannot update identity columns.');
     }
 
+    #[\Override]
     public function testTableRowSaveInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences');

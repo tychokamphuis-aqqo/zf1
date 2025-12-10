@@ -39,6 +39,7 @@ require_once 'Zend/Db/TestUtil/Pdo/Oci.php';
 class Zend_Db_TestUtil_Oracle extends Zend_Db_TestUtil_Pdo_Oci
 {
 
+    #[\Override]
     protected function _rawQuery($sql)
     {
         $conn = $this->_db->getConnection();

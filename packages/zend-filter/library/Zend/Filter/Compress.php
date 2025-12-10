@@ -42,7 +42,7 @@ class Zend_Filter_Compress implements Zend_Filter_Interface
     /**
      * Compression adapter constructor options
      */
-    protected $_adapterOptions = array();
+    protected $_adapterOptions = [];
 
     /**
      * Class constructor
@@ -75,7 +75,7 @@ class Zend_Filter_Compress implements Zend_Filter_Interface
             if ($key == 'options') {
                 $key = 'adapterOptions';
             }
-            $method = 'set' . ucfirst($key);
+            $method = 'set' . ucfirst((string) $key);
             if (method_exists($this, $method)) {
                 $this->$method($value);
             }
@@ -96,11 +96,11 @@ class Zend_Filter_Compress implements Zend_Filter_Interface
 
         $adapter = $this->_adapter;
         $options = $this->getAdapterOptions();
-        if (class_exists('Zend_Filter_Compress_' . ucfirst($adapter))) {
-            $adapter = 'Zend_Filter_Compress_' . ucfirst($adapter);
+        if (class_exists('Zend_Filter_Compress_' . ucfirst((string) $adapter))) {
+            $adapter = 'Zend_Filter_Compress_' . ucfirst((string) $adapter);
         } elseif (!class_exists($adapter)) {
             // require_once 'Zend/Loader.php';
-            if (!Zend_Loader::tryLoadClass('Zend_Filter_Compress_' . ucfirst($adapter))) {
+            if (!Zend_Loader::tryLoadClass('Zend_Filter_Compress_' . ucfirst((string) $adapter))) {
                 Zend_Loader::loadClass($adapter);
             }
         }
@@ -180,7 +180,7 @@ class Zend_Filter_Compress implements Zend_Filter_Interface
             throw new Zend_Filter_Exception("Unknown method '{$method}'");
         }
 
-        return call_user_func_array(array($adapter, $method), $options);
+        return call_user_func_array([$adapter, $method], $options);
     }
 
     /**

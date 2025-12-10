@@ -43,7 +43,7 @@ class Zend_Crypt_MathTest extends PHPUnit_Framework_TestCase
         try {
             $math = new Zend_Crypt_Math_BigInteger();
         } catch (Zend_Crypt_Math_BigInteger_Exception $e) {
-            if (strpos($e->getMessage(), 'big integer precision math support not detected') !== false) {
+            if (str_contains($e->getMessage(), 'big integer precision math support not detected')) {
                 $this->markTestSkipped($e->getMessage());
             } else {
                 throw $e;
@@ -70,8 +70,8 @@ class Zend_Crypt_MathTest extends PHPUnit_Framework_TestCase
     public function testRandInteger()
     {
         for ($i = 0; $i < 1024; $i++) {
-            $min = rand(1, PHP_INT_MAX/2);
-            $max = $min + rand(1, PHP_INT_MAX/2 - 1);
+            $min = random_int(1, PHP_INT_MAX/2);
+            $max = $min + random_int(1, PHP_INT_MAX/2 - 1);
             $rand = Zend_Crypt_Math::randInteger($min, $max);
             $this->assertGreaterThanOrEqual($min, $rand);
             $this->assertLessThanOrEqual($max, $rand);
@@ -80,10 +80,10 @@ class Zend_Crypt_MathTest extends PHPUnit_Framework_TestCase
 
     public static function provideRandInt()
     {
-        return array(
-            array(2, 1, 10000, 100, 0.9, 1.1, false),
-            array(2, 1, 10000, 100, 0.8, 1.2, true)
-        );
+        return [
+            [2, 1, 10000, 100, 0.9, 1.1, false],
+            [2, 1, 10000, 100, 0.8, 1.2, true]
+        ];
     }
 
     /**

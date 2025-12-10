@@ -53,13 +53,13 @@ class Zend_ProgressBar_Adapter_jsPushTest extends PHPUnit_Framework_TestCase
 
     public function testJson()
     {
-        $result = array();
+        $result = [];
 
-        $adapter = new Zend_ProgressBar_Adapter_jsPush_Stub(array('finishMethodName' => 'Zend_ProgressBar_Finish'));
+        $adapter = new Zend_ProgressBar_Adapter_jsPush_Stub(['finishMethodName' => 'Zend_ProgressBar_Finish']);
         $adapter->notify(0, 2, 0.5, 1, 1, 'status');
         $output = $adapter->getLastOutput();
 
-        $matches = preg_match('#<script type="text/javascript">parent.Zend_ProgressBar_Update\((.*?)\);</script>#', $output, $result);
+        $matches = preg_match('#<script type="text/javascript">parent.Zend_ProgressBar_Update\((.*?)\);</script>#', (string) $output, $result);
         $this->assertEquals(1, $matches);
 
         $data = json_decode($result[1], true);
@@ -74,7 +74,7 @@ class Zend_ProgressBar_Adapter_jsPushTest extends PHPUnit_Framework_TestCase
         $adapter->finish();
         $output = $adapter->getLastOutput();
 
-        $matches = preg_match('#<script type="text/javascript">parent.Zend_ProgressBar_Finish\(\);</script>#', $output, $result);
+        $matches = preg_match('#<script type="text/javascript">parent.Zend_ProgressBar_Finish\(\);</script>#', (string) $output, $result);
         $this->assertEquals(1, $matches);
     }
 }

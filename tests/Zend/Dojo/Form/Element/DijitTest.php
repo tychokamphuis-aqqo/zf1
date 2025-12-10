@@ -109,14 +109,14 @@ class Zend_Dojo_Form_Element_DijitTest extends PHPUnit_Framework_TestCase
     {
         $element = new Zend_Dojo_Form_Element_TextBox(
             'foo',
-            array(
+            [
                 'value' => 'some text',
                 'label' => 'TextBox',
                 'trim'  => true,
                 'propercase' => true,
                 'class' => 'someclass',
                 'style' => 'width: 100px;',
-            )
+            ]
         );
         return $element;
     }
@@ -140,7 +140,7 @@ class Zend_Dojo_Form_Element_DijitTest extends PHPUnit_Framework_TestCase
     public function testDijitElementDecoratorShouldBeEnabledByDefault()
     {
         $decorator = $this->element->getDecorator('DijitElement');
-        $this->assertTrue($decorator instanceof Zend_Dojo_Form_Decorator_DijitElement, get_class($decorator));
+        $this->assertTrue($decorator instanceof Zend_Dojo_Form_Decorator_DijitElement, $decorator::class);
     }
 
     /**
@@ -149,7 +149,7 @@ class Zend_Dojo_Form_Element_DijitTest extends PHPUnit_Framework_TestCase
     public function testDescriptionDecoratorShouldBeEnabledByDefault()
     {
         $decorator = $this->element->getDecorator('Description');
-        $this->assertTrue($decorator instanceof Zend_Form_Decorator_Description, get_class($decorator));
+        $this->assertTrue($decorator instanceof Zend_Form_Decorator_Description, $decorator::class);
     }
 
     public function testRenderingShouldCreateDijit()

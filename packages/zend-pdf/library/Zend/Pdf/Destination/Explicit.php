@@ -83,20 +83,12 @@ abstract class Zend_Pdf_Destination_Explicit extends Zend_Pdf_Destination
                 break;
         }
 
-        switch ($this->_destinationArray->items[0]->getType()) {
-            case Zend_Pdf_Element::TYPE_NUMERIC:
-                $this->_isRemote = true;
-                break;
-
-            case Zend_Pdf_Element::TYPE_DICTIONARY:
-                $this->_isRemote = false;
-                break;
-
-            default:
-                // require_once 'Zend/Pdf/Exception.php';
-                throw new Zend_Pdf_Exception('Destination target must be a page number or page dictionary object.');
-                break;
-        }
+        $this->_isRemote = match ($this->_destinationArray->items[0]->getType()) {
+            Zend_Pdf_Element::TYPE_NUMERIC => true,
+            Zend_Pdf_Element::TYPE_DICTIONARY => false,
+            // require_once 'Zend/Pdf/Exception.php';
+            default => throw new Zend_Pdf_Exception('Destination target must be a page number or page dictionary object.'),
+        };
     }
 
     /**

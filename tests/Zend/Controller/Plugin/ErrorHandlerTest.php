@@ -24,7 +24,7 @@
 if (!defined("PHPUnit_MAIN_METHOD"))
 {
     define("PHPUnit_MAIN_METHOD", "Zend_Controller_Plugin_ErrorHandlerTest::main");
-    $basePath = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..');
+    $basePath = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..');
     set_include_path(
         $basePath . DIRECTORY_SEPARATOR . 'tests'
         . PATH_SEPARATOR . $basePath . DIRECTORY_SEPARATOR . 'library'
@@ -116,11 +116,11 @@ class Zend_Controller_Plugin_ErrorHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testSetErrorHandler()
     {
-        $this->plugin->setErrorHandler(array(
+        $this->plugin->setErrorHandler([
             'module'     => 'myfoo',
             'controller' => 'bar',
             'action'     => 'boobaz',
-        ));
+        ]);
 
         $this->assertEquals('myfoo', $this->plugin->getErrorHandlerModule());
         $this->assertEquals('bar', $this->plugin->getErrorHandlerController());
@@ -212,7 +212,7 @@ class Zend_Controller_Plugin_ErrorHandlerTest extends PHPUnit_Framework_TestCase
             $this->plugin->postDispatch($this->request);
             $this->fail('Repeated calls with new exceptions should throw exceptions');
         } catch (Exception $e) {
-            $type = get_class($e);
+            $type = $e::class;
             $this->assertEquals('Zend_Controller_Dispatcher_Exception', $type);
             $this->assertEquals('Another exception', $e->getMessage());
         }
@@ -228,7 +228,7 @@ class Zend_Controller_Plugin_ErrorHandlerTest extends PHPUnit_Framework_TestCase
 
         try {
             $this->plugin->postDispatch($this->request);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('Repeated calls with no new exceptions should not throw exceptions');
         }
     }

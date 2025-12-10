@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/TestAbstract.php';
+require_once __DIR__ . '/TestAbstract.php';
 // require_once 'Zend/View/Helper/Navigation.php';
 
 /**
@@ -97,11 +97,11 @@ class Zend_View_Helper_Navigation_NavigationTest
     {
         // setup
         $this->_helper->setContainer($this->_nav2);
-        $expected = array(
+        $expected = [
             'menu' => $this->_getExpected('menu/default2.html'),
             'breadcrumbs' => $this->_getExpected('bc/default.html')
-        );
-        $actual = array();
+        ];
+        $actual = [];
 
         // result
         $actual['menu'] = $this->_helper->render();
@@ -120,14 +120,14 @@ class Zend_View_Helper_Navigation_NavigationTest
         $this->_helper->setContainer($this->_nav2);
 
         // result
-        $expected = array(
+        $expected = [
             'menu'        => '',
             'breadcrumbs' => ''
-        );
-        $actual = array(
+        ];
+        $actual = [
             'menu'        => $this->_helper->render(),
             'breadcrumbs' => $this->_helper->breadcrumbs()->render()
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -182,11 +182,11 @@ class Zend_View_Helper_Navigation_NavigationTest
 
     public function testSpecifyingDefaultProxy()
     {
-        $expected = array(
+        $expected = [
             'breadcrumbs' => $this->_getExpected('bc/default.html'),
             'menu' => $this->_getExpected('menu/default1.html')
-        );
-        $actual = array();
+        ];
+        $actual = [];
 
         // result
         $this->_helper->setDefaultProxy('breadcrumbs');
@@ -334,15 +334,15 @@ class Zend_View_Helper_Navigation_NavigationTest
     }
 
     private $_errorMessage;
-    public function toStringErrorHandler($code, $msg, $file, $line, array $c = array())
+    public function toStringErrorHandler($code, $msg, $file, $line, array $c = [])
     {
         $this->_errorMessage = $msg;
     }
 
     public function testMagicToStringShouldNotThrowException()
     {
-        set_error_handler(array($this, 'toStringErrorHandler'));
-        $this->_helper->menu()->setPartial(array(1337));
+        set_error_handler($this->toStringErrorHandler(...));
+        $this->_helper->menu()->setPartial([1337]);
         $this->_helper->__toString();
         restore_error_handler();
 
@@ -353,18 +353,18 @@ class Zend_View_Helper_Navigation_NavigationTest
     {
         $nl = Zend_View_Helper_Navigation::EOL;
 
-        $container = new Zend_Navigation(array(
-            array(
+        $container = new Zend_Navigation([
+            [
                 'label' => 'Page 1',
                 'id'    => 'p1',
                 'uri'   => 'p1'
-            ),
-            array(
+            ],
+            [
                 'label' => 'Page 2',
                 'id'    => 'p2',
                 'uri'   => 'p2'
-            )
-        ));
+            ]
+        ]);
 
         $expected = '<ul class="navigation">' . $nl
                   . '    <li>' . $nl
@@ -406,14 +406,14 @@ class Zend_View_Helper_Navigation_NavigationTest
             'My_View_Helper_Navigation'
         );
         
-        $expected = array(
-            'Zend_View_Helper_' => array(
+        $expected = [
+            'Zend_View_Helper_' => [
                 'Zend/View/Helper/',
-            ),
-            'My_View_Helper_Navigation_' => array(
+            ],
+            'My_View_Helper_Navigation_' => [
                 $this->_files . '/helpers/',
-            ),
-        );
+            ],
+        ];
         
         $this->assertSame($expected, $this->_helper->view->getHelperPaths());
     }
@@ -436,28 +436,28 @@ class Zend_View_Helper_Navigation_NavigationTest
      */
     public function testRenderInvisibleItem()
     {
-        $container = new Zend_Navigation(array(
-            array(
+        $container = new Zend_Navigation([
+            [
                 'label' => 'Page 1',
                 'id'    => 'p1',
                 'uri'   => 'p1'
-            ),
-            array(
+            ],
+            [
                 'label'   => 'Page 2',
                 'id'      => 'p2',
                 'uri'     => 'p2',
                 'visible' => false
-            )
-        ));
+            ]
+        ]);
 
         $render = $this->_helper->menu()->render($container);
 
-        $this->assertFalse(strpos($render, 'p2'));
+        $this->assertFalse(strpos((string) $render, 'p2'));
 
         $this->_helper->menu()->setRenderInvisible();
 
         $render = $this->_helper->menu()->render($container);
 
-        $this->assertTrue(strpos($render, 'p2') !== false);
+        $this->assertTrue(str_contains((string) $render, 'p2'));
     }
 }

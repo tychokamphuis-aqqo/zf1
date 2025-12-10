@@ -23,7 +23,7 @@
 /**
  * Zend_Ldap_OnlineTestCase
  */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'OnlineTestCase.php';
+require_once dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'OnlineTestCase.php';
 /**
  * @see Zend_Ldap_Node
  */
@@ -40,12 +40,14 @@ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'OnlineTestCase.
  */
 class Zend_Ldap_Node_ChildrenIterationTest extends Zend_Ldap_OnlineTestCase
 {
+    #[\Override]
     protected function setUp()
     {
         parent::setUp();
         $this->_prepareLdapServer();
     }
 
+    #[\Override]
     protected function tearDown()
     {
         $this->_cleanupLdapServer();
@@ -117,7 +119,7 @@ class Zend_Ldap_Node_ChildrenIterationTest extends Zend_Ldap_OnlineTestCase
     {
         $node = $this->_getLdap()->getBaseNode();
         $nodes = $node->searchChildren('(objectClass=*)');
-        foreach ($nodes as $rdn => $n) {
+        foreach ($nodes as $n) {
             // do nothing - just iterate
         }
         $nodes->next();

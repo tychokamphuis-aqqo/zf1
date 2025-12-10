@@ -52,6 +52,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return void
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     protected function _prepare($sql)
     {
         try {
@@ -72,6 +73,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function bindColumn($column, &$param, $type = null)
     {
         try {
@@ -105,7 +107,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
                     $type = PDO::PARAM_BOOL;
                 } elseif ($variable === null) {
                     $type = PDO::PARAM_NULL;
-                } elseif (is_integer($variable)) {
+                } elseif (is_int($variable)) {
                     $type = PDO::PARAM_INT;
                 } else {
                     $type = PDO::PARAM_STR;
@@ -127,6 +129,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function bindValue($parameter, $value, $type = null)
     {
         if (is_string($parameter) && $parameter[0] != ':') {
@@ -221,7 +224,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
-    public function _execute(array $params = null)
+    public function _execute(?array $params = null)
     {
         try {
             if ($params !== null) {
@@ -283,6 +286,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return array Collection of rows, each in a format by the fetch mode.
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function fetchAll($style = null, $col = null)
     {
         if ($style === null) {
@@ -313,6 +317,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return string
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function fetchColumn($col = 0)
     {
         try {
@@ -331,7 +336,8 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return mixed One object instance of the specified class.
      * @throws Zend_Db_Statement_Exception
      */
-    public function fetchObject($class = 'stdClass', array $config = array())
+    #[\Override]
+    public function fetchObject($class = 'stdClass', array $config = [])
     {
         try {
             return $this->_stmt->fetchObject($class, $config);
@@ -348,6 +354,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return mixed      Attribute value.
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function getAttribute($key)
     {
         try {
@@ -419,6 +426,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function setAttribute($key, $val)
     {
         try {
@@ -436,6 +444,7 @@ class Zend_Db_Statement_Pdo extends Zend_Db_Statement implements IteratorAggrega
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function setFetchMode($mode)
     {
         $this->_fetchMode = $mode;

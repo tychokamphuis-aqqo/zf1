@@ -56,23 +56,23 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
             // require_once 'Zend/Loader.php';
             try {
                 @Zend_Loader::loadClass('Archive_Tar');
-            } catch (Zend_Exception $e) {
+            } catch (Zend_Exception) {
                 $this->markTestSkipped('This filter needs PEARs Archive_Tar');
             }
         }
 
-        $files = array(
-            dirname(__FILE__) . '/../_files/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First',
-            dirname(__FILE__) . '/../_files/_compress/Compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress',
-            dirname(__FILE__) . '/../_files/_compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress',
-            dirname(__FILE__) . '/../_files/compressed.tar'
-        );
+        $files = [
+            __DIR__ . '/../_files/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second',
+            __DIR__ . '/../_files/_compress/Compress/First/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First',
+            __DIR__ . '/../_files/_compress/Compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress',
+            __DIR__ . '/../_files/_compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress',
+            __DIR__ . '/../_files/compressed.tar'
+        ];
 
         foreach($files as $file) {
             if (file_exists($file)) {
@@ -94,18 +94,18 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $files = array(
-            dirname(__FILE__) . '/../_files/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First',
-            dirname(__FILE__) . '/../_files/_compress/Compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress',
-            dirname(__FILE__) . '/../_files/_compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress',
-            dirname(__FILE__) . '/../_files/compressed.tar'
-        );
+        $files = [
+            __DIR__ . '/../_files/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second',
+            __DIR__ . '/../_files/_compress/Compress/First/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First',
+            __DIR__ . '/../_files/_compress/Compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress',
+            __DIR__ . '/../_files/_compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress',
+            __DIR__ . '/../_files/compressed.tar'
+        ];
 
         foreach($files as $file) {
             if (file_exists($file)) {
@@ -133,19 +133,19 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
     public function testBasicUsage()
     {
         $filter  = new Zend_Filter_Compress_Tar(
-            array(
-                'archive'  => dirname(__FILE__) . '/../_files/compressed.tar',
-                'target'   => dirname(__FILE__) . '/../_files/zipextracted.txt'
-            )
+            [
+                'archive'  => __DIR__ . '/../_files/compressed.tar',
+                'target'   => __DIR__ . '/../_files/zipextracted.txt'
+            ]
         );
 
         $content = $filter->compress('compress me');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.tar', $content);
 
         $content = $filter->decompress($content);
         $this->assertTrue($content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zipextracted.txt');
+        $content = file_get_contents(__DIR__ . '/../_files/zipextracted.txt');
         $this->assertEquals('compress me', $content);
     }
 
@@ -158,20 +158,20 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
     {
         $filter = new Zend_Filter_Compress_Tar();
         $this->assertEquals(
-            array(
+            [
                 'archive' => null,
                 'target'  => '.',
-                'mode'    => null),
+                'mode'    => null],
             $filter->getOptions()
         );
 
         $this->assertEquals(null, $filter->getOptions('archive'));
 
         $this->assertNull($filter->getOptions('nooption'));
-        $filter->setOptions(array('nooptions' => 'foo'));
+        $filter->setOptions(['nooptions' => 'foo']);
         $this->assertNull($filter->getOptions('nooption'));
 
-        $filter->setOptions(array('archive' => 'temp.txt'));
+        $filter->setOptions(['archive' => 'temp.txt']);
         $this->assertEquals('temp.txt', $filter->getOptions('archive'));
     }
 
@@ -218,20 +218,20 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
     public function testTarCompressToFile()
     {
         $filter  = new Zend_Filter_Compress_Tar(
-            array(
-                'archive'  => dirname(__FILE__) . '/../_files/compressed.tar',
-                'target'   => dirname(__FILE__) . '/../_files/zipextracted.txt'
-            )
+            [
+                'archive'  => __DIR__ . '/../_files/compressed.tar',
+                'target'   => __DIR__ . '/../_files/zipextracted.txt'
+            ]
         );
-        file_put_contents(dirname(__FILE__) . '/../_files/zipextracted.txt', 'compress me');
+        file_put_contents(__DIR__ . '/../_files/zipextracted.txt', 'compress me');
 
-        $content = $filter->compress(dirname(__FILE__) . '/../_files/zipextracted.txt');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $content = $filter->compress(__DIR__ . '/../_files/zipextracted.txt');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.tar', $content);
 
         $content = $filter->decompress($content);
         $this->assertTrue($content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zipextracted.txt');
+        $content = file_get_contents(__DIR__ . '/../_files/zipextracted.txt');
         $this->assertEquals('compress me', $content);
     }
 
@@ -243,13 +243,13 @@ class Zend_Filter_Compress_TarTest extends PHPUnit_Framework_TestCase
     public function testTarCompressDirectory()
     {
         $filter  = new Zend_Filter_Compress_Tar(
-            array(
-                'archive'  => dirname(__FILE__) . '/../_files/compressed.tar',
-                'target'   => dirname(__FILE__) . '/../_files/_compress'
-            )
+            [
+                'archive'  => __DIR__ . '/../_files/compressed.tar',
+                'target'   => __DIR__ . '/../_files/_compress'
+            ]
         );
-        $content = $filter->compress(dirname(__FILE__) . '/../_files/Compress');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $content = $filter->compress(__DIR__ . '/../_files/Compress');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.tar', $content);
     }
 

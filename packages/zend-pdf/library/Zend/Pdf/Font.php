@@ -417,14 +417,14 @@ abstract class Zend_Pdf_Font
      * The values are the font objects themselves.
      * @var array
      */
-    private static $_fontNames = array();
+    private static $_fontNames = [];
 
     /**
      * Array whose keys are the md5 hash of the full paths on disk for parsed
      * fonts. The values are the font objects themselves.
      * @var array
      */
-    private static $_fontFilePaths = array();
+    private static $_fontFilePaths = [];
 
 
 
@@ -479,82 +479,39 @@ abstract class Zend_Pdf_Font
         /* Not an existing font and no mapping in the config file. Check to see
          * if this is one of the standard 14 PDF fonts.
          */
-        switch ($name) {
-            case Zend_Pdf_Font::FONT_COURIER:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Courier.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_Courier();
-                break;
-
-            case Zend_Pdf_Font::FONT_COURIER_BOLD:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierBold.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_CourierBold();
-                break;
-
-            case Zend_Pdf_Font::FONT_COURIER_OBLIQUE:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierOblique.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_CourierOblique();
-                break;
-
-            case Zend_Pdf_Font::FONT_COURIER_BOLD_OBLIQUE:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierBoldOblique.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_CourierBoldOblique();
-                break;
-
-            case Zend_Pdf_Font::FONT_HELVETICA:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Helvetica.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_Helvetica();
-                break;
-
-            case Zend_Pdf_Font::FONT_HELVETICA_BOLD:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaBold.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaBold();
-                break;
-
-            case Zend_Pdf_Font::FONT_HELVETICA_OBLIQUE:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaOblique.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaOblique();
-                break;
-
-            case Zend_Pdf_Font::FONT_HELVETICA_BOLD_OBLIQUE:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaBoldOblique.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaBoldOblique();
-                break;
-
-            case Zend_Pdf_Font::FONT_SYMBOL:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Symbol.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_Symbol();
-                break;
-
-            case Zend_Pdf_Font::FONT_TIMES_ROMAN:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesRoman.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_TimesRoman();
-                break;
-
-            case Zend_Pdf_Font::FONT_TIMES_BOLD:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesBold.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_TimesBold();
-                break;
-
-            case Zend_Pdf_Font::FONT_TIMES_ITALIC:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesItalic.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_TimesItalic();
-                break;
-
-            case Zend_Pdf_Font::FONT_TIMES_BOLD_ITALIC:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesBoldItalic.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_TimesBoldItalic();
-                break;
-
-            case Zend_Pdf_Font::FONT_ZAPFDINGBATS:
-                // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/ZapfDingbats.php';
-                $font = new Zend_Pdf_Resource_Font_Simple_Standard_ZapfDingbats();
-                break;
-
-            default:
-                // require_once 'Zend/Pdf/Exception.php';
-                throw new Zend_Pdf_Exception("Unknown font name: $name",
-                                             Zend_Pdf_Exception::BAD_FONT_NAME);
-        }
+        $font = match ($name) {
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Courier.php';
+            Zend_Pdf_Font::FONT_COURIER => new Zend_Pdf_Resource_Font_Simple_Standard_Courier(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierBold.php';
+            Zend_Pdf_Font::FONT_COURIER_BOLD => new Zend_Pdf_Resource_Font_Simple_Standard_CourierBold(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierOblique.php';
+            Zend_Pdf_Font::FONT_COURIER_OBLIQUE => new Zend_Pdf_Resource_Font_Simple_Standard_CourierOblique(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/CourierBoldOblique.php';
+            Zend_Pdf_Font::FONT_COURIER_BOLD_OBLIQUE => new Zend_Pdf_Resource_Font_Simple_Standard_CourierBoldOblique(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Helvetica.php';
+            Zend_Pdf_Font::FONT_HELVETICA => new Zend_Pdf_Resource_Font_Simple_Standard_Helvetica(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaBold.php';
+            Zend_Pdf_Font::FONT_HELVETICA_BOLD => new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaBold(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaOblique.php';
+            Zend_Pdf_Font::FONT_HELVETICA_OBLIQUE => new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaOblique(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/HelveticaBoldOblique.php';
+            Zend_Pdf_Font::FONT_HELVETICA_BOLD_OBLIQUE => new Zend_Pdf_Resource_Font_Simple_Standard_HelveticaBoldOblique(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/Symbol.php';
+            Zend_Pdf_Font::FONT_SYMBOL => new Zend_Pdf_Resource_Font_Simple_Standard_Symbol(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesRoman.php';
+            Zend_Pdf_Font::FONT_TIMES_ROMAN => new Zend_Pdf_Resource_Font_Simple_Standard_TimesRoman(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesBold.php';
+            Zend_Pdf_Font::FONT_TIMES_BOLD => new Zend_Pdf_Resource_Font_Simple_Standard_TimesBold(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesItalic.php';
+            Zend_Pdf_Font::FONT_TIMES_ITALIC => new Zend_Pdf_Resource_Font_Simple_Standard_TimesItalic(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/TimesBoldItalic.php';
+            Zend_Pdf_Font::FONT_TIMES_BOLD_ITALIC => new Zend_Pdf_Resource_Font_Simple_Standard_TimesBoldItalic(),
+            // require_once 'Zend/Pdf/Resource/Font/Simple/Standard/ZapfDingbats.php';
+            Zend_Pdf_Font::FONT_ZAPFDINGBATS => new Zend_Pdf_Resource_Font_Simple_Standard_ZapfDingbats(),
+            // require_once 'Zend/Pdf/Exception.php';
+            default => throw new Zend_Pdf_Exception("Unknown font name: $name",
+                                         Zend_Pdf_Exception::BAD_FONT_NAME),
+        };
 
         /* Add this new font to the cache array and return it for use.
          */
@@ -610,18 +567,13 @@ abstract class Zend_Pdf_Font
         /* If it turns out that the file is named improperly and we guess the
          * wrong type, we'll get null instead of a font object.
          */
-        switch ($fileExtension) {
-            case 'ttf':
-                $font = Zend_Pdf_Font::_extractTrueTypeFont($dataSource, $embeddingOptions);
-                break;
-
-            default:
-                /* Unrecognized extension. Try to determine the type by actually
-                 * parsing it below.
-                 */
-                $font = null;
-                break;
-        }
+        $font = match ($fileExtension) {
+            'ttf' => Zend_Pdf_Font::_extractTrueTypeFont($dataSource, $embeddingOptions),
+            /* Unrecognized extension. Try to determine the type by actually
+             * parsing it below.
+             */
+            default => null,
+        };
 
 
         if ($font === null) {

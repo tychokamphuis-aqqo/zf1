@@ -47,7 +47,7 @@ class Zend_Translate_Adapter_Tmx extends Zend_Translate_Adapter {
     private $_tuv     = null;
     private $_seg     = null;
     private $_content = null;
-    private $_data    = array();
+    private $_data    = [];
 
     /**
      * Load translation data (TMX file reader)
@@ -59,16 +59,16 @@ class Zend_Translate_Adapter_Tmx extends Zend_Translate_Adapter {
      * @throws Zend_Translation_Exception
      * @return array
      */
-    protected function _loadTranslationData($filename, $locale, array $options = array())
+    protected function _loadTranslationData($filename, $locale, array $options = [])
     {
-        $this->_data = array();
+        $this->_data = [];
         if (!is_readable($filename)) {
             // require_once 'Zend/Translate/Exception.php';
             throw new Zend_Translate_Exception('Translation file \'' . $filename . '\' is not readable.');
         }
 
         if (isset($options['useId'])) {
-            $this->_useId = (boolean) $options['useId'];
+            $this->_useId = (bool) $options['useId'];
         }
 
         $encoding = $this->_findEncoding($filename);
@@ -92,7 +92,6 @@ class Zend_Translate_Adapter_Tmx extends Zend_Translate_Adapter {
                           xml_error_string(xml_get_error_code($this->_file)),
                           xml_get_current_line_number($this->_file),
                           $filename);
-            xml_parser_free($this->_file);
             // require_once 'Zend/Translate/Exception.php';
             throw new Zend_Translate_Exception($ex);
         }
@@ -156,7 +155,7 @@ class Zend_Translate_Adapter_Tmx extends Zend_Translate_Adapter {
                         }
 
                         if (!isset($this->_data[$this->_tuv])) {
-                            $this->_data[$this->_tuv] = array();
+                            $this->_data[$this->_tuv] = [];
                         }
                     }
                     break;
@@ -228,7 +227,7 @@ class Zend_Translate_Adapter_Tmx extends Zend_Translate_Adapter {
     protected function _findEncoding($filename)
     {
         $file = file_get_contents($filename, false, null, 0, 100);
-        if (strpos($file, "encoding") !== false) {
+        if (str_contains($file, "encoding")) {
             $encoding = substr($file, strpos($file, "encoding") + 9);
             $encoding = substr($encoding, 1, strpos($encoding, $encoding[0], 1) - 1);
             return $encoding;

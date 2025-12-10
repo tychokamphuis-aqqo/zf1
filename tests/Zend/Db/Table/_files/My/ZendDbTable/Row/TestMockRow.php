@@ -48,20 +48,23 @@ class My_ZendDbTable_Row_TestMockRow extends Zend_Db_Table_Row_Abstract
     public $callerRefRuleKey  = null;
     public $matchRefRuleKey   = null;
 
-    public function findDependentRowset($dependentTable, $ruleKey = null, Zend_Db_Table_Select $select = null)
+    #[\Override]
+    public function findDependentRowset($dependentTable, $ruleKey = null, ?Zend_Db_Table_Select $select = null)
     {
         $this->dependentTable    = $dependentTable;
         $this->ruleKey           = $ruleKey;
     }
 
-    public function findParentRow($parentTable, $ruleKey = null, Zend_Db_Table_Select $select = null)
+    #[\Override]
+    public function findParentRow($parentTable, $ruleKey = null, ?Zend_Db_Table_Select $select = null)
     {
         $this->parentTable       = $parentTable;
         $this->ruleKey           = $ruleKey;
     }
 
+    #[\Override]
     public function findManyToManyRowset($matchTable, $intersectionTable, $callerRefRule = null,
-                                         $matchRefRule = null, Zend_Db_Table_Select $select = null)
+                                         $matchRefRule = null, ?Zend_Db_Table_Select $select = null)
     {
         $this->matchTable        = $matchTable;
         $this->intersectionTable = $intersectionTable;
@@ -69,10 +72,11 @@ class My_ZendDbTable_Row_TestMockRow extends Zend_Db_Table_Row_Abstract
         $this->matchRefRuleKey   = $matchRefRule;
     }
 
+    #[\Override]
     protected function _transformColumn($columnName)
     {
         // convert 'columnFoo' to 'column_foo'
-        $columnName = strtolower(preg_replace('/([A-Z])/', '_$1', $columnName));
+        $columnName = strtolower((string) preg_replace('/([A-Z])/', '_$1', $columnName));
         return $columnName;
     }
 

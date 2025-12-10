@@ -35,11 +35,6 @@ class Zend_Application
     protected $_autoloader;
 
     /**
-     * @var bool|null
-     */
-    protected $_suppressNotFoundWarnings;
-
-    /**
      * Bootstrap
      *
      * @var Zend_Application_Bootstrap_BootstrapAbstract
@@ -58,14 +53,14 @@ class Zend_Application
      *
      * @var array
      */
-    protected $_optionKeys = array();
+    protected $_optionKeys = [];
 
     /**
      * Options for Zend_Application
      *
      * @var array
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      * Constructor
@@ -75,14 +70,13 @@ class Zend_Application
      *
      * @param  string                   $environment
      * @param  string|array|Zend_Config $options String path to configuration file, or array/Zend_Config of configuration options
-     * @param bool $suppressNotFoundWarnings Should warnings be suppressed when a file is not found during autoloading?
+     * @param bool $_suppressNotFoundWarnings Should warnings be suppressed when a file is not found during autoloading?
      * @throws Zend_Application_Exception When invalid options are provided
      * @return void
      */
-    public function __construct($environment, $options = null, $suppressNotFoundWarnings = null)
+    public function __construct($environment, $options = null, protected $_suppressNotFoundWarnings = null)
     {
         $this->_environment = (string) $environment;
-        $this->_suppressNotFoundWarnings = $suppressNotFoundWarnings;
 
         if (null !== $options) {
             if (is_string($options)) {
@@ -137,7 +131,7 @@ class Zend_Application
     {
         if (!empty($options['config'])) {
             if (is_array($options['config'])) {
-                $_options = array();
+                $_options = [];
                 foreach ($options['config'] as $tmp) {
                     $_options = $this->mergeOptions(
                         $_options, $this->_loadConfig($tmp)
@@ -259,7 +253,7 @@ class Zend_Application
         if (is_array($array2)) {
             foreach ($array2 as $key => $val) {
                 if (is_array($array2[$key])) {
-                    $array1[$key] = (array_key_exists($key, $array1) && is_array($array1[$key]))
+                    $array1[$key] = (array_key_exists((string) $key, $array1) && is_array($array1[$key]))
                                   ? $this->mergeOptions($array1[$key], $array2[$key])
                                   : $array2[$key];
                 } else {

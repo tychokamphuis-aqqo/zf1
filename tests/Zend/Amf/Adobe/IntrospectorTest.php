@@ -47,7 +47,7 @@ class Zend_Amf_Adobe_IntrospectorTest extends PHPUnit_Framework_TestCase
 
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -93,17 +93,17 @@ class Zend_Amf_Adobe_IntrospectorTest extends PHPUnit_Framework_TestCase
     public function testIntrospectionContainsOperationForEachPrototypeOfAPublicMethod()
     {
         $xml = $this->introspector->introspect('com.zend.framework.IntrospectorTest');
-        $this->assertEquals(4, substr_count($xml, 'name="foobar"'));
-        $this->assertEquals(1, substr_count($xml, 'name="barbaz"'));
-        $this->assertEquals(1, substr_count($xml, 'name="bazbat"'));
+        $this->assertEquals(4, substr_count((string) $xml, 'name="foobar"'));
+        $this->assertEquals(1, substr_count((string) $xml, 'name="barbaz"'));
+        $this->assertEquals(1, substr_count((string) $xml, 'name="bazbat"'));
     }
 
     public function testPassingDirectoriesOptionShouldResolveServiceClassAndType()
     {
-        require_once dirname(__FILE__) . '/_files/ZendAmfAdobeIntrospectorTestType.php';
-        $xml = $this->introspector->introspect('ZendAmfAdobeIntrospectorTest', array(
-            'directories' => array(dirname(__FILE__) . '/_files'),
-        ));
+        require_once __DIR__ . '/_files/ZendAmfAdobeIntrospectorTestType.php';
+        $xml = $this->introspector->introspect('ZendAmfAdobeIntrospectorTest', [
+            'directories' => [__DIR__ . '/_files'],
+        ]);
         $this->assertRegexp('/<operation[^>]*(name="foo")/', $xml, $xml);
         $this->assertRegexp('/<type[^>]*(name="ZendAmfAdobeIntrospectorTestType")/', $xml, $xml);
         $this->assertRegexp('/<property[^>]*(name="bar")/', $xml, $xml);
@@ -112,7 +112,7 @@ class Zend_Amf_Adobe_IntrospectorTest extends PHPUnit_Framework_TestCase
     public function testMissingPropertyDocblockInTypedClassShouldReportTypeAsUnknown()
     {
         $xml = $this->introspector->introspect('com.zend.framework.IntrospectorTest');
-        if (!preg_match('/(<property[^>]*(name="baz")[^>]*>)/', $xml, $matches)) {
+        if (!preg_match('/(<property[^>]*(name="baz")[^>]*>)/', (string) $xml, $matches)) {
             $this->fail('Baz property of com.zend.framework.IntrospectorTestCustomType not found');
         }
         $node = $matches[1];
@@ -122,7 +122,7 @@ class Zend_Amf_Adobe_IntrospectorTest extends PHPUnit_Framework_TestCase
     public function testPropertyDocblockWithoutAnnotationInTypedClassShouldReportTypeAsUnknown()
     {
         $xml = $this->introspector->introspect('com.zend.framework.IntrospectorTest');
-        if (!preg_match('/(<property[^>]*(name="bat")[^>]*>)/', $xml, $matches)) {
+        if (!preg_match('/(<property[^>]*(name="bat")[^>]*>)/', (string) $xml, $matches)) {
             $this->fail('Bat property of com.zend.framework.IntrospectorTestCustomType not found');
         }
         $node = $matches[1];
@@ -140,7 +140,7 @@ class Zend_Amf_Adobe_IntrospectorTest extends PHPUnit_Framework_TestCase
      */
     public function testArgumentsWithArrayTypeHintsReflectedInReturnedXml()
     {
-        require_once dirname(__FILE__) . '/TestAsset/ParameterHints.php';
+        require_once __DIR__ . '/TestAsset/ParameterHints.php';
         $xml = $this->introspector->introspect('Zend.Amf.Adobe.TestAsset.ParameterHints');
         $this->assertRegexp('/<argument[^>]*(name="arg1")[^>]*(type="Unknown\[\]")/', $xml, $xml);
         $this->assertRegexp('/<argument[^>]*(name="arg2")[^>]*(type="Unknown\[\]")/', $xml, $xml);

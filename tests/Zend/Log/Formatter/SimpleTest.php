@@ -39,7 +39,7 @@ class Zend_Log_Formatter_SimpleTest extends PHPUnit_Framework_TestCase
 {
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -56,10 +56,10 @@ class Zend_Log_Formatter_SimpleTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultFormat()
     {
-        $fields = array('timestamp'    => 0,
+        $fields = ['timestamp'    => 0,
                         'message'      => 'foo',
                         'priority'     => 42,
-                        'priorityName' => 'bar');
+                        'priorityName' => 'bar'];
 
         $f = new Zend_Log_Formatter_Simple();
         $line = $f->format($fields);
@@ -72,9 +72,9 @@ class Zend_Log_Formatter_SimpleTest extends PHPUnit_Framework_TestCase
 
     function testComplexValues()
     {
-        $fields = array('timestamp'    => 0,
+        $fields = ['timestamp'    => 0,
                         'priority'     => 42,
-                        'priorityName' => 'bar');
+                        'priorityName' => 'bar'];
 
         $f = new Zend_Log_Formatter_Simple();
 
@@ -117,17 +117,17 @@ class Zend_Log_Formatter_SimpleTest extends PHPUnit_Framework_TestCase
      */
     public function testFactory()
     {
-        $options = array(
+        $options = [
             'format' => '%timestamp% [%priority%]: %message% -- %info%'
-        );
+        ];
         $formatter = Zend_Log_Formatter_Simple::factory($options);
         $this->assertTrue($formatter instanceof Zend_Log_Formatter_Simple);
     }
 }
 
-class Zend_Log_Formatter_SimpleTest_TestObject1 {
+class Zend_Log_Formatter_SimpleTest_TestObject1 implements \Stringable {
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'Hello World';
     }

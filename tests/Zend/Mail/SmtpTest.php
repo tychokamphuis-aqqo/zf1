@@ -47,11 +47,11 @@ class Zend_Mail_SmtpTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_params = array('host'     => TESTS_ZEND_MAIL_SMTP_HOST,
+        $this->_params = ['host'     => TESTS_ZEND_MAIL_SMTP_HOST,
                                'port'     => TESTS_ZEND_MAIL_SMTP_PORT,
                                'username' => TESTS_ZEND_MAIL_SMTP_USER,
                                'password' => TESTS_ZEND_MAIL_SMTP_PASSWORD,
-                               'auth'     => TESTS_ZEND_MAIL_SMTP_AUTH);
+                               'auth'     => TESTS_ZEND_MAIL_SMTP_AUTH];
     }
 
     public function testTransportSetup()
@@ -65,7 +65,7 @@ class Zend_Mail_SmtpTest extends PHPUnit_Framework_TestCase
         try {
             $this->_connection = new Zend_Mail_Protocol_Smtp($this->_params['host'], $this->_params['port']);
             $this->_transport->setConnection($this->_connection);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while setting smtp transport connection');
         }
 

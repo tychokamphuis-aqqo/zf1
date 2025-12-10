@@ -61,10 +61,11 @@ class Zend_Cloud_QueueService_Adapter_ZendQueueTest
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
+    #[\Override]
     public function testPeekMessages()
     {
         $this->markTestSkipped('ZendQueue does not currently support peeking messages');
@@ -72,10 +73,10 @@ class Zend_Cloud_QueueService_Adapter_ZendQueueTest
 
     protected function _getConfig()
     {
-        $config = new Zend_Config(array(
+        $config = new Zend_Config([
             Zend_Cloud_QueueService_Factory::QUEUE_ADAPTER_KEY => 'Zend_Cloud_QueueService_Adapter_ZendQueue',
             Zend_Cloud_QueueService_Adapter_ZendQueue::ADAPTER => 'Array'
-        ));
+        ]);
 
         return $config;
     }

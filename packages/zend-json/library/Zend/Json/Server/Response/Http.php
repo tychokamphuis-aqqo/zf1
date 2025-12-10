@@ -39,6 +39,7 @@ class Zend_Json_Server_Response_Http extends Zend_Json_Server_Response
      *
      * @return string
      */
+    #[\Override]
     public function toJson()
     {
         $this->sendHeaders();

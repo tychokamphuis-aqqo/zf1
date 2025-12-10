@@ -28,7 +28,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
  * Test helpers
  */
 // require_once dirname(__FILE__) . '/../../../TestHelper.php';
-require_once dirname(__FILE__) . '/../../../TestConfiguration.dist.php';
+require_once __DIR__ . '/../../../TestConfiguration.dist.php';
 
 /** Zend_Service_WindowsAzure_Storage_Blob */
 // require_once 'Zend/Service/WindowsAzure/Storage/Blob.php';
@@ -47,7 +47,7 @@ class Zend_Service_WindowsAzure_BlobStreamTest extends PHPUnit_Framework_TestCas
     
     public function __construct()
     {
-        self::$path = dirname(__FILE__).'/_files/';
+        self::$path = __DIR__.'/_files/';
     }
     
     public static function main()
@@ -74,7 +74,7 @@ class Zend_Service_WindowsAzure_BlobStreamTest extends PHPUnit_Framework_TestCas
         for ($i = 1; $i <= self::$uniqId; $i++)
         {
             try { $storageClient->deleteContainer(TESTS_ZEND_SERVICE_WINDOWSAZURE_BLOBSTREAM_CONTAINER_PREFIX . $i); } catch (Exception $e) { }
-            try { $storageClient->unregisterStreamWrapper('azure'); } catch (Exception $e) { }
+            try { $storageClient->unregisterStreamWrapper('azure'); } catch (Exception) { }
         }
     }
 
@@ -290,7 +290,7 @@ class Zend_Service_WindowsAzure_BlobStreamTest extends PHPUnit_Framework_TestCas
   
             $storageClient->registerStreamWrapper();
             
-            $result2 = array();
+            $result2 = [];
             if ($handle = opendir('azure://' . $containerName)) {
                 while (false !== ($file = readdir($handle))) {
                     $result2[] = $file;

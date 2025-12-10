@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/SocketTest.php';
+require_once __DIR__ . '/SocketTest.php';
 
 // require_once 'Zend/Http/Client/Adapter/Proxy.php';
 
@@ -47,12 +47,13 @@ class Zend_Http_Client_ProxyAdapterTest extends Zend_Http_Client_SocketTest
      *
      * @var array
      */
+    #[\Override]
     protected function setUp()
     {
         if (defined('TESTS_ZEND_HTTP_CLIENT_HTTP_PROXY') &&
               TESTS_ZEND_HTTP_CLIENT_HTTP_PROXY) {
 
-            list($host, $port) = explode(':', TESTS_ZEND_HTTP_CLIENT_HTTP_PROXY, 2);
+            [$host, $port] = explode(':', TESTS_ZEND_HTTP_CLIENT_HTTP_PROXY, 2);
 
             if (! $host)
                 $this->markTestSkipped("No valid proxy host name or address specified.");
@@ -76,13 +77,13 @@ class Zend_Http_Client_ProxyAdapterTest extends Zend_Http_Client_SocketTest
                     $pass = TESTS_ZEND_HTTP_CLIENT_HTTP_PROXY_PASS;
 
 
-            $this->config = array(
+            $this->config = [
                 'adapter'    => 'Zend_Http_Client_Adapter_Proxy',
                 'proxy_host' => $host,
                 'proxy_port' => $port,
                 'proxy_user' => $user,
                 'proxy_pass' => $pass,
-            );
+            ];
 
             parent::setUp();
 
@@ -97,9 +98,9 @@ class Zend_Http_Client_ProxyAdapterTest extends Zend_Http_Client_SocketTest
      */
     public function testFallbackToSocket()
     {
-        $this->_adapter->setConfig(array(
+        $this->_adapter->setConfig([
             'proxy_host' => null,
-        ));
+        ]);
 
         $this->client->setUri($this->baseuri . 'testGetLastRequest.php');
         $res = $this->client->request(Zend_Http_Client::TRACE);
@@ -110,6 +111,7 @@ class Zend_Http_Client_ProxyAdapterTest extends Zend_Http_Client_SocketTest
         $this->assertEquals($this->client->getLastRequest(), $res->getBody(), 'Response body should be exactly like the last request');
     }
 
+    #[\Override]
     public function testGetLastRequest()
     {
         /**
@@ -190,7 +192,7 @@ class Zend_Http_Client_ProxyAdapterTest extends Zend_Http_Client_SocketTest
         print_r($this->client->getAdapter()->getLastConnectHandshakeRequest());
         
         $resp = $this->client->getAdapter()->getLastConnectHandshakeRequest();
-        $this->assertEquals(1, preg_match_all('/\r\nProxy-Authorization: ([^\r\n]+)\r\n/i', $resp, $matches));
+        $this->assertEquals(1, preg_match_all('/\r\nProxy-Authorization: ([^\r\n]+)\r\n/i', (string) $resp, $matches));
         $this->assertEquals('FooBarBaz', $matches[1][0]);
     }
     

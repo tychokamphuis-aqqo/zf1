@@ -124,7 +124,7 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
         try {
             $result = $this->_adapter->authenticate();
             $this->assertEquals(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
-        } catch (Zend_Auth_Exception $e) {
+        } catch (Zend_Auth_Exception) {
             $this->fail('Exception should have been thrown');
         }
     }
@@ -145,7 +145,7 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
         try {
             $result = $this->_adapter->authenticate();
             $this->assertEquals(Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS, $result->getCode());
-        } catch (Zend_Auth_Exception $e) {
+        } catch (Zend_Auth_Exception) {
             $this->fail('Exception should have been thrown');
         }
     }
@@ -186,7 +186,7 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
         $this->_adapter->setIdentity('my_username');
         $this->_adapter->setCredential('my_password');
         $result = $this->_adapter->authenticate();
-        $resultRow = $this->_adapter->getResultRowObject(array('username', 'real_name'));
+        $resultRow = $this->_adapter->getResultRowObject(['username', 'real_name']);
         $this->assertEquals('O:8:"stdClass":2:{s:8:"username";s:11:"my_username";s:9:"real_name";s:12:"My Real Name";}', serialize($resultRow));
     }
 
@@ -325,7 +325,7 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
     public function testDbTableAdapterUsesCaseFolding()
     {
         $this->tearDown();
-        $this->_setupDbAdapter(array(Zend_Db::CASE_FOLDING => Zend_Db::CASE_UPPER));
+        $this->_setupDbAdapter([Zend_Db::CASE_FOLDING => Zend_Db::CASE_UPPER]);
         $this->_setupAuthAdapter();
 
         $this->_adapter->setIdentity('my_username');
@@ -398,11 +398,11 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
      */
     public function testEqualUsernamesDifferentPasswordShouldNotAuthenticateWhenFlagIsNotSet()
     {
-        $this->_db->insert('users', array (
+        $this->_db->insert('users',  [
             'username' => 'my_username',
             'password' => 'my_otherpass',
             'real_name' => 'Test user 2',
-        ));
+        ]);
 
         // test if user 1 can authenticate
         $this->_adapter->setIdentity('my_username')
@@ -420,11 +420,11 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
      */
     public function testEqualUsernamesDifferentPasswordShouldAuthenticateWhenFlagIsSet()
     {
-        $this->_db->insert('users', array (
+        $this->_db->insert('users',  [
             'username' => 'my_username',
             'password' => 'my_otherpass',
             'real_name' => 'Test user 2',
-        ));
+        ]);
 
         // test if user 1 can authenticate
         $this->_adapter->setIdentity('my_username')
@@ -451,9 +451,9 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
     }
 
 
-    protected function _setupDbAdapter($optionalParams = array())
+    protected function _setupDbAdapter($optionalParams = [])
     {
-        $params = array('dbname' => TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_DATABASE);
+        $params = ['dbname' => TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_DATABASE];
 
         if (!empty($optionalParams)) {
             $params['options'] = $optionalParams;
@@ -484,6 +484,7 @@ class Zend_Auth_Adapter_DbTable_BasicSqliteTest extends PHPUnit_Framework_TestCa
 
 class Zend_Auth_Adapter_DbTable_BasicSqliteTest_Skip extends Zend_Auth_Adapter_DbTable_BasicSqliteTest
 {
+    #[\Override]
     public function setUp()
     {
         $this->markTestSkipped('Zend_Auth_Adapter_DbTable Sqlite tests are not enabled in TestConfiguration.php');

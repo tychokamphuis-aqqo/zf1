@@ -30,7 +30,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
  * Test helpers
  */
 // require_once dirname(__FILE__) . '/../../../../TestHelper.php';
-require_once dirname(__FILE__) . '/../../../../TestConfiguration.dist.php';
+require_once __DIR__ . '/../../../../TestConfiguration.dist.php';
 
 /** Zend_Service_WindowsAzure_Management_Client */
 // require_once 'Zend/Service/WindowsAzure/Management/Client.php';
@@ -51,7 +51,7 @@ class Zend_Service_WindowsAzure_Management_ManagementClientTest extends PHPUnit_
 	
     public function __construct()
     {
-        self::$path = dirname(__FILE__).'/_files/';
+        self::$path = __DIR__.'/_files/';
     }
     
     public static function main()
@@ -96,7 +96,7 @@ class Zend_Service_WindowsAzure_Management_ManagementClientTest extends PHPUnit_
         try { $managementClient->deleteHostedService(TESTS_ZEND_SERVICE_WINDOWSAZURE_MANAGEMENT_SERVICENAME); $managementClient->waitForOperation(); } catch (Exception $ex) { }
         
         // Remove affinity group
-        try { $managementClient->deleteAffinityGroup('test'); } catch (Exception $ex) { }
+        try { $managementClient->deleteAffinityGroup('test'); } catch (Exception) { }
     }
     
     protected function createStorageInstance()

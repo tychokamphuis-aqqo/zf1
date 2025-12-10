@@ -30,7 +30,7 @@
  */
 // require_once 'Zend/Paginator.php';
 
-require_once dirname(__FILE__) . '/DbSelectTest.php';
+require_once __DIR__ . '/DbSelectTest.php';
 
 /**
  * @category   Zend

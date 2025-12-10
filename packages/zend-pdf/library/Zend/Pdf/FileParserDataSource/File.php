@@ -159,7 +159,8 @@ class Zend_Pdf_FileParserDataSource_File extends Zend_Pdf_FileParserDataSource
      *
      * @return string
      */
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         return $this->_filePath;
     }
@@ -176,6 +177,7 @@ class Zend_Pdf_FileParserDataSource_File extends Zend_Pdf_FileParserDataSource
      * @param integer $offset Destination byte offset.
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function moveToOffset($offset)
     {
         if ($this->_offset == $offset) {

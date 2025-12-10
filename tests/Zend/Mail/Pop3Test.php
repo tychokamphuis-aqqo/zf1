@@ -49,9 +49,9 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_params = array('host'     => TESTS_ZEND_MAIL_POP3_HOST,
+        $this->_params = ['host'     => TESTS_ZEND_MAIL_POP3_HOST,
                                'user'     => TESTS_ZEND_MAIL_POP3_USER,
-                               'password' => TESTS_ZEND_MAIL_POP3_PASSWORD);
+                               'password' => TESTS_ZEND_MAIL_POP3_PASSWORD];
 
         if (defined('TESTS_ZEND_MAIL_SERVER_TESTDIR') && TESTS_ZEND_MAIL_SERVER_TESTDIR) {
             if (!file_exists(TESTS_ZEND_MAIL_SERVER_TESTDIR . DIRECTORY_SEPARATOR . 'inbox')
@@ -63,7 +63,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
             }
 
             $this->_cleanDir(TESTS_ZEND_MAIL_SERVER_TESTDIR);
-            $this->_copyDir(dirname(__FILE__) . '/_files/test.' . TESTS_ZEND_MAIL_SERVER_FORMAT,
+            $this->_copyDir(__DIR__ . '/_files/test.' . TESTS_ZEND_MAIL_SERVER_FORMAT,
                             TESTS_ZEND_MAIL_SERVER_TESTDIR);
         }
     }
@@ -109,7 +109,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
     {
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while loading connection to pop3 server');
         }
     }
@@ -118,7 +118,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
     {
         try {
             $mail = new Zend_Mail_Storage_Pop3(new Zend_Config($this->_params));
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while loading connection to pop3 server');
         }
     }
@@ -129,7 +129,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $this->_params['host'] = 'example.example';
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -140,8 +140,8 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
     public function testNoParams()
     {
         try {
-            $mail = new Zend_Mail_Storage_Pop3(array());
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Pop3([]);
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -157,7 +157,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $this->_params['ssl'] = 'SSL';
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while loading connection to pop3 server with SSL');
         }
     }
@@ -171,7 +171,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $this->_params['ssl'] = 'TLS';
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while loading connection to pop3 server with TLS');
         }
     }
@@ -182,7 +182,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -195,7 +195,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
         try {
             $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -208,7 +208,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
         try {
             $mail->close();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while closing pop3 connection');
         }
     }
@@ -233,7 +233,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
         try {
             $mail->noop();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while doing nothing (noop)');
         }
     }
@@ -249,7 +249,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
     public function testSize()
     {
         $mail = new Zend_Mail_Storage_Pop3($this->_params);
-        $shouldSizes = array(1 => 397, 89, 694, 452, 497, 101, 139);
+        $shouldSizes = [1 => 397, 89, 694, 452, 497, 101, 139];
 
 
         $sizes = $mail->getSize();
@@ -295,7 +295,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $mail = new Zend_Mail_Storage_Pop3($this->_params);
 
         $content = $mail->getMessage(3)->getContent();
-        list($content, ) = explode("\n", $content, 2);
+        [$content, ] = explode("\n", $content, 2);
         $this->assertEquals('Fair river! in thy bright, clear flow', trim($content));
     }
 
@@ -321,7 +321,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         try {
             // because we did no login this has to throw an exception
             $mail->getMessage(1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -334,7 +334,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $mail->close();
         try {
             $mail->getMessage(1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -394,7 +394,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
         $mail = new Zend_Mail_Storage_Pop3($this->_params);
         try {
             $mail->getNumberByUniqueId('this_is_an_invalid_id');
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -408,7 +408,7 @@ class Zend_Mail_Pop3Test extends PHPUnit_Framework_TestCase
 
         try {
             $protocol->readResponse();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 

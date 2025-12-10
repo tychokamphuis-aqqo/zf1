@@ -42,7 +42,7 @@ require_once 'Zend/Db/Adapter/TestCommon.php';
 class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -59,7 +59,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
         'DOUBLE PRECISION'   => Zend_Db::FLOAT_TYPE,
         'FIXED'              => Zend_Db::FLOAT_TYPE,
         'FLOAT'              => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Test AUTO_QUOTE_IDENTIFIERS option
@@ -68,13 +68,14 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * MySQL actually allows delimited identifiers to remain
      * case-insensitive, so this test overrides its parent.
      */
+    #[\Override]
     public function testAdapterAutoQuoteIdentifiersTrue()
     {
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::AUTO_QUOTE_IDENTIFIERS => true
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
         $db->getConnection();
 
@@ -93,11 +94,12 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
             $result2 = $stmt->fetchAll();
             $this->assertEquals(3, count($result2), 'Expected 3 rows in second query result');
             $this->assertEquals($result1, $result2);
-        } catch (Zend_Exception $e) {
+        } catch (Zend_Exception) {
             $this->fail('exception caught where none was expected.');
         }
     }
 
+    #[\Override]
     public function testAdapterInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences');
@@ -108,6 +110,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * and an alias, and returns each as delimited
      * identifiers, with 'AS' in between.
      */
+    #[\Override]
     public function testAdapterQuoteColumnAs()
     {
         $string = "foo";
@@ -121,6 +124,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * and an alias, but ignores the alias if it is
      * the same as the base identifier in the string.
      */
+    #[\Override]
     public function testAdapterQuoteColumnAsSameString()
     {
         $string = 'foo.bar';
@@ -133,6 +137,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * test that quoteIdentifier() accepts a string
      * and returns a delimited identifier.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifier()
     {
         $value = $this->_db->quoteIdentifier('table_name');
@@ -143,9 +148,10 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * test that quoteIdentifier() accepts an array
      * and returns a qualified delimited identifier.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierArray()
     {
-        $array = array('foo', 'bar');
+        $array = ['foo', 'bar'];
         $value = $this->_db->quoteIdentifier($array);
         $this->assertEquals('`foo`.`bar`', $value);
     }
@@ -155,10 +161,11 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * containing a Zend_Db_Expr, and returns strings
      * as delimited identifiers, and Exprs as unquoted.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierArrayDbExpr()
     {
         $expr = new Zend_Db_Expr('*');
-        $array = array('foo', $expr);
+        $array = ['foo', $expr];
         $value = $this->_db->quoteIdentifier($array);
         $this->assertEquals('`foo`.*', $value);
     }
@@ -167,6 +174,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * test that quoteIdentifer() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierDoubleQuote()
     {
         $string = 'table_"_name';
@@ -178,6 +186,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * test that quoteIdentifer() accepts an integer
      * and returns a delimited identifier as with a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierInteger()
     {
         $int = 123;
@@ -192,6 +201,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * delimited identifers, and returns the imploded
      * string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierQualified()
     {
         $string = 'table.column';
@@ -203,6 +213,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * test that quoteIdentifer() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIdentifierSingleQuote()
     {
         $string = "table_'_name";
@@ -215,6 +226,7 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
      * and returns each as delimited identifiers.
      * Most RDBMS want an 'AS' in between.
      */
+    #[\Override]
     public function testAdapterQuoteTableAs()
     {
         $string = "foo";
@@ -276,9 +288,9 @@ class Zend_Db_Adapter_MysqliTest extends Zend_Db_Adapter_TestCommon
     public function testMySqliInitCommand()
     {
         $params = $this->_util->getParams();
-        $params['driver_options'] = array(
+        $params['driver_options'] = [
             'mysqli_init_command' => 'SET AUTOCOMMIT=0;'
-        );
+        ];
 
         $db = Zend_Db::factory($this->getDriver(), $params);
 

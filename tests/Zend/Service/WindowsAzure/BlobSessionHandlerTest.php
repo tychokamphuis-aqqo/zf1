@@ -28,7 +28,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
  * Test helpers
  */
 // require_once dirname(__FILE__) . '/../../../TestHelper.php';
-require_once dirname(__FILE__) . '/../../../TestConfiguration.dist.php';
+require_once __DIR__ . '/../../../TestConfiguration.dist.php';
 
 /** Zend_Service_WindowsAzure_SessionHandler */
 // require_once 'Zend/Service/WindowsAzure/SessionHandler.php';
@@ -49,6 +49,7 @@ require_once 'Zend/Service/WindowsAzure/TableSessionHandlerTest.php';
  */
 class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_WindowsAzure_TableSessionHandlerTest
 {
+    #[\Override]
     public static function main()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {
@@ -60,15 +61,17 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test teardown
      */
+    #[\Override]
     protected function tearDown()
     {
         $storageClient = $this->createStorageInstance();
         for ($i = 1; $i <= self::$uniqId; $i++)
         {
-            try { $storageClient->deleteContainer(TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_TABLENAME_PREFIX . $i); } catch (Exception $e) { }
+            try { $storageClient->deleteContainer(TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_TABLENAME_PREFIX . $i); } catch (Exception) { }
         }
     }
     
+    #[\Override]
     protected function createStorageInstance()
     {
         $storageClient = null;
@@ -88,6 +91,7 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test open
      */
+    #[\Override]
     public function testOpen()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {
@@ -107,6 +111,7 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test write
      */
+    #[\Override]
     public function testWrite()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {
@@ -128,6 +133,7 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test write large
      */
+    #[\Override]
     public function testWriteLarge()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {
@@ -155,6 +161,7 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test destroy
      */
+    #[\Override]
     public function testDestroy()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {
@@ -178,6 +185,7 @@ class Zend_Service_WindowsAzure_BlobSessionHandlerTest extends Zend_Service_Wind
     /**
      * Test gc
      */
+    #[\Override]
     public function testGc()
     {
         if (TESTS_ZEND_SERVICE_WINDOWSAZURE_SESSIONHANDLER_RUNTESTS) {

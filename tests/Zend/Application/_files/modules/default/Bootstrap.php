@@ -35,6 +35,7 @@ class Bootstrap extends Zend_Application_Bootstrap_BootstrapAbstract
     {
     }
 
+    #[\Override]
     protected function _bootstrap($resource = null)
     {
         $this->bootstrapped = true;

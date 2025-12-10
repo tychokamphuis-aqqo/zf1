@@ -71,6 +71,7 @@ class Zend_Filter_File_Encrypt extends Zend_Filter_Encrypt
      * @param  string $value Full path of file to change
      * @return string The filename which has been set, or false when there were errors
      */
+    #[\Override]
     public function filter($value)
     {
         if (!file_exists($value)) {

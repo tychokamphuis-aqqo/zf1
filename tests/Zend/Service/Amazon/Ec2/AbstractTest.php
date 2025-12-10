@@ -57,7 +57,7 @@ class Zend_Service_Amazon_Ec2_AbstractTest extends PHPUnit_Framework_TestCase
         try {
             $class = new TestAmamzonEc2Abstract();
             $this->fail('Exception should be thrown when no keys are passed in.');
-        } catch(Zend_Service_Amazon_Exception $zsae) {}
+        } catch(Zend_Service_Amazon_Exception) {}
     }
 
     public function testSetRegion()
@@ -73,7 +73,7 @@ class Zend_Service_Amazon_Ec2_AbstractTest extends PHPUnit_Framework_TestCase
         try {
             TestAmamzonEc2Abstract::setRegion('eu-west-1a');
             $this->fail('Invalid Region Set with no Exception Thrown');
-        } catch (Zend_Service_Amazon_Exception $zsae) {
+        } catch (Zend_Service_Amazon_Exception) {
             // do nothing
         }
     }
@@ -81,7 +81,7 @@ class Zend_Service_Amazon_Ec2_AbstractTest extends PHPUnit_Framework_TestCase
     public function testSignParamsWithSpaceEncodesWithPercentInsteadOfPlus()
     {
         $class = new TestAmamzonEc2Abstract('TestAccessKey', 'TestSecretKey');
-        $ret = $class->testSign(array('Action' => 'Space Test'));
+        $ret = $class->testSign(['Action' => 'Space Test']);
 
         // this is the encode signuature with urlencode - It's Invalid!
         $invalidSignature = 'EeHAfo7cMcLyvH4SW4fEpjo51xJJ4ES1gdjRPxZTlto=';

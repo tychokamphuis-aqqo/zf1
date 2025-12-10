@@ -44,6 +44,7 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelect()
     {
         $select = $this->_select();
@@ -56,6 +57,7 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectQuery()
     {
         $select = $this->_select();
@@ -69,10 +71,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
     /**
      * ZF-2017: Test bind use of the Zend_Db_Select class.
      */
+    #[\Override]
     public function testSelectQueryWithBinds()
     {
         $select = $this->_select()->where('product_id = :product_id')
-                                  ->bind(array(':product_id' => 1));
+                                  ->bind([':product_id' => 1]);
 
         $sql = preg_replace('/\\s+/', ' ', $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE (product_id = :product_id)', $sql);
@@ -87,10 +90,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectColumnsScalar()
     {
         $select = $this->_selectColumnsScalar();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts"."product_name" FROM "zfproducts"', $sql);
     }
 
@@ -99,10 +103,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectColumnsArray()
     {
         $select = $this->_selectColumnsArray();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts"."product_id", "zfproducts"."product_name" FROM "zfproducts"', $sql);
     }
 
@@ -112,10 +117,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectColumnsAliases()
     {
         $select = $this->_selectColumnsAliases();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts"."product_name" AS "alias" FROM "zfproducts"', $sql);
     }
 
@@ -125,10 +131,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectColumnsQualified()
     {
         $select = $this->_selectColumnsQualified();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts"."product_name" FROM "zfproducts"', $sql);
     }
 
@@ -137,10 +144,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *
      * @return void
      */
+    #[\Override]
     public function testSelectColumnsExpr()
     {
         $select = $this->_selectColumnsExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts"."product_name" FROM "zfproducts"', $sql);
     }
 
@@ -151,10 +159,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * from('table', array(new Zend_Db_Expr('COUNT(*)')))
      */
 
+    #[\Override]
     public function testSelectColumnsAutoExpr()
     {
         $select = $this->_selectColumnsAutoExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT COUNT(*) AS "count" FROM "zfproducts"', $sql);
     }
 
@@ -162,10 +171,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding the DISTINCT query modifier to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectDistinctModifier()
     {
         $select = $this->_selectDistinctModifier();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT DISTINCT 327 FROM "zfproducts"', $sql);
     }
 
@@ -177,12 +187,13 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
     }
      */
 
+    #[\Override]
     public function testSelectColumnsReset()
     {
         $select = $this->_selectColumnsReset()
             ->reset(Zend_Db_Select::COLUMNS)
             ->columns('product_name');
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "p"."product_name" FROM "zfproducts" AS "p"', $sql);
     }
 
@@ -191,13 +202,15 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. from('schema.table').
      */
 
+    #[\Override]
     public function testSelectFromQualified()
     {
         $select = $this->_selectFromQualified();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "dummy"."zfproducts"', $sql);
     }
 
+    #[\Override]
     public function testSelectFromForUpdate()
     {
         $select = $this->_db->select()
@@ -211,10 +224,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a JOIN to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoin()
     {
         $select = $this->_selectJoin();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" INNER JOIN "zfbugs_products" ON "zfproducts"."product_id" = "zfbugs_products"."product_id"', $sql);
     }
 
@@ -223,10 +237,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * This should be exactly the same as the plain JOIN clause.
      */
 
+    #[\Override]
     public function testSelectJoinWithCorrelationName()
     {
         $select = $this->_selectJoinWithCorrelationName();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "xyz1".*, "xyz2".* FROM "zfproducts" AS "xyz1" INNER JOIN "zfbugs_products" AS "xyz2" ON "xyz1"."product_id" = "xyz2"."product_id" WHERE ("xyz1"."product_id" = 1)', $sql);
     }
 
@@ -235,10 +250,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * This should be exactly the same as the plain JOIN clause.
      */
 
+    #[\Override]
     public function testSelectJoinInner()
     {
         $select = $this->_selectJoinInner();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" INNER JOIN "zfbugs_products" ON "zfproducts"."product_id" = "zfbugs_products"."product_id"', $sql);
     }
 
@@ -246,10 +262,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding an outer join to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoinLeft()
     {
         $select = $this->_selectJoinLeft();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs".*, "zfbugs_products".* FROM "zfbugs" LEFT JOIN "zfbugs_products" ON "zfbugs"."bug_id" = "zfbugs_products"."bug_id"', $sql);
     }
 
@@ -257,10 +274,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding an outer join to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoinRight()
     {
         $select = $this->_selectJoinRight();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products".*, "zfbugs".* FROM "zfbugs_products" RIGHT JOIN "zfbugs" ON "zfbugs_products"."bug_id" = "zfbugs"."bug_id"', $sql);
     }
 
@@ -268,10 +286,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a cross join to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoinCross()
     {
         $select = $this->_selectJoinCross();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" CROSS JOIN "zfbugs_products"', $sql);
     }
 
@@ -280,10 +299,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. join('schema.table', 'condition')
      */
 
+    #[\Override]
     public function testSelectJoinQualified()
     {
         $select = $this->_selectJoinQualified();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" INNER JOIN "dummy"."zfbugs_products" ON "zfproducts"."product_id" = "zfbugs_products"."product_id"', $sql);
     }
 
@@ -291,10 +311,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a JOIN USING to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoinUsing()
     {
         $select = $this->_selectJoinUsing();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" INNER JOIN "zfbugs_products" ON "zfbugs_products"."product_id" = "zfproducts"."product_id" WHERE ("zfbugs_products"."product_id" < 3)', $sql);
     }
 
@@ -302,17 +323,19 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a JOIN INNER USING to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectJoinInnerUsing()
     {
         $select = $this->_selectJoinInnerUsing();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".*, "zfbugs_products".* FROM "zfproducts" INNER JOIN "zfbugs_products" ON "zfbugs_products"."product_id" = "zfproducts"."product_id" WHERE ("zfbugs_products"."product_id" < 3)', $sql);
     }
 
+    #[\Override]
     public function testSelectJoinWithNocolumns()
     {
         $select = $this->_selectJoinWithNocolumns();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" INNER JOIN "zfbugs" ON "zfbugs"."bug_id" = 1 INNER JOIN "zfbugs_products" ON "zfproducts"."product_id" = "zfbugs_products"."product_id" AND "zfbugs_products"."bug_id" = "zfbugs"."bug_id"', $sql);
     }
 
@@ -320,10 +343,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a WHERE clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectWhere()
     {
         $select = $this->_selectWhere();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 2)', $sql);
     }
 
@@ -331,10 +355,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding an array in the WHERE clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectWhereArray()
     {
         $select = $this->_selectWhereArray();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" IN (1, 2, 3))', $sql);
     }
 
@@ -343,10 +368,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * which should be combined with AND by default.
      */
 
+    #[\Override]
     public function testSelectWhereAnd()
     {
         $select = $this->_selectWhereAnd();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 2) AND ("product_id" = 1)', $sql);
     }
 
@@ -355,10 +381,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. where('id = ?', 1).
      */
 
+    #[\Override]
     public function testSelectWhereWithParameter()
     {
         $select = $this->_selectWhereWithParameter();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 2)', $sql);
     }
 
@@ -367,10 +394,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. where('id = ?', 1).
      */
 
+    #[\Override]
     public function testSelectWhereWithType()
     {
         $select = $this->_selectWhereWithType();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 2)', $sql);
     }
 
@@ -379,10 +407,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. where('id = ?', 1).
      */
 
+    #[\Override]
     public function testSelectWhereWithTypeFloat()
     {
         $select = $this->_selectWhereWithTypeFloat();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfprice".* FROM "zfprice" WHERE ("price_total" = 200.450000)', $sql);
     }
 
@@ -390,10 +419,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      *      * Test adding an OR WHERE clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectWhereOr()
     {
         $select = $this->_selectWhereOr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 1) OR ("product_id" = 2)', $sql);
     }
 
@@ -402,10 +432,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. orWhere('id = ?', 2).
      */
 
+    #[\Override]
     public function testSelectWhereOrWithParameter()
     {
         $select = $this->_selectWhereOrWithParameter();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" WHERE ("product_id" = 1) OR ("product_id" = 2)', $sql);
     }
 
@@ -413,10 +444,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a GROUP BY clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectGroupBy()
     {
         $select = $this->_selectGroupBy();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -425,10 +457,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. group('schema.table').
      */
 
+    #[\Override]
     public function testSelectGroupByQualified()
     {
         $select = $this->_selectGroupByQualified();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "zfbugs_products"."bug_id" ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -437,10 +470,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. group(new Zend_Db_Expr('id+1'))
      */
 
+    #[\Override]
     public function testSelectGroupByExpr()
     {
         $select = $this->_selectGroupByExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "bug_id"+1 AS "bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id"+1 ORDER BY "bug_id"+1', $sql);
     }
 
@@ -452,10 +486,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      */
 
 
+    #[\Override]
     public function testSelectGroupByAutoExpr()
     {
         $select = $this->_selectGroupByAutoExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT ABS("zfbugs_products"."bug_id") AS "bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY ABS("zfbugs_products"."bug_id") ORDER BY ABS("zfbugs_products"."bug_id") ASC', $sql);
     }
 
@@ -463,18 +498,20 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a HAVING clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectHaving()
     {
         $select = $this->_selectHaving();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" HAVING (COUNT(*) > 1) ORDER BY "bug_id" ASC', $sql);
     }
 
 
+    #[\Override]
     public function testSelectHavingAnd()
     {
         $select = $this->_selectHavingAnd();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" HAVING (COUNT(*) > 1) AND (COUNT(*) = 1) ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -484,10 +521,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      */
 
 
+    #[\Override]
     public function testSelectHavingWithParameter()
     {
         $select = $this->_selectHavingWithParameter();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" HAVING (COUNT(*) > 1) ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -496,10 +534,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      */
 
 
+    #[\Override]
     public function testSelectHavingOr()
     {
         $select = $this->_selectHavingOr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" HAVING (COUNT(*) > 1) OR (COUNT(*) = 1) ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -508,10 +547,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. orHaving('count(*) > ?', 1).
      */
 
+    #[\Override]
     public function testSelectHavingOrWithParameter()
     {
         $select = $this->_selectHavingOrWithParameter();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfbugs_products"."bug_id", COUNT(*) AS "thecount" FROM "zfbugs_products" GROUP BY "bug_id" HAVING (COUNT(*) > 1) OR (COUNT(*) = 1) ORDER BY "bug_id" ASC', $sql);
     }
 
@@ -519,34 +559,38 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding an ORDER BY clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectOrderBy()
     {
         $select = $this->_selectOrderBy();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC', $sql);
     }
 
 
+    #[\Override]
     public function testSelectOrderByArray()
     {
         $select = $this->_selectOrderByArray();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_name" ASC, "product_id" ASC', $sql);
     }
 
 
+    #[\Override]
     public function testSelectOrderByAsc()
     {
         $select = $this->_selectOrderByAsc();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC', $sql);
     }
 
 
+    #[\Override]
     public function testSelectOrderByDesc()
     {
         $select = $this->_selectOrderByDesc();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" DESC', $sql);
     }
 
@@ -555,10 +599,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. order('schema.table').
      */
 
+    #[\Override]
     public function testSelectOrderByQualified()
     {
         $select = $this->_selectOrderByQualified();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "zfproducts"."product_id" ASC', $sql);
     }
 
@@ -567,10 +612,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * e.g. order(new Zend_Db_Expr('id+1')).
      */
 
+    #[\Override]
     public function testSelectOrderByExpr()
     {
         $select = $this->_selectOrderByExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY 1', $sql);
     }
 
@@ -581,10 +627,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * order(new Zend_Db_Expr('LOWER(title)')).
      */
 
+    #[\Override]
     public function testSelectOrderByAutoExpr()
     {
         $select = $this->_selectOrderByAutoExpr();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY ABS("zfproducts"."product_id") ASC', $sql);
     }
 
@@ -594,10 +641,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * ASC|DESC fails when string is multi-line.
      */
 
+    #[\Override]
     public function testSelectOrderByMultiLine()
     {
         $select = $this->_selectOrderByMultiLine();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" DESC', $sql);
     }
 
@@ -605,10 +653,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test adding a LIMIT clause to a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectLimit()
     {
         $select = $this->_selectLimit();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC LIMIT 1 OFFSET 0', $sql);
     }
 
@@ -616,21 +665,24 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Not applicable in static test
      * @group ZF-5263
      */
+    #[\Override]
     public function testSelectLimitFetchCol()
     {}
 
+    #[\Override]
     public function testSelectLimitNone()
     {
         $select = $this->_selectLimitNone();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC', $sql);
     }
 
 
+    #[\Override]
     public function testSelectLimitOffset()
     {
         $select = $this->_selectLimitOffset();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC LIMIT 1 OFFSET 1', $sql);
     }
 
@@ -638,57 +690,64 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * Test the limitPage() method of a Zend_Db_Select object.
      */
 
+    #[\Override]
     public function testSelectLimitPageOne()
     {
         $select = $this->_selectLimitPageOne();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC LIMIT 1 OFFSET 0', $sql);
     }
 
 
+    #[\Override]
     public function testSelectLimitPageTwo()
     {
         $select = $this->_selectLimitPageTwo();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY "product_id" ASC LIMIT 1 OFFSET 1', $sql);
     }
 
+    #[\Override]
     public function testSelectUnionString()
     {
         $select = $this->_selectUnionString();
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "bug_id" AS "id", "bug_status" AS "name" FROM "zfbugs" UNION SELECT "product_id" AS "id", "product_name" AS "name" FROM "zfproducts" ORDER BY "id" ASC', $sql);
     }
 
+    #[\Override]
     public function testSelectOrderByPosition()
     {
         $select = $this->_selectOrderByPosition();
 
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY 2 ASC', $sql);
     }
 
+    #[\Override]
     public function testSelectOrderByPositionAsc()
     {
         $select = $this->_selectOrderByPositionAsc();
 
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY 2 ASC', $sql);
     }
 
+    #[\Override]
     public function testSelectOrderByPositionDesc()
     {
         $select = $this->_selectOrderByPositionDesc();
 
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY 2 DESC', $sql);
     }
 
+    #[\Override]
     public function testSelectOrderByMultiplePositions()
     {
         $select = $this->_selectOrderByMultiplePositions();
 
-        $sql = preg_replace('/\\s+/', ' ', $select->__toString());
+        $sql = preg_replace('/\\s+/', ' ', (string) $select->__toString());
         $this->assertEquals('SELECT "zfproducts".* FROM "zfproducts" ORDER BY 2 DESC, 1 DESC', $sql);
     }
 
@@ -697,24 +756,26 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
         return 'Static';
     }
 
+    #[\Override]
     public function testSqlInjectionWithOrder()
     {
         $select = $this->_db->select();
-        $select->from(array('p' => 'products'))->order('MD5(1);select');
+        $select->from(['p' => 'products'])->order('MD5(1);select');
         $this->assertEquals('SELECT "p".* FROM "products" AS "p" ORDER BY "MD5(1);select" ASC', $select->assemble());
 
         $select = $this->_db->select();
-        $select->from(array('p' => 'products'))->order('name;select;MD5(1)');
+        $select->from(['p' => 'products'])->order('name;select;MD5(1)');
         $this->assertEquals('SELECT "p".* FROM "products" AS "p" ORDER BY "name;select;MD5(1)" ASC', $select->assemble());
     }
 
     /**
      * @group ZF-378
      */
+    #[\Override]
     public function testOrderOfSingleFieldWithDirection()
     {
         $select = $this->_db->select();
-        $select->from(array ('p' => 'product'))
+        $select->from( ['p' => 'product'])
             ->order('productId DESC');
 
         $expected = 'SELECT "p".* FROM "product" AS "p" ORDER BY "productId" DESC';
@@ -725,11 +786,12 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
     /**
      * @group ZF-378
      */
+    #[\Override]
     public function testOrderOfMultiFieldWithDirection()
     {
         $select = $this->_db->select();
-        $select->from(array ('p' => 'product'))
-            ->order(array ('productId DESC', 'userId ASC'));
+        $select->from( ['p' => 'product'])
+            ->order( ['productId DESC', 'userId ASC']);
 
         $expected = 'SELECT "p".* FROM "product" AS "p" ORDER BY "productId" DESC, "userId" ASC';
         $this->assertEquals($expected, $select->assemble(),
@@ -739,11 +801,12 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
     /**
      * @group ZF-378
      */
+    #[\Override]
     public function testOrderOfMultiFieldButOnlyOneWithDirection()
     {
         $select = $this->_db->select();
-        $select->from(array ('p' => 'product'))
-            ->order(array ('productId', 'userId DESC'));
+        $select->from( ['p' => 'product'])
+            ->order( ['productId', 'userId DESC']);
 
         $expected = 'SELECT "p".* FROM "product" AS "p" ORDER BY "productId" ASC, "userId" DESC';
         $this->assertEquals($expected, $select->assemble(),
@@ -754,10 +817,11 @@ class Zend_Db_Table_Select_StaticTest extends Zend_Db_Select_TestCommon
      * @group ZF-378
      * @group ZF-381
      */
+    #[\Override]
     public function testOrderOfConditionalFieldWithDirection()
     {
         $select = $this->_db->select();
-        $select->from(array ('p' => 'product'))
+        $select->from( ['p' => 'product'])
             ->order('IF("productId" > 5,1,0) ASC');
 
         $expected = 'SELECT "p".* FROM "product" AS "p" ORDER BY IF("productId" > 5,1,0) ASC';

@@ -35,26 +35,31 @@ require_once 'Zend/Db/Statement/TestCommon.php';
 class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
 {
 
+    #[\Override]
     public function testStatementBindParamByPosition()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bound parameters by position');
     }
 
+    #[\Override]
     public function testStatementBindValueByPosition()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support bound parameters by position');
     }
 
+    #[\Override]
     public function testStatementErrorCodeKeyViolation()
     {
         $this->markTestIncomplete($this->getDriver() . ' does not return error codes correctly.');
     }
 
+    #[\Override]
     public function testStatementErrorInfoKeyViolation()
     {
         $this->markTestIncomplete($this->getDriver() . ' does not return error codes correctly.');
     }
 
+    #[\Override]
     public function testStatementExecuteWithParams()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -62,7 +67,7 @@ class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
         $product_name = $this->_db->quoteIdentifier('product_name');
 
         $stmt = $this->_db->prepare("INSERT INTO $products ($product_id, $product_name) VALUES (:product_id, :product_name)");
-        $stmt->execute(array('product_id' => 4, 'product_name' => 'Solaris'));
+        $stmt->execute(['product_id' => 4, 'product_name' => 'Solaris']);
 
         $select = $this->_db->select()
             ->from('zfproducts')
@@ -70,19 +75,22 @@ class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
         $result = $this->_db->fetchAll($select);
         $stmt->closeCursor();
 
-        $this->assertEquals(array(array('product_id'=>4, 'product_name'=>'Solaris')), $result);
+        $this->assertEquals([['product_id'=>4, 'product_name'=>'Solaris']], $result);
     }
 
+    #[\Override]
     public function testStatementFetchAllStyleBoth()
     {
         $this->markTestIncomplete($this->getDriver() . ' driver does not support fetchAll(FETCH_BOTH)');
     }
 
+    #[\Override]
     public function testStatementGetColumnMeta()
     {
         $this->markTestIncomplete($this->getDriver() . ' has not implemented getColumnMeta() yet [ZF-1424]');
     }
 
+    #[\Override]
     public function testStatementNextRowset()
     {
         $select = $this->_db->select()
@@ -93,7 +101,7 @@ class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
             $this->fail('Expected to catch Zend_Db_Statement_Oracle_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Oracle_Exception,
-                'Expecting object of type Zend_Db_Statement_Oracle_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Oracle_Exception, got '.$e::class);
             $this->assertEquals('HYC00 Optional feature not implemented', $e->getMessage());
         }
         $stmt->closeCursor();
@@ -109,7 +117,7 @@ class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
         $product_name = $this->_db->quoteIdentifier('product_name');
 
         $stmt = $this->_db->prepare("INSERT INTO $products ($product_id, $product_name) VALUES (:product_id, :product_name)");
-        $stmt->execute(array('product_id' => 4, 'product_name' => null));
+        $stmt->execute(['product_id' => 4, 'product_name' => null]);
 
         $select = $this->_db->select()
                        ->from('zfproducts')
@@ -121,6 +129,7 @@ class Zend_Db_Statement_OracleTest extends Zend_Db_Statement_TestCommon
         $this->assertTrue(array_key_exists('product_name', $result), 'fetchRow must return null for empty fields with Oracle');
     }
 
+    #[\Override]
     public function testStatementSetFetchModeBoth()
     {
         $this->markTestIncomplete($this->getDriver() . ' does not implement FETCH_BOTH correctly.');

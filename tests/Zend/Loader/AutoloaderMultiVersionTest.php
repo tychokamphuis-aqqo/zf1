@@ -81,7 +81,7 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
 
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -92,7 +92,7 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
         if (!is_array($this->loaders)) {
             // spl_autoload_functions does not return empty array when no
             // autoloaders registered...
-            $this->loaders = array();
+            $this->loaders = [];
         }
 
         // Store original include_path
@@ -156,7 +156,7 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
      */
     public function testSettingZfVersionFailsWhenNoValidInstallsDiscovered()
     {
-        $this->autoloader->setZfPath(dirname(__FILE__), 'latest');
+        $this->autoloader->setZfPath(__DIR__, 'latest');
     }
 
     public function testAutoloadLatestUsesLatestVersion()
@@ -170,14 +170,14 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
     {
         $this->autoloader->setZfPath($this->path, 'latest');
         $actual = $this->autoloader->getZfPath();
-        $this->assertRegexp('#' . preg_quote($this->latest) . '[^/\\\]*/library#', $actual);
+        $this->assertRegexp('#' . preg_quote((string) $this->latest) . '[^/\\\]*/library#', $actual);
     }
 
     public function testAutoloadLatestAddsPathToIncludePath()
     {
         $this->autoloader->setZfPath($this->path, 'latest');
         $incPath = get_include_path();
-        $this->assertRegexp('#' . preg_quote($this->latest) . '[^/\\\]*/library#', $incPath);
+        $this->assertRegexp('#' . preg_quote((string) $this->latest) . '[^/\\\]*/library#', $incPath);
     }
 
     public function testAutoloadMajorRevisionShouldUseLatestFromMajorRevision()
@@ -191,14 +191,14 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
     {
         $this->autoloader->setZfPath($this->path, $this->_getVersion($this->latestMajor, 'major'));
         $actual = $this->autoloader->getZfPath();
-        $this->assertRegexp('#' . preg_quote($this->latestMajor) . '[^/\\\]*/library#', $actual);
+        $this->assertRegexp('#' . preg_quote((string) $this->latestMajor) . '[^/\\\]*/library#', $actual);
     }
 
     public function testAutoloadMajorRevisionAddsPathToIncludePath()
     {
         $this->autoloader->setZfPath($this->path, $this->_getVersion($this->latestMajor, 'major'));
         $incPath = get_include_path();
-        $this->assertRegexp('#' . preg_quote($this->latestMajor) . '[^/\\\]*/library#', $incPath);
+        $this->assertRegexp('#' . preg_quote((string) $this->latestMajor) . '[^/\\\]*/library#', $incPath);
     }
 
     public function testAutoloadMinorRevisionShouldUseLatestFromMinorRevision()
@@ -212,14 +212,14 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
     {
         $this->autoloader->setZfPath($this->path, $this->_getVersion($this->latestMinor, 'minor'));
         $actual = $this->autoloader->getZfPath();
-        $this->assertRegexp('#' . preg_quote($this->latestMinor) . '[^/\\\]*/library#', $actual);
+        $this->assertRegexp('#' . preg_quote((string) $this->latestMinor) . '[^/\\\]*/library#', $actual);
     }
 
     public function testAutoloadMinorRevisionAddsPathToIncludePath()
     {
         $this->autoloader->setZfPath($this->path, $this->_getVersion($this->latestMinor, 'minor'));
         $incPath = get_include_path();
-        $this->assertRegexp('#' . preg_quote($this->latestMinor) . '[^/\\\]*/library#', $incPath);
+        $this->assertRegexp('#' . preg_quote((string) $this->latestMinor) . '[^/\\\]*/library#', $incPath);
     }
 
     public function testAutoloadSpecificRevisionShouldUseThatVersion()
@@ -233,19 +233,19 @@ class Zend_Loader_AutoloaderMultiVersionTest extends PHPUnit_Framework_TestCase
     {
         $this->autoloader->setZfPath($this->path, $this->specific);
         $actual = $this->autoloader->getZfPath();
-        $this->assertRegexp('#' . preg_quote($this->specific) . '[^/\\\]*/library#', $actual);
+        $this->assertRegexp('#' . preg_quote((string) $this->specific) . '[^/\\\]*/library#', $actual);
     }
 
     public function testAutoloadSpecificRevisionAddsPathToIncludePath()
     {
         $this->autoloader->setZfPath($this->path, $this->specific);
         $incPath = get_include_path();
-        $this->assertRegexp('#' . preg_quote($this->specific) . '[^/\\\]*/library#', $incPath);
+        $this->assertRegexp('#' . preg_quote((string) $this->specific) . '[^/\\\]*/library#', $incPath);
     }
 
     protected function _getVersion($version, $type)
     {
-        $parts = explode('.', $version);
+        $parts = explode('.', (string) $version);
         switch ($type) {
             case 'major':
                 $value = array_shift($parts);

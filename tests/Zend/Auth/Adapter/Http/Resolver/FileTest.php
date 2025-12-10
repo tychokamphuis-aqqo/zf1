@@ -78,7 +78,7 @@ class Zend_Auth_Adapter_Http_Resolver_FileTest extends PHPUnit_Framework_TestCas
      */
     public function __construct()
     {
-        $this->_filesPath = dirname(dirname(__FILE__)) . '/_files';
+        $this->_filesPath = dirname(__FILE__, 2) . '/_files';
         $this->_validPath = "$this->_filesPath/htdigest.3";
         $this->_badPath   = 'doesnotexist';
         $this->_resolver  = new Zend_Auth_Adapter_Http_Resolver_File($this->_validPath);
@@ -93,7 +93,7 @@ class Zend_Auth_Adapter_Http_Resolver_FileTest extends PHPUnit_Framework_TestCas
     {
         try {
             $this->_resolver->setFile($this->_validPath);
-        } catch (Zend_Auth_Adapter_Http_Resolver_Exception $e) {
+        } catch (Zend_Auth_Adapter_Http_Resolver_Exception) {
             $this->fail('Threw exception on valid file path');
         }
         $this->assertEquals($this->_validPath, $this->_resolver->getFile());
@@ -124,7 +124,7 @@ class Zend_Auth_Adapter_Http_Resolver_FileTest extends PHPUnit_Framework_TestCas
         try {
             $v = new Zend_Auth_Adapter_Http_Resolver_File($this->_validPath);
             $this->assertEquals($this->_validPath, $v->getFile());
-        } catch (Zend_Auth_Adapter_Http_Resolver_Exception $e) {
+        } catch (Zend_Auth_Adapter_Http_Resolver_Exception) {
             $this->fail('Constructor threw exception on valid file path');
         }
     }

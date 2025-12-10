@@ -28,7 +28,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
  * Test helpers
  */
 // require_once dirname(__FILE__) . '/../../../TestHelper.php';
-require_once dirname(__FILE__) . '/../../../TestConfiguration.dist.php';
+require_once __DIR__ . '/../../../TestConfiguration.dist.php';
 
 /** Zend_Service_WindowsAzure_Storage_Blob */
 // require_once 'Zend/Service/WindowsAzure/Storage/Blob.php';
@@ -50,7 +50,7 @@ class Zend_Service_WindowsAzure_BlobStorageSharedAccessTest extends PHPUnit_Fram
     
     public function __construct()
     {
-        self::$path = dirname(__FILE__).'/_files/';
+        self::$path = __DIR__.'/_files/';
     }
     
     public static function main()
@@ -76,9 +76,9 @@ class Zend_Service_WindowsAzure_BlobStorageSharedAccessTest extends PHPUnit_Fram
         $storageClient = $this->createAdministrativeStorageInstance();
         for ($i = 1; $i <= self::$uniqId; $i++)
         {
-            try { $storageClient->deleteContainer(TESTS_ZEND_SERVICE_WINDOWSAZURE_BLOBSA_CONTAINER_PREFIX . $i); } catch (Exception $e) { }
+            try { $storageClient->deleteContainer(TESTS_ZEND_SERVICE_WINDOWSAZURE_BLOBSA_CONTAINER_PREFIX . $i); } catch (Exception) { }
         }
-        try { $storageClient->deleteContainer('$root'); } catch (Exception $e) { }
+        try { $storageClient->deleteContainer('$root'); } catch (Exception) { }
     }
 
     protected function createStorageInstance()
@@ -152,9 +152,9 @@ class Zend_Service_WindowsAzure_BlobStorageSharedAccessTest extends PHPUnit_Fram
             // Reduced permissions user performs this part
             $storageClient = $this->createStorageInstance();
             $credentials = $storageClient->getCredentials();
-            $credentials->setPermissionSet(array(
+            $credentials->setPermissionSet([
                 $sharedAccessUrl
-            ));
+            ]);
 
             $result = $storageClient->putBlob($containerName, 'images/WindowsAzure.gif', self::$path . 'WindowsAzure.gif');
     
@@ -167,7 +167,7 @@ class Zend_Service_WindowsAzure_BlobStorageSharedAccessTest extends PHPUnit_Fram
             $exceptionThrown = false;
             try {
                 $storageClient->getBlob($containerName, 'images/WindowsAzure.gif', self::$path . 'WindowsAzure.gif');
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -204,11 +204,11 @@ class Zend_Service_WindowsAzure_BlobStorageSharedAccessTest extends PHPUnit_Fram
 
             $exceptionThrown = false;
             try {
-	            $credentials->setPermissionSet(array(
+	            $credentials->setPermissionSet([
 	                $sharedAccessUrl1,
 	                $sharedAccessUrl2
-	            ));
-            } catch (Exception $ex) {
+	            ]);
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);

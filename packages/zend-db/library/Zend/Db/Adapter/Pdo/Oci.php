@@ -64,20 +64,21 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
         'BINARY_DOUBLE'      => Zend_Db::FLOAT_TYPE,
         'BINARY_FLOAT'       => Zend_Db::FLOAT_TYPE,
         'NUMBER'             => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Creates a PDO DSN for the adapter from $this->_config settings.
      *
      * @return string
      */
+    #[\Override]
     protected function _dsn()
     {
         // baseline of DSN parts
@@ -114,6 +115,7 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
      * @param string $value     Raw string
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -130,6 +132,7 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
      * @param string $alias An alias for the table.
      * @return string The quoted identifier and alias.
      */
+    #[\Override]
     public function quoteTableAs($ident, $alias = null, $auto = false)
     {
         // Oracle doesn't allow the 'AS' keyword between the table identifier/expression and alias.
@@ -240,9 +243,9 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
         $constraint_type = 10;
         $position        = 11;
 
-        $desc = array();
-        foreach ($result as $key => $row) {
-            list ($primary, $primaryPosition, $identity) = array(false, null, false);
+        $desc = [];
+        foreach ($result as $row) {
+            [$primary, $primaryPosition, $identity] = [false, null, false];
             if ($row[$constraint_type] == 'P') {
                 $primary = true;
                 $primaryPosition = $row[$position];
@@ -251,7 +254,7 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
                  */
                 $identity = false;
             }
-            $desc[$this->foldCase($row[$column_name])] = array(
+            $desc[$this->foldCase($row[$column_name])] = [
                 'SCHEMA_NAME'      => $this->foldCase($row[$owner]),
                 'TABLE_NAME'       => $this->foldCase($row[$table_name]),
                 'COLUMN_NAME'      => $this->foldCase($row[$column_name]),
@@ -266,7 +269,7 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
                 'PRIMARY'          => $primary,
                 'PRIMARY_POSITION' => $primaryPosition,
                 'IDENTITY'         => $identity
-            );
+            ];
         }
         return $desc;
     }
@@ -319,6 +322,7 @@ class Zend_Db_Adapter_Pdo_Oci extends Zend_Db_Adapter_Pdo_Abstract
      * @return string
      * @throws Zend_Db_Adapter_Oracle_Exception
      */
+    #[\Override]
     public function lastInsertId($tableName = null, $primaryKey = null)
     {
         if ($tableName !== null) {

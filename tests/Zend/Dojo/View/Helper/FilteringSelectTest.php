@@ -110,16 +110,16 @@ class Zend_Dojo_View_Helper_FilteringSelectTest extends PHPUnit_Framework_TestCa
         return $this->helper->filteringSelect(
             'elementId',
             'someCombo',
-            array(),
-            array(),
-            array(
+            [],
+            [],
+            [
                 'red' => 'Rouge',
                 'blue' => 'Bleu',
                 'white' => 'Blanc',
                 'orange' => 'Orange',
                 'black' => 'Noir',
                 'green' => 'Vert',
-            )
+            ]
         );
     }
 
@@ -128,17 +128,17 @@ class Zend_Dojo_View_Helper_FilteringSelectTest extends PHPUnit_Framework_TestCa
         return $this->helper->filteringSelect(
             'elementId',
             'someCombo',
-            array(
-                'store' => array(
+            [
+                'store' => [
                     'store' => 'stateStore',
                     'type' => 'dojo.data.ItemFileReadStore',
-                    'params' => array(
+                    'params' => [
                         'url' => 'states.txt'
-                    )
-                ),
+                    ]
+                ],
                 'searchAttr' => 'name'
-            ),
-            array()
+            ],
+            []
         );
     }
 
@@ -159,7 +159,7 @@ class Zend_Dojo_View_Helper_FilteringSelectTest extends PHPUnit_Framework_TestCa
     public function testShouldAllowDeclarativeDijitCreationAsRemoter()
     {
         $html = $this->getElementAsRemoter();
-        if (!preg_match('/(<input[^>]*(dojoType="dijit.form.FilteringSelect"))/', $html, $m)) {
+        if (!preg_match('/(<input[^>]*(dojoType="dijit.form.FilteringSelect"))/', (string) $html, $m)) {
             $this->fail('Did not create text input as remoter: ' . $html);
         }
         $this->assertContains('type="text"', $m[1]);
@@ -178,7 +178,7 @@ class Zend_Dojo_View_Helper_FilteringSelectTest extends PHPUnit_Framework_TestCa
         $found = false;
         $scripts = $this->view->dojo()->_getZendLoadActions();
         foreach ($scripts as $js) {
-            if (strstr($js, 'stateStore = new ')) {
+            if (strstr((string) $js, 'stateStore = new ')) {
                 $found = true;
                 break;
             }

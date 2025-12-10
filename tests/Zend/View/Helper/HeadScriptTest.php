@@ -81,7 +81,7 @@ class Zend_View_Helper_HeadScriptTest extends PHPUnit_Framework_TestCase
             $registry = Zend_Registry::getInstance();
             unset($registry[$regKey]);
         }
-        $this->basePath = dirname(__FILE__) . '/_files/modules';
+        $this->basePath = __DIR__ . '/_files/modules';
         $this->helper = new Zend_View_Helper_HeadScript();
     }
 
@@ -130,12 +130,12 @@ class Zend_View_Helper_HeadScriptTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->set('foo');
             $this->fail('Set should throw exception with invalid item');
-        } catch (Zend_View_Exception $e) { }
+        } catch (Zend_View_Exception) { }
     }
 
     protected function _inflectAction($type)
     {
-        return ucfirst(strtolower($type));
+        return ucfirst(strtolower((string) $type));
     }
 
     protected function _testOverloadAppend($type)
@@ -254,7 +254,7 @@ class Zend_View_Helper_HeadScriptTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->fooBar('foo');
             $this->fail('Invalid method should raise exception');
-        } catch (Zend_View_Exception $e) {
+        } catch (Zend_View_Exception) {
         }
     }
 
@@ -269,7 +269,7 @@ class Zend_View_Helper_HeadScriptTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->offsetSetScript(5);
             $this->fail('Too few arguments should raise exception');
-        } catch (Zend_View_Exception $e) {
+        } catch (Zend_View_Exception) {
         }
     }
 
@@ -306,13 +306,13 @@ class Zend_View_Helper_HeadScriptTest extends PHPUnit_Framework_TestCase
                      ->headScript('SCRIPT', 'baz', 'append');
         $string = $this->helper->toString();
 
-        $scripts = substr_count($string, '<script ');
+        $scripts = substr_count((string) $string, '<script ');
         $this->assertEquals(3, $scripts);
-        $scripts = substr_count($string, '</script>');
+        $scripts = substr_count((string) $string, '</script>');
         $this->assertEquals(3, $scripts);
-        $scripts = substr_count($string, 'src="');
+        $scripts = substr_count((string) $string, 'src="');
         $this->assertEquals(1, $scripts);
-        $scripts = substr_count($string, '><');
+        $scripts = substr_count((string) $string, '><');
         $this->assertEquals(1, $scripts);
 
         $this->assertContains('src="foo"', $string);
@@ -346,7 +346,7 @@ var bar = "baz";
 document.write(bar.strlen());');
         $string = $this->helper->toString();
 
-        $scripts = substr_count($string, '    <script');
+        $scripts = substr_count((string) $string, '    <script');
         $this->assertEquals(2, $scripts);
         $this->assertContains('    //', $string);
         $this->assertContains('var', $string);
@@ -363,14 +363,14 @@ document.write(bar.strlen());');
 
     public function testRenderingDoesNotRenderArbitraryAttributesByDefault()
     {
-        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', array('bogus' => 'deferred'));
+        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', ['bogus' => 'deferred']);
         $test = $this->helper->headScript()->toString();
         $this->assertNotContains('bogus="deferred"', $test);
     }
 
     public function testCanRenderArbitraryAttributesOnRequest()
     {
-        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', array('bogus' => 'deferred'))
+        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', ['bogus' => 'deferred'])
              ->setAllowArbitraryAttributes(true);
         $test = $this->helper->headScript()->toString();
         $this->assertContains('bogus="deferred"', $test);
@@ -383,7 +383,7 @@ document.write(bar.strlen());');
         $this->helper->headScript()->captureEnd();
         try {
             $this->helper->headScript()->captureStart();
-        } catch (Zend_View_Exception $e) {
+        } catch (Zend_View_Exception) {
             $this->fail('Serial captures should be allowed');
         }
         echo "this is something else captured";
@@ -416,14 +416,14 @@ document.write(bar.strlen());');
 
     public function testConditionalScript()
     {
-        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', array('conditional' => 'lt IE 7'));
+        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', ['conditional' => 'lt IE 7']);
         $test = $this->helper->headScript()->toString();
         $this->assertContains('<!--[if lt IE 7]>', $test);
     }
 
     public function testConditionalScriptWidthIndentation()
     {
-        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', array('conditional' => 'lt IE 7'));
+        $this->helper->headScript()->appendFile('/js/foo.js', 'text/javascript', ['conditional' => 'lt IE 7']);
         $this->helper->headScript()->setIndent(4);
         $test = $this->helper->headScript()->toString();
         $this->assertContains('    <!--[if lt IE 7]>', $test);
@@ -472,7 +472,7 @@ document.write(bar.strlen());');
     {
         $this->helper->setAllowArbitraryAttributes(true);
         $this->helper->appendFile(
-            '/js/foo.js', 'text/javascript', array('conditional' => 'lt IE 7')
+            '/js/foo.js', 'text/javascript', ['conditional' => 'lt IE 7']
         );
         $test = $this->helper->toString();
 
@@ -486,7 +486,7 @@ document.write(bar.strlen());');
     {
         $this->helper->setAllowArbitraryAttributes(true);
         $this->helper->appendScript(
-            '// some script', 'text/javascript', array('noescape' => true)
+            '// some script', 'text/javascript', ['noescape' => true]
         );
         $test = $this->helper->toString();
 
@@ -499,7 +499,7 @@ document.write(bar.strlen());');
     public function testNoEscapeDefaultsToFalse()
     {
         $this->helper->appendScript(
-            '// some script' . PHP_EOL, 'text/javascript', array()
+            '// some script' . PHP_EOL, 'text/javascript', []
         );
         $test = $this->helper->toString();
 
@@ -513,7 +513,7 @@ document.write(bar.strlen());');
     public function testNoEscapeTrue()
     {
         $this->helper->appendScript(
-            '// some script' . PHP_EOL, 'text/javascript', array('noescape' => true)
+            '// some script' . PHP_EOL, 'text/javascript', ['noescape' => true]
         );
         $test = $this->helper->toString();
 
@@ -528,7 +528,7 @@ document.write(bar.strlen());');
     {
         $this->helper->setAllowArbitraryAttributes(true);
         $this->helper->appendFile(
-            '/js/foo.js', 'text/javascript', array('conditional' => '!IE')
+            '/js/foo.js', 'text/javascript', ['conditional' => '!IE']
         );
         $test = $this->helper->toString();
         $this->assertContains('<!--[if !IE]><!--><', $test);
@@ -543,7 +543,7 @@ document.write(bar.strlen());');
 
         // case: defer attribute is true - renders minimized form, charset attribute is non-empty string - renders full form
         $this->helper->setFile(
-            'example.js', 'text/javascript', array('defer' => true, 'charset' => 'utf-8')
+            'example.js', 'text/javascript', ['defer' => true, 'charset' => 'utf-8']
         );
 
         $result = $this->helper->toString();
@@ -555,7 +555,7 @@ document.write(bar.strlen());');
 
         // case: defer attribute is empty string, renders minimized form
         $this->helper->setFile(
-            'example.js', 'text/javascript', array('defer' => '')
+            'example.js', 'text/javascript', ['defer' => '']
         );
 
         $result = $this->helper->toString();
@@ -565,7 +565,7 @@ document.write(bar.strlen());');
 
         // case: defer attribute is false, skips the attribute
         $this->helper->setFile(
-            'example.js', 'text/javascript', array('defer' => false)
+            'example.js', 'text/javascript', ['defer' => false]
         );
 
         $result = $this->helper->toString();

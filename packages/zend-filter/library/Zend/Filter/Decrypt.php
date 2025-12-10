@@ -42,6 +42,7 @@ class Zend_Filter_Decrypt extends Zend_Filter_Encrypt
      * @param  string $value Content to decrypt
      * @return string The decrypted content
      */
+    #[\Override]
     public function filter($value)
     {
         return $this->_adapter->decrypt($value);

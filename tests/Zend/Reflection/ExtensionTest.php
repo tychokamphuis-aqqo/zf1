@@ -39,14 +39,14 @@ class Zend_Reflection_ExtensionTest extends PHPUnit_Framework_TestCase
     {
         $extension = new Zend_Reflection_Extension('Reflection');
         $extensionClasses = $extension->getClasses();
-        $this->assertEquals(get_class(array_shift($extensionClasses)), 'Zend_Reflection_Class');
+        $this->assertEquals(array_shift($extensionClasses)::class, 'Zend_Reflection_Class');
     }
 
     public function testFunctionReturn()
     {
         $extension = new Zend_Reflection_Extension('Spl');
         $extensionFunctions = $extension->getFunctions();
-        $this->assertEquals(get_class(array_shift($extensionFunctions)), 'Zend_Reflection_Function');
+        $this->assertEquals(array_shift($extensionFunctions)::class, 'Zend_Reflection_Function');
     }
 }
 

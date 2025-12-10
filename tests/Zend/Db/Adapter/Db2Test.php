@@ -42,7 +42,7 @@ require_once 'Zend/Db/Adapter/TestCommon.php';
 class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -51,8 +51,9 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
         'BIGINT'             => Zend_Db::BIGINT_TYPE,
         'DECIMAL'            => Zend_Db::FLOAT_TYPE,
         'NUMERIC'            => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryAuto()
     {
         $desc = $this->_db->describeTable('zfbugs');
@@ -62,6 +63,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
         $this->assertTrue($desc['bug_id']['IDENTITY']);
     }
 
+    #[\Override]
     public function testAdapterDescribeTableAttributeColumn()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -83,6 +85,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
         $this->assertFalse(                      $desc['product_name']['IDENTITY'], 'Expected product_name to return false for IDENTITY');
     }
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryKeyColumn()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -103,11 +106,13 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * DB2 and Oracle return identifiers in uppercase naturally,
      * so those test suites will override this method.
      */
+    #[\Override]
     protected function _testAdapterOptionCaseFoldingNaturalIdentifier()
     {
         return 'CASE_FOLDED_IDENTIFIER';
     }
 
+    #[\Override]
     public function testAdapterTransactionCommit()
     {
         $bugs = $this->_db->quoteIdentifier('zfbugs');
@@ -164,6 +169,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
         $this->assertEquals(2, $count);
     }
 
+    #[\Override]
     public function testAdapterTransactionRollback()
     {
         $bugs = $this->_db->quoteIdentifier('zfbugs');
@@ -233,6 +239,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * autocommit = 1
      * DB2_ATTR_CASE = 0
      */
+    #[\Override]
     public function testAdapterZendConfigEmptyDriverOptions()
     {
         // Zend_Loader::loadClass('Zend_Config');
@@ -245,10 +252,10 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
 
         $config = $db->getConfig();
 
-        $expectedValue = array(
+        $expectedValue = [
             'autocommit' => 1,
             'DB2_ATTR_CASE' => 0
-            );
+            ];
         $this->assertEquals($expectedValue, $config['driver_options']);
     }
 
@@ -258,9 +265,10 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * Test that quote() takes an array and returns
      * an imploded string of comma-separated, quoted elements.
      */
+    #[\Override]
     public function testAdapterQuoteArray()
     {
-        $array = array("it's", 'all', 'right!');
+        $array = ["it's", 'all', 'right!'];
         $value = $this->_db->quote($array);
         $this->assertEquals("'it''s', 'all', 'right!'", $value);
     }
@@ -271,6 +279,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * test that quote() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteDoubleQuote()
     {
         $string = 'St John"s Wort';
@@ -284,6 +293,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * test that quote() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteSingleQuote()
     {
         $string = "St John's Wort";
@@ -297,6 +307,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * test that quoteInto() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoDoubleQuote()
     {
         $string = 'id=?';
@@ -311,6 +322,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
      * test that quoteInto() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoSingleQuote()
     {
         $string = 'id = ?';
@@ -360,6 +372,7 @@ class Zend_Db_Adapter_Db2Test extends Zend_Db_Adapter_TestCommon
     /**
      * @group ZF-8399
      */
+    #[\Override]
     public function testLongQueryWithTextField()
     {
         $this->markTestSkipped($this->getDriver() . ' does not have TEXT field type');

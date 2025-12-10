@@ -175,7 +175,7 @@ class Zend_Controller_Action_Helper_ActionStackTest extends PHPUnit_Framework_Te
         } catch (Zend_Exception $e) {
             $this->assertTrue(
                 $e instanceof Zend_Controller_Action_Exception,
-                'Zend_Controller_Action_Exception expected, ' . get_class($e)
+                'Zend_Controller_Action_Exception expected, ' . $e::class
                     . ' caught'
             );
         }

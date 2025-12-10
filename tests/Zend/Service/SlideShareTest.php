@@ -61,11 +61,11 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
         $cache = Zend_Cache::factory(
             'Core',
             'File',
-            array(
+            [
                  'lifetime'                => 0,
                  'automatic_serialization' => true
-            ),
-            array('cache_dir' => dirname(__FILE__) . "/SlideShare/_files")
+            ],
+            ['cache_dir' => __DIR__ . "/SlideShare/_files"]
         );
         $ss->setCacheObject($cache);
 
@@ -103,7 +103,7 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
         try {
             $result =
                 $ss->getSlideShow(TESTS_ZEND_SERVICE_SLIDESHARE_SLIDESHOWID);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail("Exception Caught retrieving Slideshow");
         }
 
@@ -117,7 +117,7 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
 
         try {
             $results = $ss->getSlideShowsByTag('zend', 0, 1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail("Exception Caught retrieving Slideshow List (tag)");
         }
 
@@ -134,12 +134,12 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
 
         try {
             $results = $ss->getSlideShowsByTag(
-                array(
+                [
                      'zend',
                      'php'
-                ), 0, 1
+                ], 0, 1
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail("Exception Caught retrieving Slideshow List (tag)");
         }
 
@@ -161,7 +161,7 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
             $results = $ss->getSlideShowsByUsername(
                 TESTS_ZEND_SERVICE_SLIDESHARE_USERNAME, 0, 1
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail("Exception Caught retrieving Slideshow List (tag)");
         }
 
@@ -177,13 +177,13 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
         $ss = $this->_getSSObject();
 
         $title    = "Unit Test for ZF SlideShare Component";
-        $ppt_file = dirname(__FILE__) . "/SlideShare/_files/demo.ppt";
+        $ppt_file = __DIR__ . "/SlideShare/_files/demo.ppt";
 
         $show = new Zend_Service_SlideShare_SlideShow();
         $show->setFilename($ppt_file);
         $show->setDescription("Unit Test");
         $show->setTitle($title);
-        $show->setTags(array('unittest'));
+        $show->setTags(['unittest']);
         $show->setID(0);
 
         try {
@@ -222,10 +222,10 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
         $ss->setStatus(124);
         $ss->setStatusDescription("Boo");
         $ss->setTags(
-            array(
+            [
                  'bar',
                  'baz'
-            )
+            ]
         );
         $ss->addTag('fon');
         $ss->setThumbnailUrl('asdf');
@@ -243,11 +243,11 @@ class Zend_Service_SlideShareTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($ss->getStatusDescription(), "Boo");
         $this->assertEquals(
             $ss->getTags(),
-            array(
+            [
                  'bar',
                  'baz',
                  'fon'
-            )
+            ]
         );
         $this->assertEquals($ss->getThumbnailUrl(), "asdf");
         $this->assertEquals($ss->getTitle(), "title");

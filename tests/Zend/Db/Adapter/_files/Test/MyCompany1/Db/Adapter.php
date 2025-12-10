@@ -5,6 +5,7 @@ class Test_MyCompany1_Db_Adapter extends Zend_Db_Adapter_Abstract
     protected function _connect()
     {}
 
+    #[\Override]
     function _checkRequiredOptions(array $config)
     {}
 

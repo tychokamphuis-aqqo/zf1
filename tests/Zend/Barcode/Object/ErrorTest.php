@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/TestCommon.php';
+require_once __DIR__ . '/TestCommon.php';
 
 // require_once 'Zend/Barcode/Object/Error.php';
 
@@ -59,6 +59,7 @@ class Zend_Barcode_Object_ErrorTest extends Zend_Barcode_Object_TestCommon
         $this->assertTrue($this->_object->checkParams());
     }
 
+    #[\Override]
     public function testGetDefaultHeight()
     {
         $this->assertEquals(40, $this->_object->getHeight());

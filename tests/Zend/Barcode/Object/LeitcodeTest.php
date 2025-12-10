@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/TestCommon.php';
+require_once __DIR__ . '/TestCommon.php';
 
 // require_once 'Zend/Barcode/Object/Leitcode.php';
 
@@ -156,6 +156,7 @@ class Zend_Barcode_Object_LeitcodeTest extends Zend_Barcode_Object_TestCommon
         $this->assertEquals($instructions, $this->_object->getInstructions());
     }
 
+    #[\Override]
     public function testGetDefaultHeight()
     {
         // Checksum activated => text needed

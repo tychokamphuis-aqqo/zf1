@@ -78,7 +78,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testLoadingAndReturningHelper()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-get-redirector/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
@@ -100,14 +100,14 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
         try {
             $received = Zend_Controller_Action_HelperBroker::getExistingHelper('testHelper');
             $this->fail('Retrieving unregistered helpers should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // success
         }
     }
 
     public function testLoadingHelperOnlyInitializesOnce()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http();
         $request->setModuleName('default')
                 ->setControllerName('zend_controller_action_helper-broker')
@@ -118,7 +118,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
         $helper = new Zend_Controller_Action_HelperBroker_TestHelper();
         Zend_Controller_Action_HelperBroker::addHelper($helper);
 
-        $controller = new Zend_Controller_Action_HelperBrokerController($request, $response, array());
+        $controller = new Zend_Controller_Action_HelperBrokerController($request, $response, []);
         $controller->test();
         $received = $controller->getHelper('testHelper');
         $this->assertSame($helper, $received);
@@ -144,7 +144,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
     }
      public function testReturningHelper()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-get-redirector/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
@@ -155,7 +155,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testReturningHelperViaMagicGet()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-helper-via-magic-get/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
@@ -166,13 +166,13 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testReturningHelperViaMagicCall()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-helper-via-magic-call/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
         $this->front->returnResponse(true);
 
-        require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files/Helpers/TestHelper.php';
+        require_once dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files/Helpers/TestHelper.php';
         Zend_Controller_Action_HelperBroker::addHelper(new MyApp_TestHelper());
 
         $response = $this->front->dispatch($request);
@@ -181,7 +181,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testNonExistentHelper()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-bad-helper/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
@@ -192,13 +192,13 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testCustomHelperRegistered()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-custom-helper/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
         $this->front->returnResponse(true);
 
-        require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files/Helpers/TestHelper.php';
+        require_once dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files/Helpers/TestHelper.php';
         Zend_Controller_Action_HelperBroker::addHelper(new MyApp_TestHelper());
 
         $response = $this->front->dispatch($request);
@@ -207,14 +207,14 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testCustomHelperFromPath()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-custom-helper/');
         $this->front->setResponse(new Zend_Controller_Response_Cli());
 
         $this->front->returnResponse(true);
 
         Zend_Controller_Action_HelperBroker::addPath(
-            dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Helpers',
+            dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Helpers',
             'MyApp'
             );
 
@@ -254,7 +254,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
                  ->setControllerName('zend_controller_action_helper-broker')
                  ->setActionName('index');
         $aResponse  = new Zend_Controller_Response_Cli();
-        $controller = new Zend_Controller_Action_HelperBrokerController($aRequest, $aResponse, array());
+        $controller = new Zend_Controller_Action_HelperBrokerController($aRequest, $aResponse, []);
 
         $fRequest   = new Zend_Controller_Request_Http();
         $fRequest->setModuleName('foo')
@@ -304,7 +304,7 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
     public function testHelperPathStackIsLifo()
     {
         Zend_Controller_Action_HelperBroker::addPath(
-            dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Helpers',
+            dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'Helpers',
             'MyApp'
             );
 
@@ -324,16 +324,16 @@ class Zend_Controller_Action_HelperBrokerTest extends PHPUnit_Framework_TestCase
 
     public function testCanLoadNamespacedHelper()
     {
-        $this->front->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files')
+        $this->front->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files')
             ->setResponse(new Zend_Controller_Response_Cli())
             ->returnResponse(true);
 
-        $path = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files/Helpers';
+        $path = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files/Helpers';
         Zend_Controller_Action_HelperBroker::addPath($path, 'MyApp\Controller\Action\Helper\\');
 
         $request  = new Zend_Controller_Request_Http('http://framework.zend.com/helper-broker/test-can-load-namespaced-helper/');
         $response = $this->front->dispatch($request);
-        $this->assertEquals('MyApp\Controller\Action\Helper\NamespacedHelper', $response->getBody());
+        $this->assertEquals(\MyApp\Controller\Action\Helper\NamespacedHelper::class, $response->getBody());
     }
 
     /**

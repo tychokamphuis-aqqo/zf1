@@ -48,6 +48,7 @@ class Zend_Db_Table_Select_Pdo_IbmTest extends Zend_Db_Table_Select_TestCommon
         return 'Pdo_Ibm';
     }
 
+    #[\Override]
     public function testSelectGroupByExpr()
     {
        $server = $this->_util->getServer();
@@ -59,6 +60,7 @@ class Zend_Db_Table_Select_Pdo_IbmTest extends Zend_Db_Table_Select_TestCommon
         }
     }
 
+    #[\Override]
     public function testSelectGroupByAutoExpr()
     {
        $server = $this->_util->getServer();
@@ -70,6 +72,7 @@ class Zend_Db_Table_Select_Pdo_IbmTest extends Zend_Db_Table_Select_TestCommon
         }
     }
 
+    #[\Override]
     public function testSelectJoinCross()
     {
         $this->markTestSkipped($this->getDriver() . ' adapter support for CROSS JOIN not yet available');

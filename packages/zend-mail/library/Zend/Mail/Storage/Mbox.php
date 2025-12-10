@@ -102,7 +102,7 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
             return $pos['end'] - $pos['start'];
         }
 
-        $result = array();
+        $result = [];
         foreach ($this->_positions as $num => $pos) {
             $result[$num + 1] = $pos['end'] - $pos['start'];
         }
@@ -145,8 +145,8 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
         if (strtolower($this->_messageClass) == 'zend_mail_message_file' || is_subclass_of($this->_messageClass, 'zend_mail_message_file')) {
             // TODO top/body lines
             $messagePos = $this->_getPos($id);
-            return new $this->_messageClass(array('file' => $this->_fh, 'startPos' => $messagePos['start'],
-                                                  'endPos' => $messagePos['end']));
+            return new $this->_messageClass(['file' => $this->_fh, 'startPos' => $messagePos['start'],
+                                                  'endPos' => $messagePos['end']]);
         }
 
         $bodyLines = 0; // TODO: need a way to change that
@@ -160,7 +160,7 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
             }
         }
 
-        return new $this->_messageClass(array('handler' => $this, 'id' => $id, 'headers' => $message));
+        return new $this->_messageClass(['handler' => $this, 'id' => $id, 'headers' => $message]);
     }
 
     /*
@@ -261,7 +261,7 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
         $result = false;
 
         $line = fgets($file);
-        if (strpos($line, 'From ') === 0) {
+        if (str_starts_with($line, 'From ')) {
             $result = true;
         }
 
@@ -305,15 +305,15 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
             throw new Zend_Mail_Storage_Exception('file is not a valid mbox format');
         }
 
-        $messagePos = array('start' => ftell($this->_fh), 'separator' => 0, 'end' => 0);
+        $messagePos = ['start' => ftell($this->_fh), 'separator' => 0, 'end' => 0];
         while (($line = fgets($this->_fh)) !== false) {
-            if (strpos($line, 'From ') === 0) {
+            if (str_starts_with($line, 'From ')) {
                 $messagePos['end'] = ftell($this->_fh) - strlen($line) - 2; // + newline
                 if (!$messagePos['separator']) {
                     $messagePos['separator'] = $messagePos['end'];
                 }
                 $this->_positions[] = $messagePos;
-                $messagePos = array('start' => ftell($this->_fh), 'separator' => 0, 'end' => 0);
+                $messagePos = ['start' => ftell($this->_fh), 'separator' => 0, 'end' => 0];
             }
             if (!$messagePos['separator'] && !trim($line)) {
                 $messagePos['separator'] = ftell($this->_fh);
@@ -339,7 +339,7 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
             @fclose($this->_fh);
             $this->_fh = null;
         }
-        $this->_positions = array();
+        $this->_positions = [];
     }
 
 
@@ -360,7 +360,7 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
      * @return null
      * @throws Zend_Mail_Storage_Exception
      */
-    public function removeMessage($id)
+    public function removeMessage($id): never
     {
         /**
          * @see Zend_Mail_Storage_Exception
@@ -416,9 +416,9 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
      *
      * @return array name of variables
      */
-    public function __sleep()
+    public function __serialize(): array
     {
-        return array('_filename', '_positions', '_filemtime');
+        return ['_filename' => $this->_filename, '_positions' => $this->_positions, '_filemtime' => $this->_filemtime];
     }
 
     /**
@@ -430,19 +430,11 @@ class Zend_Mail_Storage_Mbox extends Zend_Mail_Storage_Abstract
      * @return null
      * @throws Zend_Mail_Storage_Exception
      */
-    public function __wakeup()
+    public function __unserialize(array $data): void
     {
-        if ($this->_filemtime != @filemtime($this->_filename)) {
-            $this->close();
-            $this->_openMboxFile($this->_filename);
-        } else {
-            $this->_fh = @fopen($this->_filename, 'r');
-            if (!$this->_fh) {
-                /**
-                 * @see Zend_Mail_Storage_Exception
-                 */
-                // require_once 'Zend/Mail/Storage/Exception.php';
-                throw new Zend_Mail_Storage_Exception('cannot open mbox file');
+        foreach ($data as $property => $value) {
+            if (property_exists($this, $property)) {
+                $this->{$property} = $value;
             }
         }
     }

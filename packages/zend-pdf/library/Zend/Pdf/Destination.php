@@ -46,6 +46,7 @@ abstract class Zend_Pdf_Destination extends Zend_Pdf_Target
      * @param Zend_Pdf_Element $resource
      * @return Zend_Pdf_Destination
      */
+    #[\Override]
     public static function load(Zend_Pdf_Element $resource)
     {
         // require_once 'Zend/Pdf/Element.php';
@@ -63,51 +64,25 @@ abstract class Zend_Pdf_Destination extends Zend_Pdf_Target
             throw new Zend_Pdf_Exception('An explicit destination array must contain at least two elements.');
         }
 
-        switch ($resource->items[1]->value) {
-            case 'XYZ':
-                // require_once 'Zend/Pdf/Destination/Zoom.php';
-                return new Zend_Pdf_Destination_Zoom($resource);
-                break;
-
-            case 'Fit':
-                // require_once 'Zend/Pdf/Destination/Fit.php';
-                return new Zend_Pdf_Destination_Fit($resource);
-                break;
-
-            case 'FitH':
-                // require_once 'Zend/Pdf/Destination/FitHorizontally.php';
-                return new Zend_Pdf_Destination_FitHorizontally($resource);
-                break;
-
-            case 'FitV':
-                // require_once 'Zend/Pdf/Destination/FitVertically.php';
-                return new Zend_Pdf_Destination_FitVertically($resource);
-                break;
-
-            case 'FitR':
-                // require_once 'Zend/Pdf/Destination/FitRectangle.php';
-                return new Zend_Pdf_Destination_FitRectangle($resource);
-                break;
-
-            case 'FitB':
-                // require_once 'Zend/Pdf/Destination/FitBoundingBox.php';
-                return new Zend_Pdf_Destination_FitBoundingBox($resource);
-                break;
-
-            case 'FitBH':
-                // require_once 'Zend/Pdf/Destination/FitBoundingBoxHorizontally.php';
-                return new Zend_Pdf_Destination_FitBoundingBoxHorizontally($resource);
-                break;
-
-            case 'FitBV':
-                // require_once 'Zend/Pdf/Destination/FitBoundingBoxVertically.php';
-                return new Zend_Pdf_Destination_FitBoundingBoxVertically($resource);
-                break;
-
-            default:
-                // require_once 'Zend/Pdf/Destination/Unknown.php';
-                return new Zend_Pdf_Destination_Unknown($resource);
-                break;
-        }
+        return match ($resource->items[1]->value) {
+            // require_once 'Zend/Pdf/Destination/Zoom.php';
+            'XYZ' => new Zend_Pdf_Destination_Zoom($resource),
+            // require_once 'Zend/Pdf/Destination/Fit.php';
+            'Fit' => new Zend_Pdf_Destination_Fit($resource),
+            // require_once 'Zend/Pdf/Destination/FitHorizontally.php';
+            'FitH' => new Zend_Pdf_Destination_FitHorizontally($resource),
+            // require_once 'Zend/Pdf/Destination/FitVertically.php';
+            'FitV' => new Zend_Pdf_Destination_FitVertically($resource),
+            // require_once 'Zend/Pdf/Destination/FitRectangle.php';
+            'FitR' => new Zend_Pdf_Destination_FitRectangle($resource),
+            // require_once 'Zend/Pdf/Destination/FitBoundingBox.php';
+            'FitB' => new Zend_Pdf_Destination_FitBoundingBox($resource),
+            // require_once 'Zend/Pdf/Destination/FitBoundingBoxHorizontally.php';
+            'FitBH' => new Zend_Pdf_Destination_FitBoundingBoxHorizontally($resource),
+            // require_once 'Zend/Pdf/Destination/FitBoundingBoxVertically.php';
+            'FitBV' => new Zend_Pdf_Destination_FitBoundingBoxVertically($resource),
+            // require_once 'Zend/Pdf/Destination/Unknown.php';
+            default => new Zend_Pdf_Destination_Unknown($resource),
+        };
     }
 }

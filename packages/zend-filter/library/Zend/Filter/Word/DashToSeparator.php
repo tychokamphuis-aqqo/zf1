@@ -33,6 +33,7 @@
 class Zend_Filter_Word_DashToSeparator extends Zend_Filter_Word_Separator_Abstract
 {
 
+    #[\Override]
     public function filter($value)
     {
         $this->setMatchPattern('#-#');

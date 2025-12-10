@@ -44,11 +44,13 @@ require_once 'Zend/Db/Adapter/Db2Test.php';
  */
 class Zend_Db_Adapter_Pdo_IbmTest extends Zend_Db_Adapter_Db2Test
 {
+    #[\Override]
     public function getDriver()
     {
         return 'Pdo_Ibm';
     }
 
+    #[\Override]
     public function testAdapterTransactionCommit()
     {
         $server = $this->_util->getServer();
@@ -60,6 +62,7 @@ class Zend_Db_Adapter_Pdo_IbmTest extends Zend_Db_Adapter_Db2Test
         }
     }
 
+    #[\Override]
     public function testAdapterTransactionRollback()
     {
         $server = $this->_util->getServer();
@@ -71,6 +74,7 @@ class Zend_Db_Adapter_Pdo_IbmTest extends Zend_Db_Adapter_Db2Test
         }
     }
 
+    #[\Override]
     public function testAdapterLimitInvalidArgumentException()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -86,7 +90,7 @@ class Zend_Db_Adapter_Pdo_IbmTest extends Zend_Db_Adapter_Db2Test
             $this->fail('Expected to catch Zend_Db_Adapter_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Adapter_Exception,
-                'Expecting object of type Zend_Db_Adapter_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Adapter_Exception, got '.$e::class);
         }
     }
 
@@ -95,6 +99,7 @@ class Zend_Db_Adapter_Pdo_IbmTest extends Zend_Db_Adapter_Db2Test
      * DB2 returns identifiers in uppercase naturally,
      * while IDS does not
      */
+    #[\Override]
     protected function _testAdapterOptionCaseFoldingNaturalIdentifier()
     {
         $server = $this->_util->getServer();

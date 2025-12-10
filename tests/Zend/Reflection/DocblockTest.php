@@ -41,7 +41,7 @@ class Zend_Reflection_DocblockTest extends PHPUnit_Framework_TestCase
     public function setup()
     {
         if (self::$_sampleClassFileRequired === false) {
-            $fileToRequire = dirname(__FILE__) . '/_files/TestSampleClass.php';
+            $fileToRequire = __DIR__ . '/_files/TestSampleClass.php';
             require_once $fileToRequire;
             self::$_sampleClassFileRequired = true;
         }
@@ -80,7 +80,7 @@ EOS;
         $this->assertEquals($classReflection->getMethod('doSomething')->getDocblock()->hasTag('return'), true);
 
         $returnTag = $classReflection->getMethod('doSomething')->getDocblock()->getTag('return');
-        $this->assertEquals(get_class($returnTag), 'Zend_Reflection_Docblock_Tag_Return');
+        $this->assertEquals($returnTag::class, 'Zend_Reflection_Docblock_Tag_Return');
         $this->assertEquals($returnTag->getType(), 'mixed');
     }
 

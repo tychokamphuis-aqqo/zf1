@@ -39,6 +39,7 @@ require_once 'Zend/Db/Profiler/TestCommon.php';
 class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
 {
 
+    #[\Override]
     public function testProfilerPreparedStatementWithParams()
     {
         $bug_id = $this->_db->quoteIdentifier('bug_id', true);
@@ -50,7 +51,7 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $stmt = $this->_db->prepare($select->__toString());
 
         // execute query a first time
-        $stmt->execute(array(':bug_id' => 2));
+        $stmt->execute([':bug_id' => 2]);
         $results = $stmt->fetchAll();
         $this->assertTrue(is_array($results));
         $this->assertEquals(2, $results[0]['bug_id']);
@@ -67,10 +68,10 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $this->assertContains(" = :bug_id", $sql);
         $params = $qp->getQueryParams();
         $this->assertTrue(is_array($params));
-        $this->assertEquals(array(':bug_id' => 2), $params);
+        $this->assertEquals([':bug_id' => 2], $params);
 
         // execute query a second time
-        $stmt->execute(array(':bug_id' => 3));
+        $stmt->execute([':bug_id' => 3]);
         $results = $stmt->fetchAll();
         $this->assertTrue(is_array($results));
         $this->assertEquals(3, $results[0]['bug_id']);
@@ -87,9 +88,10 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $this->assertContains(" = :bug_id", $sql);
         $params = $qp->getQueryParams();
         $this->assertTrue(is_array($params));
-        $this->assertEquals(array(':bug_id' => 3), $params);
+        $this->assertEquals([':bug_id' => 3], $params);
     }
 
+    #[\Override]
     public function testProfilerPreparedStatementWithBoundParams()
     {
         $bug_id = $this->_db->quoteIdentifier('bug_id', true);
@@ -121,7 +123,7 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $this->assertContains(" = :bug_id", $sql);
         $params = $qp->getQueryParams();
         $this->assertTrue(is_array($params));
-        $this->assertEquals(array(':bug_id' => 2), $params);
+        $this->assertEquals([':bug_id' => 2], $params);
 
         // execute query a first time
         $id = 3;
@@ -142,7 +144,7 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $this->assertContains(" = :bug_id", $sql);
         $params = $qp->getQueryParams();
         $this->assertTrue(is_array($params));
-        $this->assertEquals(array(':bug_id' => 3), $params);
+        $this->assertEquals([':bug_id' => 3], $params);
     }
 
     /**
@@ -150,6 +152,7 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
      *
      * @return void
      */
+    #[\Override]
     protected function _testProfilerSetFilterQueryTypeCommon($queryType)
     {
         $bugs = $this->_db->quoteIdentifier('zfbugs', true);
@@ -163,9 +166,9 @@ class Zend_Db_Profiler_OracleTest extends Zend_Db_Profiler_TestCommon
         $this->assertEquals($queryType, $prof->getFilterQueryType());
 
         $this->_db->query("SELECT * FROM $bugs");
-        $this->_db->query("INSERT INTO $bugs ($bug_id, $bug_status) VALUES (:id, :status)", array(':id' => 100,':status' => 'NEW'));
+        $this->_db->query("INSERT INTO $bugs ($bug_id, $bug_status) VALUES (:id, :status)", [':id' => 100,':status' => 'NEW']);
         $this->_db->query("DELETE FROM $bugs");
-        $this->_db->query("UPDATE $bugs SET $bug_status = :status", array(':status'=>'FIXED'));
+        $this->_db->query("UPDATE $bugs SET $bug_status = :status", [':status'=>'FIXED']);
 
         $qps = $prof->getQueryProfiles();
         $this->assertTrue(is_array($qps), 'Expecting some query profiles, got none');

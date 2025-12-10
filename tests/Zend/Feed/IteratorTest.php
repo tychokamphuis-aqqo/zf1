@@ -40,8 +40,8 @@ class Zend_Feed_IteratorTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_feed = Zend_Feed::importFile(dirname(__FILE__) . '/_files/TestAtomFeed.xml');
-        $this->_nsfeed = Zend_Feed::importFile(dirname(__FILE__) . '/_files/TestAtomFeedNamespaced.xml');
+        $this->_feed = Zend_Feed::importFile(__DIR__ . '/_files/TestAtomFeed.xml');
+        $this->_nsfeed = Zend_Feed::importFile(__DIR__ . '/_files/TestAtomFeedNamespaced.xml');
     }
 
     public function testRewind()
@@ -92,17 +92,17 @@ class Zend_Feed_IteratorTest extends PHPUnit_Framework_TestCase
 
     public function testKey()
     {
-        $keys = array();
+        $keys = [];
         foreach ($this->_feed as $k => $f) {
             $keys[] = $k;
         }
-        $this->assertEquals($keys, array(0, 1), 'Feed should have keys 0 and 1');
+        $this->assertEquals($keys, [0, 1], 'Feed should have keys 0 and 1');
 
-        $keys = array();
+        $keys = [];
         foreach ($this->_nsfeed as $k => $f) {
             $keys[] = $k;
         }
-        $this->assertEquals($keys, array(0, 1), 'Feed should have keys 0 and 1');
+        $this->assertEquals($keys, [0, 1], 'Feed should have keys 0 and 1');
     }
 
     public function testNext()

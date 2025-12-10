@@ -51,7 +51,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
             if (TESTS_ZEND_MAIL_TEMPDIR != null) {
                 $this->_tmpdir = TESTS_ZEND_MAIL_TEMPDIR;
             } else {
-                $this->_tmpdir = dirname(__FILE__) . '/_files/test.tmp/';
+                $this->_tmpdir = __DIR__ . '/_files/test.tmp/';
             }
             if (!file_exists($this->_tmpdir)) {
                 mkdir($this->_tmpdir);
@@ -68,7 +68,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        $this->_mboxOriginalFile = dirname(__FILE__) . '/_files/test.mbox/INBOX';
+        $this->_mboxOriginalFile = __DIR__ . '/_files/test.mbox/INBOX';
         $this->_mboxFile = $this->_tmpdir . 'INBOX';
 
         copy($this->_mboxOriginalFile, $this->_mboxFile);
@@ -84,8 +84,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testLoadOk()
     {
         try {
-            $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
+        } catch (Exception) {
             $this->fail('exception raised while loading mbox file');
         }
     }
@@ -93,8 +93,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testLoadConfig()
     {
         try {
-            $mail = new Zend_Mail_Storage_Mbox(new Zend_Config(array('filename' => $this->_mboxFile)));
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Mbox(new Zend_Config(['filename' => $this->_mboxFile]));
+        } catch (Exception) {
             $this->fail('exception raised while loading mbox folder');
         }
     }
@@ -102,8 +102,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testNoParams()
     {
         try {
-            $mail = new Zend_Mail_Storage_Mbox(array());
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Mbox([]);
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -113,8 +113,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testLoadFailure()
     {
         try {
-            $mail = new Zend_Mail_Storage_Mbox(array('filename' => 'ThisFileDoesNotExist'));
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Mbox(['filename' => 'ThisFileDoesNotExist']);
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -124,8 +124,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testLoadInvalid()
     {
         try {
-            $mail = new Zend_Mail_Storage_Mbox(array('filename' => __FILE__));
-        } catch (Exception $e) {
+            $mail = new Zend_Mail_Storage_Mbox(['filename' => __FILE__]);
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -134,43 +134,43 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testClose()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         try {
             $mail->close();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while closing mbox file');
         }
     }
 
     public function testHasTop()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $this->assertTrue($mail->hasTop);
     }
 
     public function testHasCreate()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $this->assertFalse($mail->hasCreate);
     }
 
     public function testNoop()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         try {
             $mail->noop();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('exception raised while doing nothing (noop)');
         }
     }
 
     public function testCount()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $count = $mail->countMessages();
         $this->assertEquals(7, $count);
@@ -178,8 +178,8 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testSize()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
-        $shouldSizes = array(1 => 397, 89, 694, 452, 497, 101, 139);
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
+        $shouldSizes = [1 => 397, 89, 694, 452, 497, 101, 139];
 
 
         $sizes = $mail->getSize();
@@ -188,7 +188,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testSingleSize()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $size = $mail->getSize(2);
         $this->assertEquals(89, $size);
@@ -196,7 +196,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testFetchHeader()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $subject = $mail->getMessage(1)->subject;
         $this->assertEquals('Simple Message', $subject);
@@ -214,7 +214,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testFetchMessageHeader()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $subject = $mail->getMessage(1)->subject;
         $this->assertEquals('Simple Message', $subject);
@@ -222,20 +222,20 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testFetchMessageBody()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $content = $mail->getMessage(3)->getContent();
-        list($content, ) = explode("\n", $content, 2);
+        [$content, ] = explode("\n", $content, 2);
         $this->assertEquals('Fair river! in thy bright, clear flow', trim($content));
     }
 
     public function testFailedRemove()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         try {
             $mail->removeMessage(1);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -244,14 +244,14 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testCapa()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
         $capa = $mail->getCapabilities();
         $this->assertTrue(isset($capa['uniqueid']));
     }
 
     public function testValid()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $this->assertFalse($mail->valid());
         $mail->rewind();
@@ -261,11 +261,11 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testOutOfBounds()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         try {
             $mail->seek(INF);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return; // test ok
         }
 
@@ -274,7 +274,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testSleepWake()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $count = $mail->countMessages();
         $content = $mail->getMessage(1)->getContent();
@@ -293,7 +293,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testSleepWakeRemoved()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $count = $mail->countMessages();
         $content = $mail->getMessage(1)->getContent();
@@ -316,7 +316,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
         $check = false;
         try {
             $mail = unserialize($serialzed);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $check = true;
             // test ok
         }
@@ -333,7 +333,7 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
 
     public function testUniqueId()
     {
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
 
         $this->assertFalse($mail->hasUniqueId);
         $this->assertEquals(1, $mail->getNumberByUniqueId($mail->getUniqueId(1)));
@@ -351,9 +351,9 @@ class Zend_Mail_MboxTest extends PHPUnit_Framework_TestCase
     public function testShortMbox()
     {
         $fh = fopen($this->_mboxFile, 'w');
-        fputs($fh, "From \r\nSubject: test\r\nFrom \r\nSubject: test2\r\n");
+        fwrite($fh, "From \r\nSubject: test\r\nFrom \r\nSubject: test2\r\n");
         fclose($fh);
-        $mail = new Zend_Mail_Storage_Mbox(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox(['filename' => $this->_mboxFile]);
         $this->assertEquals($mail->countMessages(), 2);
         $this->assertEquals($mail->getMessage(1)->subject, 'test');
         $this->assertEquals($mail->getMessage(1)->getContent(), '');

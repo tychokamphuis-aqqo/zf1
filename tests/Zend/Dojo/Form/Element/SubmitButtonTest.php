@@ -121,7 +121,7 @@ class Zend_Dojo_Form_Element_SubmitButtonTest extends PHPUnit_Framework_TestCase
 
     public function testGetLabelReturnsTranslatedLabelIfTranslatorIsRegistered()
     {
-        $translations = include dirname(__FILE__) . '/_files/locale/array.php';
+        $translations = include __DIR__ . '/_files/locale/array.php';
         $translate = new Zend_Translate('array', $translations, 'en');
         $this->element->setTranslator($translate)
                       ->setLabel('submit');
@@ -155,7 +155,7 @@ class Zend_Dojo_Form_Element_SubmitButtonTest extends PHPUnit_Framework_TestCase
     public function testLabelIsTranslatedWhenTranslationAvailable()
     {
         // require_once 'Zend/Translate.php';
-        $translations = array('Label' => 'This is the Submit Label');
+        $translations = ['Label' => 'This is the Submit Label'];
         $translate = new Zend_Translate('array', $translations);
         $button = new Zend_Dojo_Form_Element_SubmitButton('foo', 'Label');
         $button->setTranslator($translate);

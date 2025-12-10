@@ -16,10 +16,10 @@ $zfTests = $rootDir . '/tests';
  * Prepend the tests/ directory to the include_path.
  * This allows the tests to run without additional autoloader
  */
-$path = array(
+$path = [
     $zfTests,
     get_include_path()
-);
+];
 set_include_path(implode(PATH_SEPARATOR, $path));
 
 /*
@@ -40,7 +40,7 @@ if (PHP_VERSION_ID >= 70300 && PCRE_VERSION_MAJOR === 10 && PCRE_VERSION_MINOR <
 // workaround for Microsoft WSL
 if (!defined('PHP_OS_WSL')) {
     $uname = php_uname();
-    define('PHP_OS_WSL', strpos($uname, 'Linux') === 0 && strpos($uname, 'Microsoft'));
+    define('PHP_OS_WSL', str_starts_with($uname, 'Linux') && strpos($uname, 'Microsoft'));
 }
 
 /*

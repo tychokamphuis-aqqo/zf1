@@ -126,6 +126,7 @@ class Zend_View_Helper_LayoutTest extends PHPUnit_Framework_TestCase
  */
 class Zend_View_Helper_LayoutTest_Layout extends Zend_Layout
 {
+    #[\Override]
     public static function resetMvcInstance()
     {
         self::$_mvcInstance = null;

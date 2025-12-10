@@ -131,11 +131,11 @@ class Zend_Service_Rackspace_Servers_OfflineTest extends PHPUnit_Framework_TestC
      */
     public function testCreateServer()
     {       
-        $data = array (
+        $data =  [
             'name'     => TESTS_ZEND_SERVICE_RACKSPACE_SERVER_NAME,
             'imageId'  => TESTS_ZEND_SERVICE_RACKSPACE_SERVER_IMAGEID,
             'flavorId' => TESTS_ZEND_SERVICE_RACKSPACE_SERVER_FLAVORID
-        );
+        ];
         $server= $this->rackspace->createServer($data);
         
         $this->assertTrue($server!==false);
@@ -179,7 +179,7 @@ class Zend_Service_Rackspace_Servers_OfflineTest extends PHPUnit_Framework_TestC
      */
     public function testChangeServerPassword()
     {
-        self::$adminPass= md5(time().rand());
+        self::$adminPass= md5(time().random_int(0, mt_getrandmax()));
         $this->assertTrue($this->rackspace->changeServerPassword(self::$serverId,self::$adminPass));
     }
     /**

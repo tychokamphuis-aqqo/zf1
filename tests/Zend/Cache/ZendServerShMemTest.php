@@ -43,74 +43,87 @@ class Zend_Cache_ZendServerShMemTest extends Zend_Cache_CommonBackendTest {
 
     protected $_instance;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct('Zend_Cache_Backend_ZendServer_Disk', $data, $dataName);
     }
 
+    #[\Override]
     public function setUp($notag = true)
     {
         $this->_instance = new Zend_Cache_Backend_ZendServer_ShMem();
         parent::setUp(true);
     }
 
+    #[\Override]
     public function tearDown()
     {
         parent::tearDown();
         unset($this->_instance);
     }
 
+    #[\Override]
     public function testConstructorCorrectCall()
     {
         $test = new Zend_Cache_Backend_ZendServer_ShMem();
     }
 
+    #[\Override]
     public function testCleanModeOld() {
-        $this->_instance->setDirectives(array('logging' => false));
+        $this->_instance->setDirectives(['logging' => false]);
         $this->_instance->clean('old');
         // do nothing, just to see if an error occured
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 
+    #[\Override]
     public function testCleanModeMatchingTags() {
-        $this->_instance->setDirectives(array('logging' => false));
-        $this->_instance->clean('matchingTag', array('tag1'));
+        $this->_instance->setDirectives(['logging' => false]);
+        $this->_instance->clean('matchingTag', ['tag1']);
         // do nothing, just to see if an error occured
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 
+    #[\Override]
     public function testCleanModeNotMatchingTags() {
-        $this->_instance->setDirectives(array('logging' => false));
-        $this->_instance->clean('notMatchingTag', array('tag1'));
+        $this->_instance->setDirectives(['logging' => false]);
+        $this->_instance->clean('notMatchingTag', ['tag1']);
         // do nothing, just to see if an error occured
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 
     // Because of limitations of this backend...
+    #[\Override]
     public function testGetWithAnExpiredCacheId() {}
+    #[\Override]
     public function testCleanModeMatchingTags2() {}
+    #[\Override]
     public function testCleanModeNotMatchingTags2() {}
+    #[\Override]
     public function testCleanModeNotMatchingTags3() {}
+    #[\Override]
     public function testSaveCorrectCall()
     {
-        $this->_instance->setDirectives(array('logging' => false));
+        $this->_instance->setDirectives(['logging' => false]);
         parent::testSaveCorrectCall();
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 
+    #[\Override]
     public function testSaveWithNullLifeTime()
     {
-        $this->_instance->setDirectives(array('logging' => false));
+        $this->_instance->setDirectives(['logging' => false]);
         parent::testSaveWithNullLifeTime();
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 
+    #[\Override]
     public function testSaveWithSpecificLifeTime()
     {
 
-        $this->_instance->setDirectives(array('logging' => false));
+        $this->_instance->setDirectives(['logging' => false]);
         parent::testSaveWithSpecificLifeTime();
-        $this->_instance->setDirectives(array('logging' => true));
+        $this->_instance->setDirectives(['logging' => true]);
     }
 }
 

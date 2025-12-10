@@ -40,7 +40,7 @@
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Custom_Message extends Zend_Queue_Message
+class Custom_Message extends Zend_Queue_Message implements \Stringable
 {
     /**
      * We adjusted the constructor to accept both an array and an object.
@@ -61,8 +61,8 @@ class Custom_Message extends Zend_Queue_Message
      *
      * @return string
      */
-    public function __toString() {
-        return $this->_data['body'];
+    public function __toString(): string {
+        return (string) $this->_data['body'];
     }
 
     /**

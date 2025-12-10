@@ -49,6 +49,7 @@ class Zend_Db_Select_MysqliTest extends Zend_Db_Select_TestCommon
      * @group ZF-2017
      * @expectedException Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function testSelectQueryWithBinds()
     {
         parent::testSelectQueryWithBinds();

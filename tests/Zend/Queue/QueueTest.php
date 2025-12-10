@@ -60,10 +60,10 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // Test Zend_Config
-        $this->config = array(
+        $this->config = [
             'name'      => 'queue1',
-            'params'    => array(),
-        );
+            'params'    => [],
+        ];
 
         $this->queue = new Zend_Queue('array', $this->config);
     }
@@ -75,7 +75,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
     public function testConst()
     {
         $this->assertTrue(is_string(Zend_Queue::TIMEOUT));
-        $this->assertTrue(is_integer(Zend_Queue::VISIBILITY_TIMEOUT));
+        $this->assertTrue(is_int(Zend_Queue::VISIBILITY_TIMEOUT));
         $this->assertTrue(is_string(Zend_Queue::NAME));
     }
 
@@ -88,11 +88,11 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         // Test Zend_Config
-        $config = array(
+        $config = [
             'name'      => 'queue1',
-            'params'    => array(),
+            'params'    => [],
             'adapter'   => 'array'
-        );
+        ];
 
         // require_once "Zend/Config.php";
         $zend_config = new Zend_Config($config);
@@ -103,7 +103,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         try {
             $obj = new Zend_Queue('ops');
             $this->fail('Zend_Queue cannot accept a string');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
     }
@@ -146,7 +146,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
     {
         // parameter testing
         try {
-            $this->queue->createQueue(array());
+            $this->queue->createQueue([]);
             $this->fail('createQueue() $name must be a string');
         } catch (Exception $e) {
             $this->assertTrue(true);
@@ -155,7 +155,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         try {
             $this->queue->createQueue('test', 'test');
             $this->fail('createQueue() $timeout must be an integer');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
 
@@ -173,7 +173,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         // ------------------------------------ send()
         // parameter verification
         try {
-            $this->queue->send(array());
+            $this->queue->send([]);
             $this->fail('send() $mesage must be a string');
         } catch (Exception $e) {
             $this->assertTrue(true);
@@ -188,16 +188,16 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         // ------------------------------------ receive()
         // parameter verification
         try {
-            $this->queue->receive(array());
+            $this->queue->receive([]);
             $this->fail('receive() $maxMessages must be a integer or null');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
 
         try {
-            $this->queue->receive(1, array());
+            $this->queue->receive(1, []);
             $this->fail('receive() $timeout must be a integer or null');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
 
@@ -205,7 +205,7 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($messages instanceof Zend_Queue_Message_Iterator);
 
         // ------------------------------------ deleteMessage()
-        foreach ($messages as $i => $message) {
+        foreach ($messages as $message) {
             $this->assertTrue($this->queue->deleteMessage($message));
         }
     }
@@ -216,11 +216,11 @@ class Zend_Queue_QueueTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($list));
 
         // these functions must have an boolean answer
-        $func = array(
+        $func = [
             'create', 'delete', 'send', 'receive',
             'deleteMessage', 'getQueues', 'count',
             'isExists'
-        );
+        ];
 
         foreach ( array_values($func) as $f ) {
             $this->assertTrue(isset($list[$f]));

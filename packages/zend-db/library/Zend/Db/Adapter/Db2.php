@@ -62,7 +62,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
      *
      * @var array
      */
-    protected $_config = array(
+    protected $_config = [
         'dbname'       => null,
         'username'     => null,
         'password'     => null,
@@ -72,7 +72,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
         'persistent'   => false,
         'os'           => null,
         'schema'       => null
-    );
+    ];
 
     /**
      * Execution mode
@@ -100,7 +100,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -109,7 +109,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
         'BIGINT'             => Zend_Db::BIGINT_TYPE,
         'DECIMAL'            => Zend_Db::FLOAT_TYPE,
         'NUMERIC'            => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Creates a connection resource.
@@ -146,11 +146,11 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
         }
 
         if (isset($this->_config['options'][Zend_Db::CASE_FOLDING])) {
-            $caseAttrMap = array(
+            $caseAttrMap = [
                 Zend_Db::CASE_NATURAL => DB2_CASE_NATURAL,
                 Zend_Db::CASE_UPPER   => DB2_CASE_UPPER,
                 Zend_Db::CASE_LOWER   => DB2_CASE_LOWER
-            );
+            ];
             $this->_config['driver_options']['DB2_ATTR_CASE'] = $caseAttrMap[$this->_config['options'][Zend_Db::CASE_FOLDING]];
         }
 
@@ -278,6 +278,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
      * @param string $value     Raw string
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -297,6 +298,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
     /**
      * @return string
      */
+    #[\Override]
     public function getQuoteIdentifierSymbol()
     {
         $this->_connect();
@@ -325,7 +327,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
             $schema = $this->_config['schema'];
         }
 
-        $tables = array();
+        $tables = [];
 
         if (!$this->_isI5) {
             if ($schema) {
@@ -428,7 +430,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
             $sql .= " ORDER BY C.ORDINAL_POSITION FOR FETCH ONLY";
         }
 
-        $desc = array();
+        $desc = [];
         $stmt = $this->query($sql);
 
         /**
@@ -453,8 +455,8 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
         $tabconstType   = 10;
         $colseq         = 11;
 
-        foreach ($result as $key => $row) {
-            list ($primary, $primaryPosition, $identity) = array(false, null, false);
+        foreach ($result as $row) {
+            [$primary, $primaryPosition, $identity] = [false, null, false];
             if ($row[$tabconstType] == 'P') {
                 $primary = true;
                 $primaryPosition = $row[$colseq];
@@ -468,7 +470,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
             }
 
             // only colname needs to be case adjusted
-            $desc[$this->foldCase($row[$colname])] = array(
+            $desc[$this->foldCase($row[$colname])] = [
                 'SCHEMA_NAME'      => $this->foldCase($row[$tabschema]),
                 'TABLE_NAME'       => $this->foldCase($row[$tabname]),
                 'COLUMN_NAME'      => $this->foldCase($row[$colname]),
@@ -483,7 +485,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
                 'PRIMARY'          => $primary,
                 'PRIMARY_POSITION' => $primaryPosition,
                 'IDENTITY'         => $identity
-            );
+            ];
         }
 
         return $desc;
@@ -628,28 +630,21 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
      */
     public function setFetchMode($mode)
     {
-        switch ($mode) {
-            case Zend_Db::FETCH_NUM:   // seq array
-            case Zend_Db::FETCH_ASSOC: // assoc array
-            case Zend_Db::FETCH_BOTH:  // seq+assoc array
-            case Zend_Db::FETCH_OBJ:   // object
-                $this->_fetchMode = $mode;
-                break;
-            case Zend_Db::FETCH_BOUND:   // bound to PHP variable
-                /**
-                 * @see Zend_Db_Adapter_Db2_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Db2/Exception.php';
-                throw new Zend_Db_Adapter_Db2_Exception('FETCH_BOUND is not supported yet');
-                break;
-            default:
-                /**
-                 * @see Zend_Db_Adapter_Db2_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Db2/Exception.php';
-                throw new Zend_Db_Adapter_Db2_Exception("Invalid fetch mode '$mode' specified");
-                break;
-        }
+        $this->_fetchMode = match ($mode) {
+            // object
+            Zend_Db::FETCH_NUM, Zend_Db::FETCH_ASSOC, Zend_Db::FETCH_BOTH, Zend_Db::FETCH_OBJ => $mode,
+            // bound to PHP variable
+            /**
+             * @see Zend_Db_Adapter_Db2_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Db2/Exception.php';
+            Zend_Db::FETCH_BOUND => throw new Zend_Db_Adapter_Db2_Exception('FETCH_BOUND is not supported yet'),
+            /**
+             * @see Zend_Db_Adapter_Db2_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Db2/Exception.php';
+            default => throw new Zend_Db_Adapter_Db2_Exception("Invalid fetch mode '$mode' specified"),
+        };
     }
 
     /**
@@ -730,7 +725,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
         if ($server_info !== false) {
             $version = $server_info->DBMS_VER;
             if ($this->_isI5) {
-                $version = (int) substr($version, 0, 2) . '.' . (int) substr($version, 2, 2) . '.' . (int) substr($version, 4);
+                $version = (int) substr((string) $version, 0, 2) . '.' . (int) substr((string) $version, 2, 2) . '.' . (int) substr((string) $version, 4);
             }
             return $version;
         } else {
@@ -786,7 +781,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
     protected function _i5listTables($schema = null)
     {
         //list of i5 libraries.
-        $tables = array();
+        $tables = [];
         if ($schema) {
             $tablesStatement = db2_tables($this->_connection, null, $schema);
             while ($rowTables = db2_fetch_assoc($tablesStatement) ) {
@@ -823,7 +818,7 @@ class Zend_Db_Adapter_Db2 extends Zend_Db_Adapter_Abstract
             return $value;
         }
 
-        if (strtoupper($idType) === 'S'){
+        if (strtoupper((string) $idType) === 'S'){
             //check i5_lib option
             $sequenceName = $objectName;
             return $this->lastSequenceId($sequenceName);

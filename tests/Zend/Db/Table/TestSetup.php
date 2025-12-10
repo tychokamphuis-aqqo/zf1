@@ -45,10 +45,11 @@ abstract class Zend_Db_Table_TestSetup extends Zend_Db_TestSetup
     /**
      * @var array of Zend_Db_Table_Abstract
      */
-    protected $_table = array();
+    protected $_table = [];
 
     protected $_runtimeIncludePath = null;
 
+    #[\Override]
     public function setUp()
     {
         parent::setUp();
@@ -59,6 +60,7 @@ abstract class Zend_Db_Table_TestSetup extends Zend_Db_TestSetup
         $this->_table['products']      = $this->_getTable('My_ZendDbTable_TableProducts');
     }
 
+    #[\Override]
     public function tearDown()
     {
         if ($this->_runtimeIncludePath) {
@@ -67,7 +69,7 @@ abstract class Zend_Db_Table_TestSetup extends Zend_Db_TestSetup
         parent::tearDown();
     }
 
-    protected function _getTable($tableClass, $options = array())
+    protected function _getTable($tableClass, $options = [])
     {
         if (is_array($options) && !isset($options['db'])) {
             $options['db'] = $this->_db;
@@ -84,7 +86,7 @@ abstract class Zend_Db_Table_TestSetup extends Zend_Db_TestSetup
     protected function _useMyIncludePath()
     {
         $this->_runtimeIncludePath = get_include_path();
-        set_include_path(dirname(__FILE__) . '/_files/' . PATH_SEPARATOR . $this->_runtimeIncludePath);
+        set_include_path(__DIR__ . '/_files/' . PATH_SEPARATOR . $this->_runtimeIncludePath);
     }
 
     protected function _restoreIncludePath()

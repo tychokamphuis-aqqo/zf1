@@ -45,7 +45,8 @@ class Db_MockNoResult extends Zend_Db_Adapter_Abstract
      * @param mixed                 $fetchMode Override current fetch mode.
      * @return null
      */
-    public function fetchRow($sql, $bind = array(), $fetchMode = null)
+    #[\Override]
+    public function fetchRow($sql, $bind = [], $fetchMode = null)
     {
         return null;
     }

@@ -82,6 +82,7 @@ class Zend_Mail_Protocol_Smtp_Auth_Plain extends Zend_Mail_Protocol_Smtp
      *
      * @return void
      */
+    #[\Override]
     public function auth()
     {
         // Ensure AUTH has not already been initiated.

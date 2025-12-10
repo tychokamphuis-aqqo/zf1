@@ -71,7 +71,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
      * parts of multipart message
      * @var array
      */
-    protected $_parts = array();
+    protected $_parts = [];
 
     /**
      * count of parts of a multipart message
@@ -196,7 +196,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
     public function getPartClass()
     {
         if ( !$this->_partClass ) {
-            $this->_partClass = __CLASS__;
+            $this->_partClass = self::class;
         }
         return $this->_partClass;
     }
@@ -210,7 +210,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
     {
         try {
             return stripos($this->contentType, 'multipart/') === 0;
-        } catch(Zend_Mail_Exception $e) {
+        } catch(Zend_Mail_Exception) {
             return false;
         }
     }
@@ -286,7 +286,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
         $partClass = $this->getPartClass();
         $counter = 1;
         foreach ($parts as $part) {
-            $this->_parts[$counter++] = new $partClass(array('headers' => $part['header'], 'content' => $part['body']));
+            $this->_parts[$counter++] = new $partClass(['headers' => $part['header'], 'content' => $part['body']]);
         }
     }
 
@@ -369,7 +369,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
     {
         if ($this->_headers === null) {
             if (!$this->_mail) {
-                $this->_headers = array();
+                $this->_headers = [];
             } else {
                 $part = $this->_mail->getRawHeader($this->_messageNum);
                 Zend_Mime_Decode::splitMessage($part, $this->_headers, $null);
@@ -399,7 +399,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
         $lowerName = strtolower($name);
 
         if ($this->headerExists($name) == false) {
-            $lowerName = strtolower(preg_replace('%([a-z])([A-Z])%', '\1-\2', $name));
+            $lowerName = strtolower((string) preg_replace('%([a-z])([A-Z])%', '\1-\2', $name));
             if($this->headerExists($lowerName) == false) {
                 /**
                  * @see Zend_Mail_Exception
@@ -499,7 +499,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface, Cou
      *
      * @return string content
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getContent();
     }

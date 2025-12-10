@@ -37,7 +37,7 @@ class Zend_Search_Lucene_Storage_DirectoryTest extends PHPUnit_Framework_TestCas
 {
     public function testFilesystem()
     {
-        $tempPath = dirname(__FILE__) . '/_tempFiles/_files';
+        $tempPath = __DIR__ . '/_tempFiles/_files';
 
         if (is_dir($tempPath)) {
             // remove files from temporary direcytory
@@ -60,7 +60,7 @@ class Zend_Search_Lucene_Storage_DirectoryTest extends PHPUnit_Framework_TestCas
         unset($fileObject);
         $this->assertEquals($directory->fileLength('file1'), 0);
 
-        $this->assertEquals(count(array_diff($directory->fileList(), array('file1'))), 0);
+        $this->assertEquals(count(array_diff($directory->fileList(), ['file1'])), 0);
 
         $directory->deleteFile('file1');
         $this->assertEquals(count($directory->fileList()), 0);
@@ -74,7 +74,7 @@ class Zend_Search_Lucene_Storage_DirectoryTest extends PHPUnit_Framework_TestCas
         $this->assertEquals($directory->fileLength('file2'), 10);
 
         $directory->renameFile('file2', 'file3');
-        $this->assertEquals(count(array_diff($directory->fileList(), array('file3'))), 0);
+        $this->assertEquals(count(array_diff($directory->fileList(), ['file3'])), 0);
 
         $modifiedAt1 = $directory->fileModified('file3');
         clearstatcache();
@@ -104,13 +104,13 @@ class Zend_Search_Lucene_Storage_DirectoryTest extends PHPUnit_Framework_TestCas
 
     public function testFilesystemSubfoldersAutoCreation()
     {
-        $directory = new Zend_Search_Lucene_Storage_Directory_Filesystem(dirname(__FILE__) . '/_tempFiles/_files/dir1/dir2/dir3');
+        $directory = new Zend_Search_Lucene_Storage_Directory_Filesystem(__DIR__ . '/_tempFiles/_files/dir1/dir2/dir3');
         $this->assertTrue($directory instanceof Zend_Search_Lucene_Storage_Directory);
         $directory->close();
 
-        rmdir(dirname(__FILE__) . '/_tempFiles/_files/dir1/dir2/dir3');
-        rmdir(dirname(__FILE__) . '/_tempFiles/_files/dir1/dir2');
-        rmdir(dirname(__FILE__) . '/_tempFiles/_files/dir1');
+        rmdir(__DIR__ . '/_tempFiles/_files/dir1/dir2/dir3');
+        rmdir(__DIR__ . '/_tempFiles/_files/dir1/dir2');
+        rmdir(__DIR__ . '/_tempFiles/_files/dir1');
     }
 }
 

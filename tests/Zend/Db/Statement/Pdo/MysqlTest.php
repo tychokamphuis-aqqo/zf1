@@ -35,6 +35,7 @@ require_once 'Zend/Db/Statement/Pdo/TestCommon.php';
 class Zend_Db_Statement_Pdo_MysqlTest extends Zend_Db_Statement_Pdo_TestCommon
 {
 
+    #[\Override]
     public function testStatementNextRowset()
     {
         $select = $this->_db->select()
@@ -44,7 +45,7 @@ class Zend_Db_Statement_Pdo_MysqlTest extends Zend_Db_Statement_Pdo_TestCommon
             $stmt->nextRowset();
         } catch (Zend_Db_Statement_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals('SQLSTATE[HYC00]: Optional feature not implemented', $e->getMessage());
         }
         $stmt->closeCursor();
@@ -71,6 +72,7 @@ class Zend_Db_Statement_Pdo_MysqlTest extends Zend_Db_Statement_Pdo_TestCommon
     /**
      * @group ZF-7706
      */
+    #[\Override]
     public function testStatementCanReturnDriverStatement()
     {
         $statement = parent::testStatementCanReturnDriverStatement();

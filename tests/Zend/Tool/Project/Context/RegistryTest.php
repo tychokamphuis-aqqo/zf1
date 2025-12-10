@@ -44,7 +44,7 @@ class Zend_Tool_Project_Context_RepositoryTest extends PHPUnit_Framework_TestCas
 
     public function testGetInstanceReturnsIntstance()
     {
-        $this->assertEquals('Zend_Tool_Project_Context_Repository', get_class(Zend_Tool_Project_Context_Repository::getInstance()));
+        $this->assertEquals('Zend_Tool_Project_Context_Repository', Zend_Tool_Project_Context_Repository::getInstance()::class);
     }
 
     public function testNewRegistryHasSystemContexts()
@@ -54,7 +54,7 @@ class Zend_Tool_Project_Context_RepositoryTest extends PHPUnit_Framework_TestCas
 
     public function testRegistryReturnsSystemContext()
     {
-        $this->assertEquals('Zend_Tool_Project_Context_System_ProjectProfileFile', get_class(Zend_Tool_Project_Context_Repository::getInstance()->getContext('projectProfileFile')));
+        $this->assertEquals('Zend_Tool_Project_Context_System_ProjectProfileFile', Zend_Tool_Project_Context_Repository::getInstance()->getContext('projectProfileFile')::class);
     }
 
     public function testRegistryLoadsZFContexts()
@@ -86,6 +86,6 @@ class Zend_Tool_Project_Context_RepositoryTest extends PHPUnit_Framework_TestCas
     protected function _loadZfSystem()
     {
         $conextRegistry = Zend_Tool_Project_Context_Repository::getInstance();
-        $conextRegistry->addContextsFromDirectory(dirname(__FILE__) . '/../../../../../packages/zend-tool/library/Zend/Tool/Project/Context/Zf/', 'Zend_Tool_Project_Context_Zf_');
+        $conextRegistry->addContextsFromDirectory(__DIR__ . '/../../../../../packages/zend-tool/library/Zend/Tool/Project/Context/Zf/', 'Zend_Tool_Project_Context_Zf_');
     }
 }

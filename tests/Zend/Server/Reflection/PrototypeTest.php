@@ -66,7 +66,7 @@ class Zend_Server_Reflection_PrototypeTest extends PHPUnit_Framework_TestCase
         $parameters = $method->getParameters();
         $this->_parametersRaw = $parameters;
 
-        $fParameters = array();
+        $fParameters = [];
         foreach ($parameters as $p) {
             $fParameters[] = new Zend_Server_Reflection_Parameter($p);
         }
@@ -110,7 +110,7 @@ class Zend_Server_Reflection_PrototypeTest extends PHPUnit_Framework_TestCase
         try {
             $r1 = new Zend_Server_Reflection_Prototype($this->_r->getReturnValue(), 'string');
             $this->fail('Construction requires an array of parameters');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // do nothing
         }
     }

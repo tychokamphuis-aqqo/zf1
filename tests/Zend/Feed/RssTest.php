@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/AbstractFeedTest.php';
+require_once __DIR__ . '/AbstractFeedTest.php';
 
 /**
  * @see Zend_Feed_Rss
@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . '/AbstractFeedTest.php';
  */
 class Zend_Feed_RssTest extends Zend_Feed_AbstractFeedTest
 {
-    public $remoteFeedNames = array('zend_feed_rss_xxe.remote.xml');
+    public $remoteFeedNames = ['zend_feed_rss_xxe.remote.xml'];
 
     public function testPreventsXxeAttacksOnParsing()
     {

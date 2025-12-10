@@ -107,7 +107,7 @@ EOX;
 
         $this->server = $_SERVER;
         foreach ($_SERVER as $key => $value) {
-            if ('HTTP_' == substr($key, 0, 5)) {
+            if (str_starts_with((string) $key, 'HTTP_')) {
                 unset($_SERVER[$key]);
             }
         }
@@ -135,12 +135,12 @@ EOX;
 
     public function testGetHeaders()
     {
-        $expected = array(
+        $expected = [
             'User-Agent'     => 'Zend_XmlRpc_Client',
             'Host'           => 'localhost',
             'Content-Type'   => 'text/xml',
             'Content-Length' => 958
-        );
+        ];
         $this->assertEquals($expected, $this->request->getHeaders());
     }
 
@@ -161,8 +161,8 @@ EOT;
     public function testCanPassInMethodAndParams()
     {
         try {
-            $request = new Zend_XmlRpc_Request_Http('foo', array('bar', 'baz'));
-        } catch (Exception $e) {
+            $request = new Zend_XmlRpc_Request_Http('foo', ['bar', 'baz']);
+        } catch (Exception) {
             $this->fail('Should be able to pass in methods and params to request');
         }
     }
@@ -170,19 +170,19 @@ EOT;
     public function testExtendingClassShouldBeAbleToReceiveMethodAndParams()
     {
         try {
-            $request = new Zend_XmlRpc_Request_HttpTest_Extension('foo', array('bar', 'baz'));
-        } catch (Exception $e) {
+            $request = new Zend_XmlRpc_Request_HttpTest_Extension('foo', ['bar', 'baz']);
+        } catch (Exception) {
             $this->fail('Should be able to pass in methods and params to request');
         }
         $this->assertEquals('foo', $request->method);
-        $this->assertEquals(array('bar', 'baz'), $request->params);
+        $this->assertEquals(['bar', 'baz'], $request->params);
     }
 
     public function testHttpRequestReadsFromPhpInput()
     {
         $this->assertNull(Zend_AllTests_StreamWrapper_PhpInput::argumentsPassedTo('stream_open'));
         $request = new Zend_XmlRpc_Request_Http();
-        list($path, $mode,) = Zend_AllTests_StreamWrapper_PhpInput::argumentsPassedTo('stream_open');
+        [$path, $mode, ] = Zend_AllTests_StreamWrapper_PhpInput::argumentsPassedTo('stream_open');
         $this->assertSame('php://input', $path);
         $this->assertSame('rb', $mode);
         $this->assertSame($this->xml, $request->getRawRequest());
@@ -200,17 +200,15 @@ EOT;
 class Zend_XmlRpc_Request_HttpTest_Extension extends Zend_XmlRpc_Request_Http
 {
     /**
-     * @var string|null
-     */
-    public $method;
-    /**
      * @var array
      */
     public $params;
 
-    public function __construct($method = null, $params = null)
+    /**
+     * @param string|null $method
+     */
+    public function __construct(public $method = null, $params = null)
     {
-        $this->method = $method;
         $this->params = (array) $params;
     }
 }

@@ -63,7 +63,7 @@ class Zend_Server_ReflectionTest extends PHPUnit_Framework_TestCase
         try {
             $reflection = Zend_Server_Reflection::reflectClass(false);
             $this->fail('Passing non-object/class should fail');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // do nothing
         }
     }
@@ -99,7 +99,7 @@ class Zend_Server_ReflectionTest extends PHPUnit_Framework_TestCase
         try {
             $reflection = Zend_Server_Reflection::reflectFunction('Zend_Server_Reflection_testFunction', 'string');
             $this->fail('Argv array should be an array');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // do nothing
         }
     }

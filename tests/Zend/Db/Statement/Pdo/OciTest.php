@@ -38,6 +38,7 @@ require_once 'Zend/Db/Statement/Pdo/TestCommon.php';
 class Zend_Db_Statement_Pdo_OciTest extends Zend_Db_Statement_Pdo_TestCommon
 {
 
+    #[\Override]
     public function testStatementGetColumnMeta()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support statement metadata');

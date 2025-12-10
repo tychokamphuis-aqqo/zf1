@@ -27,7 +27,7 @@
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Json_Server_Response
+class Zend_Json_Server_Response implements \Stringable
 {
     /**
      * @var string
@@ -178,15 +178,15 @@ class Zend_Json_Server_Response
     public function toJson()
     {
         if ($this->isError()) {
-            $response = array(
+            $response = [
                 'error'  => $this->getError()->toArray(),
                 'id'     => $this->getId(),
-            );
+            ];
         } else {
-            $response = array(
+            $response = [
                 'result' => $this->getResult(),
                 'id'     => $this->getId(),
-            );
+            ];
         }
 
         if (null !== ($version = $this->getVersion())) {
@@ -246,7 +246,7 @@ class Zend_Json_Server_Response
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toJson();
     }

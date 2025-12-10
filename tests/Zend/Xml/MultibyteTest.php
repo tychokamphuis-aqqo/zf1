@@ -47,18 +47,18 @@ class Zend_Xml_MultibyteTest extends PHPUnit_Framework_TestCase
 {
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
  
     public function multibyteEncodings()
     {
-        return array(
-            'UTF-16LE' => array('UTF-16LE', pack('CC', 0xff, 0xfe), 3),
-            'UTF-16BE' => array('UTF-16BE', pack('CC', 0xfe, 0xff), 3),
-            'UTF-32LE' => array('UTF-32LE', pack('CCCC', 0xff, 0xfe, 0x00, 0x00), 4),
-            'UTF-32BE' => array('UTF-32BE', pack('CCCC', 0x00, 0x00, 0xfe, 0xff), 4),
-        );
+        return [
+            'UTF-16LE' => ['UTF-16LE', pack('CC', 0xff, 0xfe), 3],
+            'UTF-16BE' => ['UTF-16BE', pack('CC', 0xfe, 0xff), 3],
+            'UTF-32LE' => ['UTF-32LE', pack('CCCC', 0xff, 0xfe, 0x00, 0x00), 4],
+            'UTF-32BE' => ['UTF-32BE', pack('CCCC', 0x00, 0x00, 0xfe, 0xff), 4],
+        ];
     }
 
     public function getXmlWithXXE()
@@ -94,8 +94,8 @@ XML;
     {
         $xml = $this->getXmlWithXXE();
         $xml = str_replace('{ENCODING}', $encoding, $xml);
-        $xml = iconv('UTF-8', $encoding, $xml);
-        $this->assertNotSame(0, strncmp($xml, $bom, $bomLength));
+        $xml = iconv('UTF-8', (string) $encoding, $xml);
+        $this->assertNotSame(0, strncmp($xml, (string) $bom, $bomLength));
         $this->setExpectedException('Zend_Xml_Exception', 'ENTITY');
         $this->invokeHeuristicScan($xml);
     }
@@ -107,7 +107,7 @@ XML;
     {
         $xml  = $this->getXmlWithXXE();
         $xml  = str_replace('{ENCODING}', $encoding, $xml);
-        $orig = iconv('UTF-8', $encoding, $xml);
+        $orig = iconv('UTF-8', (string) $encoding, $xml);
         $xml  = $bom . $orig;
         $this->setExpectedException('Zend_Xml_Exception', 'ENTITY');
         $this->invokeHeuristicScan($xml);
@@ -130,11 +130,11 @@ XML;
     {
         $xml = $this->getXmlWithoutXXE();
         $xml = str_replace('{ENCODING}', $encoding, $xml);
-        $xml = iconv('UTF-8', $encoding, $xml);
+        $xml = iconv('UTF-8', (string) $encoding, $xml);
         try {
             $result = $this->invokeHeuristicScan($xml);
             $this->assertNull($result);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('Security scan raised exception when it should not have');
         }
     }
@@ -147,7 +147,7 @@ XML;
     {
         $xml = $this->getXmlWithXXE();
         $xml = str_replace('{ENCODING}', 'UTF-8', $xml);
-        $xml = iconv('UTF-8', $encoding, $xml);
+        $xml = iconv('UTF-8', (string) $encoding, $xml);
         $xml = $bom . $xml;
         $this->setExpectedException('Zend_Xml_Exception', 'ENTITY');
         $this->invokeHeuristicScan($xml);

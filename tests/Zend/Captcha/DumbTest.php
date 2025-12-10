@@ -73,12 +73,12 @@ class Zend_Captcha_DumbTest extends PHPUnit_Framework_TestCase
 
         $this->element = new Zend_Form_Element_Captcha(
             'captchaD',
-            array(
-                'captcha' => array(
+            [
+                'captcha' => [
                     'Dumb',
                     'sessionClass' => 'Zend_Captcha_DumbTest_SessionContainer'
-                )
-            )
+                ]
+            ]
         );
         $this->captcha =  $this->element->getCaptcha();
     }
@@ -98,7 +98,7 @@ class Zend_Captcha_DumbTest extends PHPUnit_Framework_TestCase
         $id   = $this->captcha->generate('test');
         $word = $this->captcha->getWord();
         $html = $this->captcha->render(new Zend_View);
-        $this->assertContains(strrev($word), $html);
+        $this->assertContains(strrev((string) $word), $html);
         $this->assertNotContains($word, $html);
     }
 

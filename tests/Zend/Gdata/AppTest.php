@@ -82,16 +82,16 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->expectedMajorProtocolVersion = 1;
         $this->expectedMinorProtocolVersion = 2;
         $this->httpEntrySample = $this->loadResponse(
-            dirname(__FILE__) . '/_files/AppSample1.txt'
+            __DIR__ . '/_files/AppSample1.txt'
         );
         $this->httpEntrySampleWithoutVersion = $this->loadResponse(
-            dirname(__FILE__) . '/_files/AppSample2.txt'
+            __DIR__ . '/_files/AppSample2.txt'
         );
         $this->httpFeedSample = $this->loadResponse(
-            dirname(__FILE__) . '/_files/AppSample3.txt'
+            __DIR__ . '/_files/AppSample3.txt'
         );
         $this->httpFeedSampleWithoutVersion = $this->loadResponse(
-            dirname(__FILE__) . '/_files/AppSample4.txt'
+            __DIR__ . '/_files/AppSample4.txt'
         );
 
         $this->adapter = new Test_Zend_Gdata_MockHttpClient();
@@ -143,7 +143,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $exceptionCaught = false;
         try {
             $this->service->setMajorProtocolVersion(0);
-        } catch (Zend_Gdata_App_InvalidArgumentException $e) {
+        } catch (Zend_Gdata_App_InvalidArgumentException) {
             $exceptionCaught = true;
         }
         $this->assertTrue($exceptionCaught, 'Expected exception not caught: '
@@ -155,7 +155,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $exceptionCaught = false;
         try {
             $this->service->setMajorProtocolVersion(null);
-        } catch (Zend_Gdata_App_InvalidArgumentException $e) {
+        } catch (Zend_Gdata_App_InvalidArgumentException) {
             $exceptionCaught = true;
         }
         $this->assertTrue($exceptionCaught, 'Expected exception not caught: '
@@ -167,7 +167,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $exceptionCaught = false;
         try {
             $this->service->setMinorProtocolVersion(-1);
-        } catch (Zend_Gdata_App_InvalidArgumentException $e) {
+        } catch (Zend_Gdata_App_InvalidArgumentException) {
             $exceptionCaught = true;
         }
         $this->assertTrue($exceptionCaught, 'Expected exception not caught: '
@@ -176,7 +176,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
 
     public function testNoGdataVersionHeaderSentWhenUsingV1()
     {
-        $this->adapter->setResponse(array('HTTP/1.1 200 OK\r\n\r\n'));
+        $this->adapter->setResponse(['HTTP/1.1 200 OK\r\n\r\n']);
 
         $this->service->setMajorProtocolVersion(1);
         $this->service->setMinorProtocolVersion(null);
@@ -185,7 +185,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
-            if (strstr($header, 'GData-Version:'))
+            if (strstr((string) $header, 'GData-Version:'))
                 $found = true;
         }
         $this->assertFalse($found, 'Version header found in V1 feed');
@@ -193,7 +193,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
 
     public function testNoGdataVersionHeaderSentWhenUsingV1X()
     {
-        $this->adapter->setResponse(array('HTTP/1.1 200 OK\r\n\r\n'));
+        $this->adapter->setResponse(['HTTP/1.1 200 OK\r\n\r\n']);
 
         $this->service->setMajorProtocolVersion(1);
         $this->service->setMinorProtocolVersion(1);
@@ -202,7 +202,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
-            if (strstr($header, 'GData-Version:'))
+            if (strstr((string) $header, 'GData-Version:'))
                 $found = true;
         }
         $this->assertTrue(!$found, 'Version header found in V1 feed');
@@ -210,7 +210,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
 
     public function testGdataVersionHeaderSentWhenUsingV2()
     {
-        $this->adapter->setResponse(array('HTTP/1.1 200 OK\r\n\r\n'));
+        $this->adapter->setResponse(['HTTP/1.1 200 OK\r\n\r\n']);
 
         $this->service->setMajorProtocolVersion(2);
         $this->service->setMinorProtocolVersion(null);
@@ -227,7 +227,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
 
     public function testGdataVersionHeaderSentWhenUsingV2X()
     {
-        $this->adapter->setResponse(array('HTTP/1.1 200 OK\r\n\r\n'));
+        $this->adapter->setResponse(['HTTP/1.1 200 OK\r\n\r\n']);
 
         $this->service->setMajorProtocolVersion(2);
         $this->service->setMinorProtocolVersion(1);
@@ -271,10 +271,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = new Zend_Gdata_App_Entry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $this->service->updateEntry($entry);
         $headers = $this->adapter->popRequest()->headers;
@@ -292,10 +292,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = new Zend_Gdata_App_Entry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $this->service->updateEntry($entry);
         $headers = $this->adapter->popRequest()->headers;
@@ -313,10 +313,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $entry->setService($this->service);
         $entry->save();
@@ -335,10 +335,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $entry->setService($this->service);
         $entry->delete();
@@ -375,10 +375,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $entry->setService($this->service);
         $this->service->put($entry);
@@ -397,10 +397,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $entry->setService($this->service);
         $this->service->delete($entry);
@@ -423,7 +423,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $newEntry = $this->service->insertEntry($entry,
                 'http://www.example.com',
                 'Zend_Gdata_App_Entry',
-                array('If-Match' => $etagOverride));
+                ['If-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -443,7 +443,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $newEntry = $this->service->insertEntry($entry,
                 'http://www.example.com',
                 'Zend_Gdata_App_Entry',
-                array('If-None-Match' => $etagOverride));
+                ['If-None-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -463,7 +463,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $newEntry = $this->service->updateEntry($entry,
                 'http://www.example.com',
                 'Zend_Gdata_App_Entry',
-                array('If-Match' => $etagOverride));
+                ['If-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -483,7 +483,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $newEntry = $this->service->updateEntry($entry,
                 'http://www.example.com',
                 'Zend_Gdata_App_Entry',
-                array('If-None-Match' => $etagOverride));
+                ['If-None-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -503,10 +503,10 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse("HTTP/1.1 201 Created");
         $this->service->setMajorProtocolVersion(2);
         $entry = new Zend_Gdata_App_Entry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $this->service->updateEntry($entry);
 
@@ -648,7 +648,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
     public function testLoadExtensionCausesFatalErrorWhenErrorHandlerIsOverridden()
     {
         // Override the error handler to throw an ErrorException
-        set_error_handler(function($a, $b, $c, $d) { throw new ErrorException($b, 0, $a, $c, $d); }, E_ALL);
+        set_error_handler(function($a, $b, $c, $d): void { throw new ErrorException($b, 0, $a, $c, $d); }, E_ALL);
         try { 
             $eq = $this->service->newEventQuery();
             restore_error_handler();
@@ -660,7 +660,7 @@ class Zend_Gdata_AppTest extends PHPUnit_Framework_TestCase
             // (Expected since we didn't load the Calendar extension dir)
             restore_error_handler();
             $this->assertContains('EventQuery', $ex->getMessage());
-        } catch ( ErrorException $ex ) {
+        } catch ( ErrorException ) {
             restore_error_handler();
             $this->fail('Did not expect ErrorException');
         }

@@ -48,6 +48,7 @@ class Zend_Pdf_Element_String_Binary extends Zend_Pdf_Element_String
      * @param string $inStr
      * @return string
      */
+    #[\Override]
     public static function escape($inStr)
     {
         return strtoupper(bin2hex($inStr));
@@ -60,9 +61,10 @@ class Zend_Pdf_Element_String_Binary extends Zend_Pdf_Element_String
      * @param string $inStr
      * @return string
      */
+    #[\Override]
     public static function unescape($inStr)
     {
-        $chunks = array();
+        $chunks = [];
         $offset = 0;
         $length = 0;
         while ($offset < strlen($inStr)) {
@@ -81,7 +83,7 @@ class Zend_Pdf_Element_String_Binary extends Zend_Pdf_Element_String
             $chunks[] = '0';
         }
 
-        return pack('H*' , implode($chunks));
+        return pack('H*' , implode('', $chunks));
     }
 
 
@@ -91,6 +93,7 @@ class Zend_Pdf_Element_String_Binary extends Zend_Pdf_Element_String
      * @param Zend_Pdf_Factory $factory
      * @return string
      */
+    #[\Override]
     public function toString($factory = null)
     {
         return '<' . self::escape((string)$this->value) . '>';

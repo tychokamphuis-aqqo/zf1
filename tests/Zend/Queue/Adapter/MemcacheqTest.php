@@ -38,7 +38,7 @@
 require_once 'MessageTestClass.php';
 
 /** Base Adapter test class */
-require_once dirname(__FILE__) . '/AdapterTest.php';
+require_once __DIR__ . '/AdapterTest.php';
 
 /**
  * @category   Zend
@@ -73,6 +73,7 @@ class Zend_Queue_Adapter_MemcacheqTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterName()
     {
         return 'Memcacheq';
@@ -87,24 +88,27 @@ class Zend_Queue_Adapter_MemcacheqTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterFullName()
     {
         return 'Zend_Queue_Adapter_' . $this->getAdapterName();
     }
 
+    #[\Override]
     public function getTestConfig()
     {
-        $driverOptions = array();
+        $driverOptions = [];
         if (defined('TESTS_ZEND_QUEUE_MEMCACHEQ_HOST')) {
             $driverOptions['host'] = TESTS_ZEND_QUEUE_MEMCACHEQ_HOST;
         }
         if (defined('TESTS_ZEND_QUEUE_MEMCACHEQ_PORT')) {
             $driverOptions['port'] = TESTS_ZEND_QUEUE_MEMCACHEQ_PORT;
         }
-        return array('driverOptions' => $driverOptions);
+        return ['driverOptions' => $driverOptions];
     }
 
     // test the constants
+    #[\Override]
     public function testConst()
     {
         /**
@@ -112,7 +116,7 @@ class Zend_Queue_Adapter_MemcacheqTest extends Zend_Queue_Adapter_AdapterTest
          */
         // require_once 'Zend/Queue/Adapter/Memcacheq.php';
         $this->assertTrue(is_string(Zend_Queue_Adapter_Memcacheq::DEFAULT_HOST));
-        $this->assertTrue(is_integer(Zend_Queue_Adapter_Memcacheq::DEFAULT_PORT));
+        $this->assertTrue(is_int(Zend_Queue_Adapter_Memcacheq::DEFAULT_PORT));
         $this->assertTrue(is_string(Zend_Queue_Adapter_Memcacheq::EOL));
     }
     
@@ -121,7 +125,7 @@ class Zend_Queue_Adapter_MemcacheqTest extends Zend_Queue_Adapter_AdapterTest
      */
     public function testReceiveWillRetrieveZeroItems()
     {
-        $options = array('name' => 'ZF7650', 'driverOptions' => $this->getTestConfig());
+        $options = ['name' => 'ZF7650', 'driverOptions' => $this->getTestConfig()];
 
         $queue = new Zend_Queue('Memcacheq', $options);
         $queue2 = $queue->createQueue('queue');

@@ -37,6 +37,7 @@ require_once 'Zend/Db/TestUtil/Mysqli.php';
  */
 class Zend_Db_TestUtil_Pdo_Mysql extends Zend_Db_TestUtil_Mysqli
 {
+    #[\Override]
     protected function _rawQuery($sql)
     {
         $conn = $this->_db->getConnection();
@@ -48,16 +49,17 @@ class Zend_Db_TestUtil_Pdo_Mysql extends Zend_Db_TestUtil_Mysqli
         }
     }
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
         $constants = parent::getParams($constants);
 
         if (!isset($constants['driver_options'])) {
-            $constants['driver_options'] = array();
+            $constants['driver_options'] = [];
         }
 
-        if (!isset($constants['driver_options'][PDO::MYSQL_ATTR_USE_BUFFERED_QUERY])) {
-            $constants['driver_options'][PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = true;
+        if (!isset($constants['driver_options'][\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY])) {
+            $constants['driver_options'][\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY] = true;
         }
 
         return $constants;

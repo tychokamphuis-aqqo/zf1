@@ -58,12 +58,12 @@ class Zend_Mime_PartTest extends PHPUnit_Framework_TestCase
 
     public function testHeaders()
     {
-        $expectedHeaders = array('Content-Type: text/plain',
+        $expectedHeaders = ['Content-Type: text/plain',
                                  'Content-Transfer-Encoding: ' . Zend_Mime::ENCODING_BASE64,
                                  'Content-Disposition: attachment',
                                  'filename="test.txt"',
                                  'charset=iso8859-1',
-                                 'Content-ID: <4711>');
+                                 'Content-ID: <4711>'];
 
         $actual = $this->part->getHeaders();
 
@@ -76,11 +76,11 @@ class Zend_Mime_PartTest extends PHPUnit_Framework_TestCase
     {
         // Test with base64 encoding
         $content = $this->part->getContent();
-        $this->assertEquals($this->testText, base64_decode($content));
+        $this->assertEquals($this->testText, base64_decode((string) $content));
         // Test with quotedPrintable Encoding:
         $this->part->encoding = Zend_Mime::ENCODING_QUOTEDPRINTABLE;
         $content = $this->part->getContent();
-        $this->assertEquals($this->testText, quoted_printable_decode($content));
+        $this->assertEquals($this->testText, quoted_printable_decode((string) $content));
         // Test with 8Bit encoding
         $this->part->encoding = Zend_Mime::ENCODING_8BIT;
         $content = $this->part->getContent();

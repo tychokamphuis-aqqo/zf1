@@ -39,7 +39,7 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->_feedSamplePath = dirname(__FILE__) . '/Reader/_files';
+        $this->_feedSamplePath = __DIR__ . '/Reader/_files';
     }
 
     public function tearDown()
@@ -132,7 +132,7 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
     public function testGetEncoding()
     {
         $feed = Zend_Feed_Reader::importString(
-            file_get_contents(dirname(__FILE__) . '/Reader/Entry/_files/Atom/title/plain/atom10.xml')
+            file_get_contents(__DIR__ . '/Reader/Entry/_files/Atom/title/plain/atom10.xml')
         );
 
         $this->assertEquals('utf-8', $feed->getEncoding());
@@ -143,7 +143,7 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
     {
         try {
             $feed = Zend_Feed_Reader::importFile(
-                dirname(__FILE__) . '/Reader/Entry/_files/Atom/title/plain/atom10.xml'
+                __DIR__ . '/Reader/Entry/_files/Atom/title/plain/atom10.xml'
             );
         } catch(Exception $e) {
             $this->fail($e->getMessage());
@@ -209,9 +209,9 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
         }
         $links = Zend_Feed_Reader::findFeedLinks('http://www.planet-php.net');
         $this->assertTrue($links instanceof Zend_Feed_Reader_FeedSet);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'rel' => 'alternate', 'type' => 'application/rss+xml', 'href' => 'http://www.planet-php.org/rss/'
-        ), (array) $links->getIterator()->current());
+        ], (array) $links->getIterator()->current());
     }
 
     public function testFeedSetLoadsFeedObjectWhenFeedArrayKeyAccessed()
@@ -288,8 +288,8 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
             $currClient = Zend_Feed_Reader::getHttpClient();
 
             $testAdapter = new Zend_Http_Client_Adapter_Test();
-            $testAdapter->setResponse(new Zend_Http_Response(200, array(), '<!DOCTYPE html><html><head><link rel="alternate" type="application/rss+xml" href="../test.rss"><link rel="alternate" type="application/atom+xml" href="/test.atom"></head><body></body></html>'));
-            Zend_Feed_Reader::setHttpClient(new Zend_Http_Client(null, array('adapter' => $testAdapter)));
+            $testAdapter->setResponse(new Zend_Http_Response(200, [], '<!DOCTYPE html><html><head><link rel="alternate" type="application/rss+xml" href="../test.rss"><link rel="alternate" type="application/atom+xml" href="/test.atom"></head><body></body></html>'));
+            Zend_Feed_Reader::setHttpClient(new Zend_Http_Client(null, ['adapter' => $testAdapter]));
 
             $links = Zend_Feed_Reader::findFeedLinks('http://foo/bar');
 
@@ -312,7 +312,7 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
     public function testRegistersUserExtension()
     {
         try {
-            Zend_Feed_Reader::addPrefixPath('My_FeedReader_Extension',dirname(__FILE__) . '/Reader/_files/My/Extension');
+            Zend_Feed_Reader::addPrefixPath('My_FeedReader_Extension',__DIR__ . '/Reader/_files/My/Extension');
             Zend_Feed_Reader::registerExtension('JungleBooks');
         } catch(Exception $e) {
             $this->fail($e->getMessage());
@@ -327,10 +327,10 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
     {
         $currClient = Zend_Feed_Reader::getHttpClient();
         $testAdapter = new Zend_Http_Client_Adapter_Test();
-        $testAdapter->setResponse(new Zend_Http_Response(200,array(),''));
-        Zend_Feed_Reader::setHttpClient(new Zend_Http_Client(null, array(
+        $testAdapter->setResponse(new Zend_Http_Response(200,[],''));
+        Zend_Feed_Reader::setHttpClient(new Zend_Http_Client(null, [
             'adapter'=>$testAdapter
-        )));
+        ]));
         
         $this->setExpectedException('Zend_Feed_Exception', 'Feed failed to load');
         $result = Zend_Feed_Reader::import('http://www.example.com');
@@ -359,9 +359,9 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
  
     protected function _getTempDirectory()
     {
-        $tmpdir = array();
-        foreach (array($_ENV, $_SERVER) as $tab) {
-            foreach (array('TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot') as $key) {
+        $tmpdir = [];
+        foreach ([$_ENV, $_SERVER] as $tab) {
+            foreach (['TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot'] as $key) {
                 if (isset($tab[$key])) {
                     if (($key == 'windir') or ($key == 'SystemRoot')) {
                         $dir = realpath($tab[$key] . '\\temp');
@@ -380,7 +380,7 @@ class Zend_Feed_ReaderTest extends PHPUnit_Framework_TestCase
                 return $dir;
             }
         }
-        $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
+        $tempFile = tempnam(md5(uniqid(random_int(0, mt_getrandmax()), TRUE)), '');
         if ($tempFile) {
             $dir = realpath(dirname($tempFile));
             unlink($tempFile);

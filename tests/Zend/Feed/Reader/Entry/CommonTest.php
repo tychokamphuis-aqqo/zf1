@@ -43,7 +43,7 @@ class Zend_Feed_Reader_Entry_CommonTest extends PHPUnit_Framework_TestCase
             $registry = Zend_Registry::getInstance();
             unset($registry['Zend_Locale']);
         }
-        $this->_feedSamplePath = dirname(__FILE__) . '/_files/Common';
+        $this->_feedSamplePath = __DIR__ . '/_files/Common';
     }
 
     /**

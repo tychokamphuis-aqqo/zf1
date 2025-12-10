@@ -54,7 +54,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Binary('100','Binary::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -68,7 +68,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Binary('novalue',Zend_Measure_Binary::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -82,7 +82,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Binary('100',Zend_Measure_Binary::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -224,7 +224,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Binary('100',Zend_Measure_Binary::STANDARD,'de');
             $value->setValue('-200.200,200','Binary::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -239,7 +239,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Binary('100',Zend_Measure_Binary::STANDARD,'de');
             $value->setValue('novalue',Zend_Measure_Binary::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -254,7 +254,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Binary('100',Zend_Measure_Binary::STANDARD,'de');
             $value->setValue('200',Zend_Measure_Binary::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -313,7 +313,7 @@ class Zend_Measure_BinaryTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Binary('-100',Zend_Measure_Binary::STANDARD,'de');
             $value->setType('Binary::UNKNOWN');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }

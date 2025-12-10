@@ -86,7 +86,7 @@ class Zend_Gdata_DocsOnlineTest extends PHPUnit_Framework_TestCase
         $query = new Zend_Gdata_Docs_Query();
         $query->title = $this->docTitle;
         $feed = $this->gdata->getDocumentListFeed($query);
-        $this->assertTrue(strpos(strtolower($feed->entries[0]->title), strtolower($this->docTitle)) !== FALSE);
+        $this->assertTrue(str_contains(strtolower((string) $feed->entries[0]->title), strtolower((string) $this->docTitle)));
     }
 
     public function testGetDocumentListEntry()
@@ -109,7 +109,7 @@ class Zend_Gdata_DocsOnlineTest extends PHPUnit_Framework_TestCase
 
         // Get the newly created document.
         // First extract the document's ID key from the Atom id.
-        $idParts = explode('/', $newDocumentEntry->id->text);
+        $idParts = explode('/', (string) $newDocumentEntry->id->text);
         $keyParts = explode('%3A', end($idParts));
         $documentFromGetDoc = $this->gdata->getDoc($keyParts[1], $keyParts[0]);
         $this->assertTrue($documentFromGetDoc->title->text === $documentTitle);

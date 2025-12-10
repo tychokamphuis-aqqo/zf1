@@ -79,7 +79,7 @@ class Zend_OpenId_Consumer_Storage_FileTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_tmpDir = dirname(__FILE__) . "/_files";
+        $this->_tmpDir = __DIR__ . "/_files";
 
         // Clear directory
         self::_rmDir($this->_tmpDir);

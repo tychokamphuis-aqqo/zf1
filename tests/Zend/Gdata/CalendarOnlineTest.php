@@ -56,8 +56,7 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
     public function testCalendarListFeed()
     {
         $calFeed = $this->gdata->getCalendarListFeed();
-        $this->assertTrue(strpos($calFeed->title->text, 'Calendar List')
-                !== false);
+        $this->assertTrue(str_contains((string) $calFeed->title->text, 'Calendar List'));
         $calCount = 0;
         foreach ($calFeed as $calendar) {
             $calCount++;
@@ -71,8 +70,7 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
     public function testCalendarOnlineFeed()
     {
         $eventFeed = $this->gdata->getCalendarEventFeed();
-        $this->assertTrue(strpos($eventFeed->title->text, TESTS_ZEND_GDATA_CLIENTLOGIN_EMAIL)
-                !== false);
+        $this->assertTrue(str_contains((string) $eventFeed->title->text, TESTS_ZEND_GDATA_CLIENTLOGIN_EMAIL));
         $eventCount = 0;
         foreach ( $eventFeed as $event ) {
             $this->assertTrue($event instanceof Zend_Gdata_Calendar_EventEntry);
@@ -103,8 +101,8 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
             $endDate = '2008-01-20', $endTime = '11:00', $tzOffset = '-08')
     {
         $newEntry = $this->gdata->newEventEntry();
-        $newEntry->title = $this->gdata->newTitle(trim($title));
-        $newEntry->where  = array($this->gdata->newWhere($where));
+        $newEntry->title = $this->gdata->newTitle(trim((string) $title));
+        $newEntry->where  = [$this->gdata->newWhere($where)];
 
         $newEntry->content = $this->gdata->newContent($desc);
         $newEntry->content->type = 'text';
@@ -115,8 +113,8 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
         $reminder = $this->gdata->newReminder();
         $reminder->minutes = '30';
         $reminder->method = 'email';
-        $when->reminders = array($reminder);
-        $newEntry->when = array($when);
+        $when->reminders = [$reminder];
+        $newEntry->when = [$when];
 
         $createdEntry = $this->gdata->insertEvent($newEntry);
 
@@ -124,9 +122,9 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($title, $createdEntry->title->text);
         $this->assertEquals($desc, $createdEntry->content->text);
         $this->assertEquals(strtotime($when->startTime),
-                strtotime($createdEntry->when[0]->startTime));
+                strtotime((string) $createdEntry->when[0]->startTime));
         $this->assertEquals(strtotime($when->endTime),
-                strtotime($createdEntry->when[0]->endTime));
+                strtotime((string) $createdEntry->when[0]->endTime));
         $this->assertEquals($reminder->method,
                 $createdEntry->when[0]->reminders[0]->method);
         $this->assertEquals($reminder->minutes,
@@ -155,7 +153,7 @@ class Zend_Gdata_CalendarOnlineTest extends PHPUnit_Framework_TestCase
     {
         $newTitle = 'my new title';
         $createdEntry = $this->createEvent();
-        preg_match('#.*/([A-Za-z0-9]+)$#', $createdEntry->id->text, $matches);
+        preg_match('#.*/([A-Za-z0-9]+)$#', (string) $createdEntry->id->text, $matches);
         $id = $matches[1];
         $updatedEvent = $this->updateEvent($id, $newTitle);
         $this->assertEquals($newTitle, $updatedEvent->title->text);

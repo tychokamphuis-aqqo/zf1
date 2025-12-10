@@ -35,16 +35,19 @@ require_once 'Zend/Db/Statement/TestCommon.php';
 class Zend_Db_Statement_Db2Test extends Zend_Db_Statement_TestCommon
 {
 
+    #[\Override]
     public function testStatementErrorCodeKeyViolation()
     {
         $this->markTestIncomplete($this->getDriver() . ' does not return error codes correctly.');
     }
 
+    #[\Override]
     public function testStatementErrorInfoKeyViolation()
     {
         $this->markTestIncomplete($this->getDriver() . ' does not return error codes correctly.');
     }
 
+    #[\Override]
     public function testStatementColumnCountForSelect()
     {
         $select = $this->_db->select()
@@ -66,11 +69,13 @@ class Zend_Db_Statement_Db2Test extends Zend_Db_Statement_TestCommon
         $this->assertEquals(2, $n);
     }
 
+    #[\Override]
     public function testStatementBindParamByPosition()
     {
         $this->markTestIncomplete($this->getDriver() . ' is having trouble with binding params');
     }
 
+    #[\Override]
     public function testStatementBindParamByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -89,16 +94,18 @@ class Zend_Db_Statement_Db2Test extends Zend_Db_Statement_TestCommon
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals("Invalid bind-variable name ':id'", $e->getMessage());
         }
     }
 
+    #[\Override]
     public function testStatementBindValueByPosition()
     {
         $this->markTestIncomplete($this->getDriver() . ' is having trouble with binding params');
     }
 
+    #[\Override]
     public function testStatementBindValueByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -117,11 +124,12 @@ class Zend_Db_Statement_Db2Test extends Zend_Db_Statement_TestCommon
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals("Invalid bind-variable name ':id'", $e->getMessage());
         }
     }
 
+    #[\Override]
     public function testStatementGetColumnMeta()
     {
         $this->markTestIncomplete($this->getDriver() . ' has not implemented getColumnMeta() yet [ZF-1424]');

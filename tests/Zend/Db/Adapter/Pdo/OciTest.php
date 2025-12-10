@@ -35,20 +35,22 @@ require_once 'Zend/Db/Adapter/Pdo/TestCommon.php';
 class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
         'BINARY_DOUBLE'      => Zend_Db::FLOAT_TYPE,
         'BINARY_FLOAT'       => Zend_Db::FLOAT_TYPE,
         'NUMBER'             => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryAuto()
     {
         $this->markTestSkipped('Oracle does not support auto-increment');
     }
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryKeyColumn()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -66,12 +68,13 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
         $this->assertFalse(                      $desc['product_id']['IDENTITY']);
     }
 
+    #[\Override]
     public function testAdapterInsert()
     {
-        $row = array (
+        $row =  [
             'product_id'   => new Zend_Db_Expr($this->_db->quoteIdentifier('zfproducts_seq').'.NEXTVAL'),
             'product_name' => 'Solaris',
-        );
+        ];
         $rowsAffected = $this->_db->insert('zfproducts', $row);
         $this->assertEquals(1, $rowsAffected);
         $lastInsertId = $this->_db->lastInsertId('zfproducts', null); // implies 'products_seq'
@@ -82,12 +85,13 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
         $this->assertEquals('4', (string) $lastSequenceId, 'Expected new id to be 4');
     }
 
+    #[\Override]
     public function testAdapterInsertDbExpr()
     {
-        $row = array (
+        $row =  [
             'product_id'   => new Zend_Db_Expr($this->_db->quoteIdentifier('zfproducts_seq').'.NEXTVAL'),
             'product_name' => new Zend_Db_Expr('UPPER(\'Solaris\')')
-        );
+        ];
         $rowsAffected = $this->_db->insert('zfproducts', $row);
         $this->assertEquals(1, $rowsAffected);
         $product_id = $this->_db->quoteIdentifier('product_id', true);
@@ -104,6 +108,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * DB2 and Oracle return identifiers in uppercase naturally,
      * so those test suites will override this method.
      */
+    #[\Override]
     protected function _testAdapterOptionCaseFoldingNaturalIdentifier()
     {
         return 'CASE_FOLDED_IDENTIFIER';
@@ -113,9 +118,10 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * Test that quote() takes an array and returns
      * an imploded string of comma-separated, quoted elements.
      */
+    #[\Override]
     public function testAdapterQuoteArray()
     {
-        $array = array("it's", 'all', 'right!');
+        $array = ["it's", 'all', 'right!'];
         $value = $this->_db->quote($array);
         $this->assertEquals("'it''s', 'all', 'right!'", $value);
     }
@@ -124,6 +130,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteDoubleQuote()
     {
         $string = 'St John"s Wort';
@@ -135,6 +142,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteSingleQuote()
     {
         $string = "St John's Wort";
@@ -146,6 +154,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoDoubleQuote()
     {
         $string = 'id=?';
@@ -158,6 +167,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoSingleQuote()
     {
         $string = 'id = ?';
@@ -171,6 +181,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
      * and returns each as delimited identifiers.
      * Oracle does not want the 'AS' in between.
      */
+    #[\Override]
     public function testAdapterQuoteTableAs()
     {
         $string = "foo";
@@ -182,6 +193,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-5146
      */
+    #[\Override]
     public function testAdapterReadClobFetchAll()
     {
         $documents = $this->_db->quoteIdentifier('zfdocuments');
@@ -196,6 +208,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-5146
      */
+    #[\Override]
     public function testAdapterReadClobFetchRow()
     {
         $documents = $this->_db->quoteIdentifier('zfdocuments');
@@ -210,6 +223,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-5146
      */
+    #[\Override]
     public function testAdapterReadClobFetchAssoc()
     {
         $documents = $this->_db->quoteIdentifier('zfdocuments');
@@ -224,6 +238,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-5146
      */
+    #[\Override]
     public function testAdapterReadClobFetchCol()
     {
         $documents = $this->_db->quoteIdentifier('zfdocuments');
@@ -239,6 +254,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-5146
      */
+    #[\Override]
     public function testAdapterReadClobFetchOne()
     {
         $documents = $this->_db->quoteIdentifier('zfdocuments');
@@ -254,6 +270,7 @@ class Zend_Db_Adapter_Pdo_OciTest extends Zend_Db_Adapter_Pdo_TestCommon
     /**
      * @group ZF-8399
      */
+    #[\Override]
     public function testLongQueryWithTextField()
     {
         $this->markTestSkipped($this->getDriver() . ' does not have TEXT field type');

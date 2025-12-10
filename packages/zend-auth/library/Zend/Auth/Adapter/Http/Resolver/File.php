@@ -117,7 +117,7 @@ class Zend_Auth_Adapter_Http_Resolver_File implements Zend_Auth_Adapter_Http_Res
              */
             // require_once 'Zend/Auth/Adapter/Http/Resolver/Exception.php';
             throw new Zend_Auth_Adapter_Http_Resolver_Exception('Username is required');
-        } else if (!ctype_print($username) || strpos($username, ':') !== false) {
+        } else if (!ctype_print($username) || str_contains($username, ':')) {
             /**
              * @see Zend_Auth_Adapter_Http_Resolver_Exception
              */
@@ -131,7 +131,7 @@ class Zend_Auth_Adapter_Http_Resolver_File implements Zend_Auth_Adapter_Http_Res
              */
             // require_once 'Zend/Auth/Adapter/Http/Resolver/Exception.php';
             throw new Zend_Auth_Adapter_Http_Resolver_Exception('Realm is required');
-        } else if (!ctype_print($realm) || strpos($realm, ':') !== false) {
+        } else if (!ctype_print($realm) || str_contains($realm, ':')) {
             /**
              * @see Zend_Auth_Adapter_Http_Resolver_Exception
              */
@@ -152,7 +152,7 @@ class Zend_Auth_Adapter_Http_Resolver_File implements Zend_Auth_Adapter_Http_Res
 
         // No real validation is done on the contents of the password file. The
         // assumption is that we trust the administrators to keep it secure.
-        while (($line = fgetcsv($fp, 512, ':')) !== false) {
+        while (($line = fgetcsv($fp, 512, ':', escape: '\\')) !== false) {
             if ($line[0] == $username && $line[1] == $realm) {
                 $password = $line[2];
                 fclose($fp);

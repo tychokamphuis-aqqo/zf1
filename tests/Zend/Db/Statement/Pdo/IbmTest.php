@@ -44,10 +44,11 @@ class Zend_Db_Statement_Pdo_IbmTest extends Zend_Db_Statement_Pdo_TestCommon
      * used by testStatementGetColumnMeta()
      *
      */
-    protected $_getColumnMetaKeys = array(
+    protected $_getColumnMetaKeys = [
         'scale', 'table', 'native_type', 'flags', 'name', 'len', 'precision', 'pdo_type'
-    );
+    ];
 
+    #[\Override]
     public function testStatementNextRowset()
     {
         $select = $this->_db->select()
@@ -61,6 +62,7 @@ class Zend_Db_Statement_Pdo_IbmTest extends Zend_Db_Statement_Pdo_TestCommon
         $stmt->closeCursor();
     }
 
+    #[\Override]
     public function testStatementColumnCountForSelect()
     {
         $select = $this->_db->select()
@@ -80,6 +82,7 @@ class Zend_Db_Statement_Pdo_IbmTest extends Zend_Db_Statement_Pdo_TestCommon
         $this->assertEquals(2, $n);
     }
 
+    #[\Override]
     public function testStatementGetSetAttribute()
     {
         $select = $this->_db->select()
@@ -100,7 +103,7 @@ class Zend_Db_Statement_Pdo_IbmTest extends Zend_Db_Statement_Pdo_TestCommon
             return;
         }
 
-        $valueArray = array('value1', 'value2');
+        $valueArray = ['value1', 'value2'];
         $stmt->setAttribute(1235, $valueArray);
         $this->assertEquals($valueArray, $stmt->getAttribute(1235), "Expected array #1");
         $this->assertEquals($value, $stmt->getAttribute(1234), "Expected '$value' #2");

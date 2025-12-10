@@ -49,7 +49,7 @@ abstract class Zend_Pdf_FileParser_Font extends Zend_Pdf_FileParser
      * {@link __set()}.
      * @var array
      */
-    private $_fontProperties = array();
+    private $_fontProperties = [];
 
     /**
      * Flag indicating whether or not debug logging is active.
@@ -115,6 +115,7 @@ abstract class Zend_Pdf_FileParser_Font extends Zend_Pdf_FileParser
      * @return string
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function readStringUTF16($byteCount,
                                     $byteOrder = Zend_Pdf_FileParser::BYTE_ORDER_BIG_ENDIAN,
                                     $characterSet = '')
@@ -131,6 +132,7 @@ abstract class Zend_Pdf_FileParser_Font extends Zend_Pdf_FileParser
      * @return string
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function readStringMacRoman($byteCount, $characterSet = '')
     {
         return parent::readStringMacRoman($byteCount, 'UTF-16BE');
@@ -146,6 +148,7 @@ abstract class Zend_Pdf_FileParser_Font extends Zend_Pdf_FileParser
      * @return string
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function readStringPascal($characterSet = '', $lengthBytes = 1)
     {
         return parent::readStringPascal('UTF-16BE');

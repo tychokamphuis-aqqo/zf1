@@ -110,12 +110,12 @@ class Zend_Dojo_View_Helper_CheckBoxTest extends PHPUnit_Framework_TestCase
         return $this->helper->checkBox(
             'elementId',
             'foo',
-            array(),
-            array(),
-            array(
+            [],
+            [],
+            [
                 'checked'   => 'foo',
                 'unChecked' => 'bar',
-            )
+            ]
         );
     }
 
@@ -136,7 +136,7 @@ class Zend_Dojo_View_Helper_CheckBoxTest extends PHPUnit_Framework_TestCase
     public function testShouldCreateHiddenElementWithUncheckedValue()
     {
         $html = $this->getElement();
-        if (!preg_match('/(<input[^>]*(type="hidden")[^>]*>)/s', $html, $m)) {
+        if (!preg_match('/(<input[^>]*(type="hidden")[^>]*>)/s', (string) $html, $m)) {
             $this->fail('Missing hidden element with unchecked value');
         }
         $this->assertContains('value="bar"', $m[1]);
@@ -145,7 +145,7 @@ class Zend_Dojo_View_Helper_CheckBoxTest extends PHPUnit_Framework_TestCase
     public function testShouldCheckElementWhenValueMatchesCheckedValue()
     {
         $html = $this->getElement();
-        if (!preg_match('/(<input[^>]*(type="checkbox")[^>]*>)/s', $html, $m)) {
+        if (!preg_match('/(<input[^>]*(type="checkbox")[^>]*>)/s', (string) $html, $m)) {
             $this->fail('Missing checkbox element: ' . $html);
         }
         $this->assertContains('checked="checked"', $m[1]);
@@ -156,11 +156,11 @@ class Zend_Dojo_View_Helper_CheckBoxTest extends PHPUnit_Framework_TestCase
      */
     public function testElementShouldUseCheckedValueForCheckboxInput()
     {
-        $html = $this->helper->checkBox('foo', '0', array(), array(), array(
+        $html = $this->helper->checkBox('foo', '0', [], [], [
             'checkedValue'   => '1',
             'unCheckedValue' => '0',
-        ));
-        if (!preg_match('#(<input[^>]*(?:type="checkbox")[^>]*>)#s', $html, $matches)) {
+        ]);
+        if (!preg_match('#(<input[^>]*(?:type="checkbox")[^>]*>)#s', (string) $html, $matches)) {
             $this->fail('Did not find checkbox in html: ' . $html);
         }
         $this->assertContains('value="1"', $matches[1]);

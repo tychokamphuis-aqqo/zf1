@@ -38,6 +38,7 @@ require_once 'Zend/Db/TestUtil/Pdo/Common.php';
 class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
 {
 
+    #[\Override]
     public function setUp(Zend_Db_Adapter_Abstract $db)
     {
         $this->_db = $db;
@@ -46,20 +47,22 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         parent::setUp($db);
     }
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array (
+        $constants =  [
             'host'     => 'TESTS_ZEND_DB_ADAPTER_ORACLE_HOSTNAME',
             'username' => 'TESTS_ZEND_DB_ADAPTER_ORACLE_USERNAME',
             'password' => 'TESTS_ZEND_DB_ADAPTER_ORACLE_PASSWORD',
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_ORACLE_SID'
-        );
+        ];
         return parent::getParams($constants);
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
-        if (preg_match('/VARCHAR(.*)/', $type, $matches)) {
+        if (preg_match('/VARCHAR(.*)/', (string) $type, $matches)) {
             return 'VARCHAR2' . $matches[1];
         }
         if ($type == 'IDENTITY') {
@@ -74,23 +77,25 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         $tableList = $this->_db->fetchCol('SELECT UPPER(TABLE_NAME) FROM ALL_TABLES '
             . $this->_db->quoteInto(' WHERE UPPER(TABLE_NAME) = UPPER(?)', $tableName)
         );
-        if (in_array(strtoupper($tableName), $tableList)) {
+        if (in_array(strtoupper((string) $tableName), $tableList)) {
             return null;
         }
         return 'CREATE TABLE ' . $this->_db->quoteIdentifier($tableName, true);
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         $tableList = $this->_db->fetchCol('SELECT UPPER(TABLE_NAME) FROM ALL_TABLES '
             . $this->_db->quoteInto(' WHERE UPPER(TABLE_NAME) = UPPER(?)', $tableName)
         );
-        if (in_array(strtoupper($tableName), $tableList)) {
+        if (in_array(strtoupper((string) $tableName), $tableList)) {
             return 'DROP TABLE ' . $this->_db->quoteIdentifier($tableName, true);
         }
         return null;
@@ -101,7 +106,7 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         $seqList = $this->_db->fetchCol('SELECT UPPER(SEQUENCE_NAME) FROM ALL_SEQUENCES '
             . $this->_db->quoteInto(' WHERE UPPER(SEQUENCE_NAME) = UPPER(?)', $sequenceName)
         );
-        if (in_array(strtoupper($sequenceName), $seqList)) {
+        if (in_array(strtoupper((string) $sequenceName), $seqList)) {
             return null;
         }
         return 'CREATE SEQUENCE ' . $this->_db->quoteIdentifier($sequenceName, true);
@@ -112,12 +117,13 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         $seqList = $this->_db->fetchCol('SELECT UPPER(SEQUENCE_NAME) FROM ALL_SEQUENCES '
             . $this->_db->quoteInto(' WHERE UPPER(SEQUENCE_NAME) = UPPER(?)', $sequenceName)
         );
-        if (in_array(strtoupper($sequenceName), $seqList)) {
+        if (in_array(strtoupper((string) $sequenceName), $seqList)) {
             return 'DROP SEQUENCE ' . $this->_db->quoteIdentifier($sequenceName, true);
         }
         return null;
     }
 
+    #[\Override]
     protected function _getDataBugs()
     {
         $data = parent::_getDataBugs();
@@ -129,12 +135,13 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         return $data;
     }
 
+    #[\Override]
     protected function _getDataDocuments()
     {
         $data = parent::_getDataDocuments();
         foreach ($data as &$row) {
             $quoted = $this->_db->quote($row['doc_clob']);
-            $hex = bin2hex($row['doc_clob']);
+            $hex = bin2hex((string) $row['doc_clob']);
             $row['doc_clob'] = new Zend_Db_Expr("TO_CLOB($quoted)");
             $row['doc_blob'] = new Zend_Db_Expr("TO_BLOB(HEXTORAW('$hex'))");
 
@@ -142,6 +149,7 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         return $data;
     }
 
+    #[\Override]
     protected function _getDataProducts()
     {
         $data = parent::_getDataProducts();
@@ -151,6 +159,7 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
         return $data;
     }
 
+    #[\Override]
     protected function _getSqlCreateView($viewName)
     {
         return 'CREATE OR REPLACE VIEW ' . $this->_db->quoteIdentifier($viewName, true);
@@ -162,6 +171,7 @@ class Zend_Db_TestUtil_Pdo_Oci extends Zend_Db_TestUtil_Pdo_Common
      * http://download-east.oracle.com/docs/cd/B19306_01/server.102/b14220/intro.htm#sthref69
      * @return string
      */
+    #[\Override]
     public function getSchema()
     {
         $param = $this->getParams();

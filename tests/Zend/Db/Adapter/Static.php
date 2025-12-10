@@ -64,7 +64,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
      */
     public function setOnQuerySleep($seconds = 0)
     {
-        $this->_onQuerySleep = (integer) $seconds;
+        $this->_onQuerySleep = (int) $seconds;
 
         return $this;
     }
@@ -86,6 +86,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
      * @param array $config
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     protected function _checkRequiredOptions(array $config)
     {
         // we need at least a dbname
@@ -103,7 +104,8 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
      * @param  mixed                 $bind An array of data to bind to the placeholders.
      * @return Zend_Db_Statement (may also be PDOStatement in the case of PDO)
      */
-    public function query($sql, $bind = array())
+    #[\Override]
+    public function query($sql, $bind = [])
     {
         // connect to the database if needed
         $this->_connect();
@@ -117,7 +119,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
         // don't use (array) typecasting because
         // because $bind may be a Zend_Db_Expr object
         if (!is_array($bind)) {
-            $bind = array($bind);
+            $bind = [$bind];
         }
 
         // prepare and execute the statement with profiling
@@ -141,7 +143,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
      */
     public function listTables()
     {
-        return array('dummy');
+        return ['dummy'];
     }
 
     /**
@@ -173,7 +175,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
      */
     public function describeTable($tableName, $schemaName = null)
     {
-        return array(
+        return [
             'SCHEMA_NAME'      => $schemaName,
             'TABLE_NAME'       => $tableName,
             'COLUMN_NAME'      => null,
@@ -187,7 +189,7 @@ class Zend_Db_Adapter_Static extends Zend_Db_Adapter_Abstract
             'UNSIGNED'         => null,
             'PRIMARY'          => null,
             'PRIMARY_POSITION' => null,
-        );
+        ];
     }
 
     /**

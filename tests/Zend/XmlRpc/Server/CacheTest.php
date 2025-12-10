@@ -68,7 +68,7 @@ class Zend_XmlRpc_Server_CacheTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->_file = realpath(dirname(__FILE__)) . '/xmlrpc.cache';
+        $this->_file = realpath(__DIR__) . '/xmlrpc.cache';
         $this->_server = new Zend_XmlRpc_Server();
         $this->_server->setClass('Zend_XmlRpc_Server_Cache', 'cache');
     }
@@ -89,7 +89,7 @@ class Zend_XmlRpc_Server_CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSave()
     {
-        if (!is_writeable('./')) {
+        if (!is_writable('./')) {
             $this->markTestIncomplete('Directory no writable');
         }
 
@@ -107,7 +107,7 @@ class Zend_XmlRpc_Server_CacheTest extends PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        if (!is_writeable('./')) {
+        if (!is_writable('./')) {
             $this->markTestIncomplete('Directory no writable');
         }
 
@@ -117,7 +117,7 @@ class Zend_XmlRpc_Server_CacheTest extends PHPUnit_Framework_TestCase
 
     public function testShouldReturnFalseWithInvalidCache()
     {
-        if (!is_writeable('./')) {
+        if (!is_writable('./')) {
             $this->markTestIncomplete('Directory no writable');
         }
 

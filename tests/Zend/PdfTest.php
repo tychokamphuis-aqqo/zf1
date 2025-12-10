@@ -46,7 +46,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->_pdf = Zend_Pdf::load(dirname(__FILE__) . '/Pdf/_files/PdfWithFields.pdf');
+        $this->_pdf = Zend_Pdf::load(__DIR__ . '/Pdf/_files/PdfWithFields.pdf');
     }
 
     /**
@@ -55,7 +55,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     public function testGetTextFieldNames()
     {
         $fieldNames = $this->_pdf->getTextFieldNames();
-        $this->assertEquals(array('Field1', 'Field2'), $fieldNames);
+        $this->assertEquals(['Field1', 'Field2'], $fieldNames);
     }
 
     /**
@@ -65,7 +65,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     {
         $pdf        = new Zend_Pdf();
         $fieldNames = $pdf->getTextFieldNames();
-        $this->assertEquals(array(), $fieldNames);
+        $this->assertEquals([], $fieldNames);
     }
 
     public function testSetTextField()
@@ -73,7 +73,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
         try {
             $this->_pdf->setTextField('Field1', 'Value1');
             $this->assertTrue(true); // in case of --strict
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->fail('Failed to set an existing text field');
         }
     }
@@ -108,7 +108,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
                     | Zend_Pdf::PDF_FORM_FIELD_NOEXPORT
             );
             $this->assertTrue(true); // in case of --strict
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->fail('Failed to set property of an existing text field');
         }
     }
@@ -133,7 +133,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
             $this->_pdf->markTextFieldAsReadOnly('Field1');
             $this->_pdf->markTextFieldAsReadOnly('Field2');
             $this->assertTrue(true); // in case of --strict
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->fail('Failed to set an existing text field as read-only');
         }
     }
@@ -179,7 +179,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     {
         // setting string value is possible
         $pdf = new Zend_Pdf();
-        $javaScriptArray = array('print();', 'alert();');
+        $javaScriptArray = ['print();', 'alert();'];
         $pdf->setJavaScript($javaScriptArray);
         $this->assertEquals($javaScriptArray, $pdf->getJavaScript());
     }
@@ -197,7 +197,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     {
         // adding JavaScript appends previously added JavaScript
         $pdf = new Zend_Pdf();
-        $javaScriptArray = array('print();', 'alert();');
+        $javaScriptArray = ['print();', 'alert();'];
         $pdf->addJavaScript($javaScriptArray[0]);
         $pdf->addJavaScript($javaScriptArray[1]);
         $this->assertEquals($javaScriptArray, $pdf->getJavaScript());
@@ -226,13 +226,13 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     public function testSetJavaScriptEmptyArray()
     {
         $pdf = new Zend_Pdf();
-        $pdf->setJavaScript(array());
+        $pdf->setJavaScript([]);
     }
 
     public function testSetAndSaveLoadAndGetJavaScript()
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'PdfUnitFile');
-        $javaScript = array('print();', 'alert();');
+        $javaScript = ['print();', 'alert();'];
 
         $pdf = new Zend_Pdf();
         $pdf->setJavaScript($javaScript);
@@ -248,7 +248,7 @@ class Zend_PdfTest extends PHPUnit_Framework_TestCase
     public function testSetAndSaveLoadAndResetAndSaveLoadAndGetJavaScript()
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'PdfUnitFile');
-        $javaScript = array('print();', 'alert();');
+        $javaScript = ['print();', 'alert();'];
 
         $pdf = new Zend_Pdf();
         $pdf->setJavaScript($javaScript);

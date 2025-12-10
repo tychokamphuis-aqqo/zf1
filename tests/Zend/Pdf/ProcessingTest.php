@@ -67,7 +67,7 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         // Draw rectangle
         $page2->setFillColor(new Zend_Pdf_Color_GrayScale(0.8))
               ->setLineColor(new Zend_Pdf_Color_GrayScale(0.2))
-              ->setLineDashingPattern(array(3, 2, 3, 4), 1.6)
+              ->setLineDashingPattern([3, 2, 3, 4], 1.6)
               ->drawRectangle(60, 400, 500, 350);
 
         // Draw rounded rectangle
@@ -98,8 +98,8 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
 
         // Draw and fill polygon
         $page2->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 1));
-        $x = array();
-        $y = array();
+        $x = [];
+        $y = [];
         for ($count = 0; $count < 8; $count++) {
             $x[] = 140 + 25*cos(3*M_PI_4*$count);
             $y[] = 375 + 25*sin(3*M_PI_4*$count);
@@ -112,20 +112,20 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         $page2->setLineWidth(0.5)
               ->drawLine(60, 375, 500, 375);
 
-        $pdf->save(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf->save(__DIR__ . '/_files/output.pdf');
         unset($pdf);
 
-        $pdf1 = Zend_Pdf::load(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf1 = Zend_Pdf::load(__DIR__ . '/_files/output.pdf');
 
         $this->assertTrue($pdf1 instanceof Zend_Pdf);
         unset($pdf1);
 
-        unlink(dirname(__FILE__) . '/_files/output.pdf');
+        unlink(__DIR__ . '/_files/output.pdf');
     }
 
     public function testModify()
     {
-        $pdf = Zend_Pdf::load(dirname(__FILE__) . '/_files/pdfarchiving.pdf');
+        $pdf = Zend_Pdf::load(__DIR__ . '/_files/pdfarchiving.pdf');
 
         // Reverse page order
         $pdf->pages = array_reverse($pdf->pages);
@@ -138,7 +138,7 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
             $page->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0.9))
                  ->setLineColor(new Zend_Pdf_Color_GrayScale(0.2))
                  ->setLineWidth(3)
-                 ->setLineDashingPattern(array(3, 2, 3, 4), 1.6)
+                 ->setLineDashingPattern([3, 2, 3, 4], 1.6)
                  ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 32);
 
 
@@ -173,7 +173,7 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         // Draw rectangle
         $page2->setFillColor(new Zend_Pdf_Color_GrayScale(0.8))
               ->setLineColor(new Zend_Pdf_Color_GrayScale(0.2))
-              ->setLineDashingPattern(array(3, 2, 3, 4), 1.6)
+              ->setLineDashingPattern([3, 2, 3, 4], 1.6)
               ->drawRectangle(60, 400, 500, 350);
 
         // Draw rounded rectangle
@@ -204,8 +204,8 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
 
         // Draw and fill polygon
         $page2->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 1));
-        $x = array();
-        $y = array();
+        $x = [];
+        $y = [];
         for ($count = 0; $count < 8; $count++) {
             $x[] = 140 + 25*cos(3*M_PI_4*$count);
             $y[] = 375 + 25*sin(3*M_PI_4*$count);
@@ -218,21 +218,21 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         $page2->setLineWidth(0.5)
               ->drawLine(60, 375, 500, 375);
 
-        $pdf->save(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf->save(__DIR__ . '/_files/output.pdf');
 
         unset($pdf);
 
-        $pdf1 = Zend_Pdf::load(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf1 = Zend_Pdf::load(__DIR__ . '/_files/output.pdf');
 
         $this->assertTrue($pdf1 instanceof Zend_Pdf);
         unset($pdf1);
 
-        unlink(dirname(__FILE__) . '/_files/output.pdf');
+        unlink(__DIR__ . '/_files/output.pdf');
     }
 
     public function testInfoProcessing()
     {
-        $pdf = Zend_Pdf::load(dirname(__FILE__) . '/_files/pdfarchiving.pdf');
+        $pdf = Zend_Pdf::load(__DIR__ . '/_files/pdfarchiving.pdf');
 
         $this->assertEquals($pdf->properties['Title'], 'PDF as a Standard for Archiving');
         $this->assertEquals($pdf->properties['Author'], 'Adobe Systems Incorporated');
@@ -257,11 +257,11 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         $titleNode->nodeValue .= ' (modified using RDF data)';
         $pdf->setMetadata($metadataDOM->saveXML());
 
-        $pdf->save(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf->save(__DIR__ . '/_files/output.pdf');
         unset($pdf);
 
 
-        $pdf1 = Zend_Pdf::load(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf1 = Zend_Pdf::load(__DIR__ . '/_files/output.pdf');
         $this->assertEquals($pdf1->properties['Title'], 'PDF as a Standard for Archiving (modified)');
         $this->assertEquals($pdf1->properties['Author'], 'Adobe Systems Incorporated');
         $this->assertEquals($pdf1->properties['New_Property'], 'New property');
@@ -278,26 +278,26 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($titleNode1->nodeValue, 'PDF as a Standard for Archiving (modified using RDF data)');
         unset($pdf1);
 
-        unlink(dirname(__FILE__) . '/_files/output.pdf');
+        unlink(__DIR__ . '/_files/output.pdf');
     }
 
     public function testPageCloning()
     {
-        $pdf = Zend_Pdf::load(dirname(__FILE__) . '/_files/pdfarchiving.pdf');
+        $pdf = Zend_Pdf::load(__DIR__ . '/_files/pdfarchiving.pdf');
 
         $srcPageCount = count($pdf->pages);
 
         try {
             $newPage = clone reset($pdf->pages);
         } catch (Zend_Pdf_Exception $e) {
-            if (strpos($e->getMessage(), 'Cloning Zend_Pdf_Page object using \'clone\' keyword is not supported.') !== 0) {
+            if (!str_starts_with($e->getMessage(), 'Cloning Zend_Pdf_Page object using \'clone\' keyword is not supported.')) {
                 throw $e;
             }
 
             // Exception is thrown
         }
 
-        $outputPageSet = array();
+        $outputPageSet = [];
         foreach ($pdf->pages as $srcPage){
             $page = new Zend_Pdf_Page($srcPage);
 
@@ -310,7 +310,7 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
             $page->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0.9))
                  ->setLineColor(new Zend_Pdf_Color_GrayScale(0.2))
                  ->setLineWidth(3)
-                 ->setLineDashingPattern(array(3, 2, 3, 4), 1.6)
+                 ->setLineDashingPattern([3, 2, 3, 4], 1.6)
                  ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 32);
 
 
@@ -323,17 +323,17 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         // Add new page generated by Zend_Pdf object (page is attached to the specified the document)
         $pdf->pages = $outputPageSet;
 
-        $pdf->save(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf->save(__DIR__ . '/_files/output.pdf');
 
         unset($pdf);
 
-        $pdf1 = Zend_Pdf::load(dirname(__FILE__) . '/_files/output.pdf');
+        $pdf1 = Zend_Pdf::load(__DIR__ . '/_files/output.pdf');
 
         $this->assertTrue($pdf1 instanceof Zend_Pdf);
         $this->assertEquals($srcPageCount*2, count($pdf1->pages));
         unset($pdf1);
 
-        unlink(dirname(__FILE__) . '/_files/output.pdf');
+        unlink(__DIR__ . '/_files/output.pdf');
     }
 
     /**
@@ -344,8 +344,8 @@ class Zend_Pdf_ProcessingTest extends PHPUnit_Framework_TestCase
         $pdf = new ExtendedZendPdf();
 
         // Test accessing protected variables and their default content
-        $this->assertEquals(array(), $pdf->_originalProperties);
-        $this->assertEquals(array(), $pdf->_namedTargets);
+        $this->assertEquals([], $pdf->_originalProperties);
+        $this->assertEquals([], $pdf->_namedTargets);
 
         $pdfpage = new ExtendedZendPdfPage(Zend_Pdf_Page::SIZE_A4);
         // Test accessing protected variables and their default content

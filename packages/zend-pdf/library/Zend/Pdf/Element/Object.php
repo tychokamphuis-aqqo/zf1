@@ -78,12 +78,12 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
             throw new Zend_Pdf_Exception('Object number must not be an instance of Zend_Pdf_Element_Object.');
         }
 
-        if ( !(is_integer($objNum) && $objNum > 0) ) {
+        if ( !(is_int($objNum) && $objNum > 0) ) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Object number must be positive integer.');
         }
 
-        if ( !(is_integer($genNum) && $genNum >= 0) ) {
+        if ( !(is_int($genNum) && $genNum >= 0) ) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Generation number must be non-negative integer.');
         }
@@ -208,7 +208,7 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
      */
     public function __call($method, $args)
     {
-        return call_user_func_array(array($this->_value, $method), $args);
+        return call_user_func_array([$this->_value, $method], $args);
     }
 
     /**
@@ -219,6 +219,7 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
      * @param integer $mode  Cloning mode (defines filter for objects cloning)
      * @returns Zend_Pdf_Element
      */
+    #[\Override]
     public function makeClone(Zend_Pdf_ElementFactory $factory, array &$processed, $mode)
     {
         $id = spl_object_hash($this);
@@ -249,6 +250,7 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
     /**
      * Mark object as modified, to include it into new PDF file segment
      */
+    #[\Override]
     public function touch()
     {
         $this->_factory->markAsModified($this);
@@ -267,6 +269,7 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
     /**
      * Clean up resources, used by object
      */
+    #[\Override]
     public function cleanUp()
     {
         $this->_value = null;
@@ -277,6 +280,7 @@ class Zend_Pdf_Element_Object extends Zend_Pdf_Element
      *
      * @return mixed
      */
+    #[\Override]
     public function toPhp()
     {
         return $this->_value->toPhp();

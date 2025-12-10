@@ -39,13 +39,13 @@ require_once 'Zend/Db/Adapter/Pdo/TestCommon.php';
 class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
         'INTEGER'            => Zend_Db::BIGINT_TYPE,
         'REAL'               => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Test AUTO_QUOTE_IDENTIFIERS option
@@ -54,13 +54,14 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * SQLite actually allows delimited identifiers to remain
      * case-insensitive, so this test overrides its parent.
      */
+    #[\Override]
     public function testAdapterAutoQuoteIdentifiersTrue()
     {
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::AUTO_QUOTE_IDENTIFIERS => true
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
         $db->getConnection();
 
@@ -78,29 +79,33 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
             $result2 = $stmt->fetchAll();
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
-            $this->fail('Unexpected exception '.get_class($e).' received: '.$e->getMessage());
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
+            $this->fail('Unexpected exception '.$e::class.' received: '.$e->getMessage());
         }
 
         $this->assertEquals($result1, $result2);
     }
 
 
+    #[\Override]
     public function testAdapterConstructInvalidParamDbnameException()
     {
         $this->markTestSkipped($this->getDriver() . ' does not throw exception on missing dbname');
     }
 
+    #[\Override]
     public function testAdapterConstructInvalidParamUsernameException()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support login credentials');
     }
 
+    #[\Override]
     public function testAdapterConstructInvalidParamPasswordException()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support login credentials');
     }
 
+    #[\Override]
     public function testAdapterInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences');
@@ -112,6 +117,7 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * - testAdapterOptionCaseFoldingUpper()
      * - testAdapterOptionCaseFoldingLower()
      */
+    #[\Override]
     protected function _testAdapterOptionCaseFoldingSetup(Zend_Db_Adapter_Abstract $db)
     {
         $db->getConnection();
@@ -122,9 +128,10 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * Test that quote() takes an array and returns
      * an imploded string of comma-separated, quoted elements.
      */
+    #[\Override]
     public function testAdapterQuoteArray()
     {
-        $array = array("it's", 'all', 'right!');
+        $array = ["it's", 'all', 'right!'];
         $value = $this->_db->quote($array);
         $this->assertEquals("'it''s', 'all', 'right!'", $value);
     }
@@ -133,6 +140,7 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteDoubleQuote()
     {
         $value = $this->_db->quote('St John"s Wort');
@@ -143,6 +151,7 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteSingleQuote()
     {
         $string = "St John's Wort";
@@ -154,6 +163,7 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoDoubleQuote()
     {
         $value = $this->_db->quoteInto('id=?', 'St John"s Wort');
@@ -164,22 +174,26 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoSingleQuote()
     {
         $value = $this->_db->quoteInto('id = ?', 'St John\'s Wort');
         $this->assertEquals("id = 'St John''s Wort'", $value);
     }
 
+    #[\Override]
     public function testAdapterTransactionAutoCommit()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support transactions or concurrency');
     }
 
+    #[\Override]
     public function testAdapterTransactionCommit()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support transactions or concurrency');
     }
 
+    #[\Override]
     public function testAdapterTransactionRollback()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support transactions or concurrency');
@@ -200,36 +214,38 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
         return 'Pdo_Sqlite';
     }
 
+    #[\Override]
     public function testAdapterOptionFetchMode()
     {
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::FETCH_MODE => 'obj'
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
 
         //two extra lines to make SQLite work
         $db->query('CREATE TABLE zfproducts (id)');
-        $db->insert('zfproducts', array('id' => 1));
+        $db->insert('zfproducts', ['id' => 1]);
 
         $select = $db->select()->from('zfproducts');
         $row = $db->fetchRow($select);
         $this->assertTrue($row instanceof stdClass);
     }
 
+    #[\Override]
     protected function _testAdapterAlternateStatement($stmtClass)
     {
         $ip = get_include_path();
-        $dir = dirname(__FILE__) . DIRECTORY_SEPARATOR .  '..' . DIRECTORY_SEPARATOR . '_files';
+        $dir = __DIR__ . DIRECTORY_SEPARATOR .  '..' . DIRECTORY_SEPARATOR . '_files';
         $newIp = $dir . PATH_SEPARATOR . $ip;
         set_include_path($newIp);
 
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::AUTO_QUOTE_IDENTIFIERS => false
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
         $db->getConnection();
         $db->setStatementClass($stmtClass);
@@ -245,13 +261,14 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
         $stmt = $db->prepare("SELECT COUNT(*) FROM $bugs");
 
         $this->assertTrue($stmt instanceof $stmtClass,
-            'Expecting object of type ' . $stmtClass . ', got ' . get_class($stmt));
+            'Expecting object of type ' . $stmtClass . ', got ' . $stmt::class);
     }
 
     /**
      * test that quote() escapes null byte character
      * in a string.
      */
+    #[\Override]
     public function testAdapterQuoteNullByteCharacter()
     {
         $string = "1\0";
@@ -263,6 +280,7 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
      * https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.sqlite
      * @inheritDoc
      */
+    #[\Override]
     public function testAdapterZendConfigEmptyDriverOptions()
     {
         $params = $this->_util->getParams();
@@ -275,9 +293,9 @@ class Zend_Db_Adapter_Pdo_SqliteTest extends Zend_Db_Adapter_Pdo_TestCommon
         $config = $db->getConfig();
 
         if (PHP_VERSION_ID >= 80100) {
-            $this->assertEquals(array(PDO::ATTR_STRINGIFY_FETCHES => true), $config['driver_options']);
+            $this->assertEquals([PDO::ATTR_STRINGIFY_FETCHES => true], $config['driver_options']);
         } else {
-            $this->assertEquals(array(), $config['driver_options']);
+            $this->assertEquals([], $config['driver_options']);
         }
     }
 }

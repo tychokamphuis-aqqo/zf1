@@ -46,14 +46,14 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsInvalidArgumentExceptionForNonDirectoryIteratorArgument()
     {
-        $iterator = new ArrayIterator(array());
+        $iterator = new ArrayIterator([]);
         $this->setExpectedException('InvalidArgumentException');
         $locator = new Zend_File_ClassFileLocator($iterator);
     }
 
     public function testIterationShouldReturnOnlyPhpFiles()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         foreach ($locator as $file) {
             $this->assertRegexp('/\.php$/', $file->getFilename());
         }
@@ -61,10 +61,10 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testIterationShouldReturnOnlyPhpFilesContainingClasses()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         $found = false;
         foreach ($locator as $file) {
-            if (preg_match('/locator-should-skip-this\.php$/', $file->getFilename())) {
+            if (preg_match('/locator-should-skip-this\.php$/', (string) $file->getFilename())) {
                 $found = true;
             }
         }
@@ -73,10 +73,10 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testIterationShouldReturnInterfaces()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         $found = false;
         foreach ($locator as $file) {
-            if (preg_match('/LocatorShouldFindThis\.php$/', $file->getFilename())) {
+            if (preg_match('/LocatorShouldFindThis\.php$/', (string) $file->getFilename())) {
                 $found = true;
             }
         }
@@ -85,7 +85,7 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testIterationShouldInjectNamespaceInFoundItems()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         $found = false;
         foreach ($locator as $file) {
             $classes = $file->getClasses();
@@ -100,7 +100,7 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testIterationShouldInjectClassInFoundItems()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         $found = false;
         foreach ($locator as $file) {
             $classes = $file->getClasses();
@@ -114,25 +114,25 @@ class Zend_File_ClassFileLocatorTest extends PHPUnit_Framework_TestCase
 
     public function testIterationShouldFindMultipleClassesInMultipleNamespacesInSinglePhpFile()
     {
-        $locator = new Zend_File_ClassFileLocator(dirname(__FILE__));
+        $locator = new Zend_File_ClassFileLocator(__DIR__);
         $foundFirst = false;
         $foundSecond = false;
         $foundThird = false;
         $foundFourth = false;
         foreach ($locator as $file) {
-            if (preg_match('/MultipleClassesInMultipleNamespaces\.php$/', $file->getFilename())) {
+            if (preg_match('/MultipleClassesInMultipleNamespaces\.php$/', (string) $file->getFilename())) {
                 $classes = $file->getClasses();
                 foreach ($classes as $class) {
-                    if ($class === 'ZendTest\File\TestAsset\LocatorShouldFindFirstClass') {
+                    if ($class === \ZendTest\File\TestAsset\LocatorShouldFindFirstClass::class) {
                         $foundFirst = true;
                     }
-                    if ($class === 'ZendTest\File\TestAsset\LocatorShouldFindSecondClass') {
+                    if ($class === \ZendTest\File\TestAsset\LocatorShouldFindSecondClass::class) {
                         $foundSecond = true;
                     }
-                    if ($class === 'ZendTest\File\TestAsset\SecondTestNamespace\LocatorShouldFindThirdClass') {
+                    if ($class === \ZendTest\File\TestAsset\SecondTestNamespace\LocatorShouldFindThirdClass::class) {
                         $foundThird = true;
                     }
-                    if ($class === 'ZendTest\File\TestAsset\SecondTestNamespace\LocatorShouldFindFourthClass') {
+                    if ($class === \ZendTest\File\TestAsset\SecondTestNamespace\LocatorShouldFindFourthClass::class) {
                         $foundFourth = true;
                     }
                 }

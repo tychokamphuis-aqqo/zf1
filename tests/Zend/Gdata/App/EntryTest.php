@@ -63,10 +63,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->enryText = $this->loadResponse(
-            dirname(__FILE__) . '/../App/_files/EntrySample1.xml'
+            __DIR__ . '/../App/_files/EntrySample1.xml'
         );
         $this->httpEntrySample = $this->loadResponse(
-            dirname(__FILE__) . '/../App/_files/EntrySampleHttp1.txt'
+            __DIR__ . '/../App/_files/EntrySampleHttp1.txt'
         );
         $this->enry = new Zend_Gdata_App_Entry();
 
@@ -194,12 +194,12 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
 
         $c = new Zend_Gdata_HttpClient();
         $this->enry->setHttpClient($c);
-        $this->assertEquals(get_class($s->getHttpClient()),
+        $this->assertEquals($s->getHttpClient()::class,
                 'Zend_Gdata_HttpClient');
 
         $c = new Zend_Http_Client();
         $this->enry->setHttpClient($c);
-        $this->assertEquals(get_class($s->getHttpClient()),
+        $this->assertEquals($s->getHttpClient()::class,
                 'Zend_Http_Client');
     }
 
@@ -215,7 +215,7 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         // Set a URL for posting, so that save() will work
         $editLink = new Zend_Gdata_App_extension_Link('http://example.com',
                 'edit');
-        $this->enry->setLink(array($editLink));
+        $this->enry->setLink([$editLink]);
 
         // Perform a (mock) save
         $this->enry->save();
@@ -243,7 +243,7 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         // Set a URL for posting, so that save() will work
         $editLink = new Zend_Gdata_App_extension_Link('http://example.com',
                 'edit');
-        $this->enry->setLink(array($editLink));
+        $this->enry->setLink([$editLink]);
 
         // Perform a (mock) save
         $this->enry->delete();
@@ -266,13 +266,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->save(null, null,
-                array('If-Match' => $etagOverride));
+                ['If-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -290,13 +290,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->save(null, null,
-                array('If-None-Match' => $etagOverride));
+                ['If-None-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -324,12 +324,12 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $className = 'Zend_Gdata_Entry';
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $newEntry = $entry->save(null, $className);
-        $this->assertEquals($className, get_class($newEntry));
+        $this->assertEquals($className, $newEntry::class);
     }
 
     public function testIfNoneMatchSetOnReload()
@@ -337,10 +337,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $etag = 'ABCD1234';
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
         $headers = $this->adapter->popRequest()->headers;
@@ -359,13 +359,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $etag = 'ABCD1234';
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload(null, null,
-                array('If-None-Match' => $etagOverride));
+                ['If-None-Match' => $etagOverride]);
         $headers = $this->adapter->popRequest()->headers;
         $found = false;
         foreach ($headers as $header) {
@@ -381,13 +381,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $etag = 'ABCD1234';
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
-        $this->assertEquals('Zend_Gdata_App_Entry', get_class($newEntry));
+        $this->assertEquals('Zend_Gdata_App_Entry', $newEntry::class);
     }
 
     public function testReloadPopulatesEntryObject()
@@ -395,10 +395,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $etag = 'ABCD1234';
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
         $this->assertEquals('Hello world', $newEntry->title->text);
@@ -408,12 +408,12 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
     {
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $newEntry = $entry->reload();
-        $this->assertEquals('Zend_Gdata_App_Entry', get_class($newEntry));
+        $this->assertEquals('Zend_Gdata_App_Entry', $newEntry::class);
     }
 
     public function testReloadExtractsURIFromEditLink()
@@ -423,10 +423,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 $expectedUri,
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
         $requestUri = $this->adapter->popRequest()->uri;
@@ -442,10 +442,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload($uriOverride);
         $requestUri = $this->adapter->popRequest()->uri;
@@ -460,10 +460,10 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse('HTTP/1.1 304 Not Modified');
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
         $this->assertEquals(null, $newEntry);
@@ -476,13 +476,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->service->setMajorProtocolVersion(2);
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = $this->service->newEntry();
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload(null, $className);
-        $this->assertEquals($className, get_class($newEntry));
+        $this->assertEquals($className, $newEntry::class);
     }
 
     public function testReloadInheritsClassname()
@@ -493,13 +493,13 @@ class Zend_Gdata_App_EntryTest extends PHPUnit_Framework_TestCase
         $this->adapter->setResponse($this->httpEntrySample);
         $entry = new $className;
         $entry->setService($this->service);
-        $entry->link = array(new Zend_Gdata_App_Extension_Link(
+        $entry->link = [new Zend_Gdata_App_Extension_Link(
                 'http://www.example.com',
                 'edit',
-                'application/atom+xml'));
+                'application/atom+xml')];
         $entry->setEtag($etag);
         $newEntry = $entry->reload();
-        $this->assertEquals($className, get_class($newEntry));
+        $this->assertEquals($className, $newEntry::class);
     }
 
     public function testCanSetMajorProtocolVersion()

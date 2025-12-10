@@ -110,14 +110,14 @@ class Zend_Dojo_View_Helper_NumberSpinnerTest extends PHPUnit_Framework_TestCase
         return $this->helper->numberSpinner(
             'elementId',
             '5',
-            array(
+            [
                 'smallDelta' => '10',
                 'min' => 9,
                 'max' => 1550,
                 'places' => 0,
                 'required'    => true,
-            ),
-            array()
+            ],
+            []
         );
     }
 
@@ -144,7 +144,7 @@ class Zend_Dojo_View_Helper_NumberSpinnerTest extends PHPUnit_Framework_TestCase
     public function testShouldJsonEncodeConstraints()
     {
         $html = $this->getElement();
-        if (!preg_match('/constraints="(.*?)(" )/', $html, $m)) {
+        if (!preg_match('/constraints="(.*?)(" )/', (string) $html, $m)) {
             $this->fail('Did not serialize constraints');
         }
         $constraints = str_replace("'", '"', $m[1]);
@@ -164,9 +164,9 @@ class Zend_Dojo_View_Helper_NumberSpinnerTest extends PHPUnit_Framework_TestCase
         $html = $this->helper->numberSpinner(
             'foo',
             5,
-            array (
+             [
                 'constraints' => 'bogus',
-            )
+            ]
         );
         $this->assertNotContains('constraints="', $html);
     }

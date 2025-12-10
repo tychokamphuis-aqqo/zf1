@@ -71,7 +71,7 @@ class Zend_Pdf_Parser
      */
     public function getPDFLength()
     {
-        return strlen($this->_stringParser->data);
+        return strlen((string) $this->_stringParser->data);
     }
 
     /**
@@ -132,7 +132,7 @@ class Zend_Pdf_Parser
 
                 $this->_stringParser->skipWhiteSpace();
                 while ($refCount > 0) {
-                    $objectOffset = substr($this->_stringParser->data, $this->_stringParser->offset, 10);
+                    $objectOffset = substr((string) $this->_stringParser->data, $this->_stringParser->offset, 10);
                     if (!ctype_digit($objectOffset)) {
                         // require_once 'Zend/Pdf/Exception.php';
                         throw new Zend_Pdf_Exception(sprintf('PDF file cross-reference table syntax error. Offset - 0x%X. Offset must contain only digits.', $this->_stringParser->offset));
@@ -146,13 +146,13 @@ class Zend_Pdf_Parser
                     $objectOffset = substr($objectOffset, $numStart);
                     $this->_stringParser->offset += 10;
 
-                    if (strpos("\x00\t\n\f\r ", $this->_stringParser->data[$this->_stringParser->offset]) === false) {
+                    if (!str_contains("\x00\t\n\f\r ", (string) $this->_stringParser->data[$this->_stringParser->offset])) {
                         // require_once 'Zend/Pdf/Exception.php';
                         throw new Zend_Pdf_Exception(sprintf('PDF file cross-reference table syntax error. Offset - 0x%X. Value separator must be white space.', $this->_stringParser->offset));
                     }
                     $this->_stringParser->offset++;
 
-                    $genNumber = substr($this->_stringParser->data, $this->_stringParser->offset, 5);
+                    $genNumber = substr((string) $this->_stringParser->data, $this->_stringParser->offset, 5);
                     if (!ctype_digit($objectOffset)) {
                         // require_once 'Zend/Pdf/Exception.php';
                         throw new Zend_Pdf_Exception(sprintf('PDF file cross-reference table syntax error. Offset - 0x%X. Offset must contain only digits.', $this->_stringParser->offset));
@@ -166,7 +166,7 @@ class Zend_Pdf_Parser
                     $genNumber = substr($genNumber, $numStart);
                     $this->_stringParser->offset += 5;
 
-                    if (strpos("\x00\t\n\f\r ", $this->_stringParser->data[$this->_stringParser->offset]) === false) {
+                    if (!str_contains("\x00\t\n\f\r ", (string) $this->_stringParser->data[$this->_stringParser->offset])) {
                         // require_once 'Zend/Pdf/Exception.php';
                         throw new Zend_Pdf_Exception(sprintf('PDF file cross-reference table syntax error. Offset - 0x%X. Value separator must be white space.', $this->_stringParser->offset));
                     }
@@ -396,7 +396,7 @@ class Zend_Pdf_Parser
         }
 
         $pdfVersionComment = $this->_stringParser->readComment();
-        if (substr($pdfVersionComment, 0, 5) != '%PDF-') {
+        if (!str_starts_with($pdfVersionComment, '%PDF-')) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('File is not a PDF.');
         }
@@ -416,9 +416,9 @@ class Zend_Pdf_Parser
         }
         $this->_pdfVersion = $pdfVersion;
 
-        $this->_stringParser->offset = strrpos($this->_stringParser->data, '%%EOF');
+        $this->_stringParser->offset = strrpos((string) $this->_stringParser->data, '%%EOF');
         if ($this->_stringParser->offset === false ||
-            strlen($this->_stringParser->data) - $this->_stringParser->offset > 7) {
+            strlen((string) $this->_stringParser->data) - $this->_stringParser->offset > 7) {
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Pdf file syntax error. End-of-fle marker expected at the end of file.');
         }

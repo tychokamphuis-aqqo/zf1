@@ -89,7 +89,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
 
     public function testConstructorWithLayoutObject()
     {
-        $layout = new Zend_Layout(array('mvcEnabled' => false));
+        $layout = new Zend_Layout(['mvcEnabled' => false]);
         $plugin = new Zend_Layout_Controller_Plugin_Layout($layout);
         $this->assertSame($layout, $plugin->getLayout());
     }
@@ -105,7 +105,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
         $plugin = new Zend_Layout_Controller_Plugin_Layout();
         $this->assertNull($plugin->getLayout());
 
-        $layout = new Zend_Layout(array('mvcEnabled' => false));
+        $layout = new Zend_Layout(['mvcEnabled' => false]);
         $plugin->setlayout($layout);
         $this->assertSame($layout, $plugin->getLayout());
     }
@@ -131,7 +131,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
               ->setResponse($response);
 
         $layout = Zend_Layout::startMvc();
-        $layout->setLayoutPath(dirname(__FILE__) . '/_files/layouts')
+        $layout->setLayoutPath(__DIR__ . '/_files/layouts')
                ->setLayout('plugin.phtml')
                ->disableInflector();
 
@@ -159,7 +159,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
               ->setResponse($response);
 
         $layout = Zend_Layout::startMvc();
-        $layout->setLayoutPath(dirname(__FILE__) . '/_files/layouts')
+        $layout->setLayoutPath(__DIR__ . '/_files/layouts')
                ->setLayout('plugin.phtml')
                ->disableInflector();
 
@@ -184,7 +184,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
               ->setResponse($response);
 
         $layout = Zend_Layout::startMvc();
-        $layout->setLayoutPath(dirname(__FILE__) . '/_files/layouts')
+        $layout->setLayoutPath(__DIR__ . '/_files/layouts')
                ->setLayout('plugin.phtml')
                ->disableInflector()
                ->disableLayout();
@@ -214,7 +214,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
               ->setResponse($response);
 
         $layout = Zend_Layout::startMvc();
-        $layout->setLayoutPath(dirname(__FILE__) . '/_files/layouts')
+        $layout->setLayoutPath(__DIR__ . '/_files/layouts')
                ->setLayout('plugin.phtml')
                ->setMvcSuccessfulActionOnly(false)
                ->disableInflector();
@@ -234,6 +234,7 @@ class Zend_Layout_PluginTest extends PHPUnit_Framework_TestCase
  */
 class Zend_Layout_PluginTest_Layout extends Zend_Layout
 {
+    #[\Override]
     public static function resetMvcInstance()
     {
         self::$_mvcInstance = null;

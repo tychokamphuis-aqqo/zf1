@@ -87,17 +87,17 @@ class Zend_Gdata_AuthSubTest extends PHPUnit_Framework_TestCase
             $c->setAuthSubToken('abcdefg');
             $requestData = $c->filterHttpRequest('POST',
                                                  'http://www.example.com/feed',
-                                                  array(),
+                                                  [],
                                                   'foo bar',
                                                   'text/plain');
 
             $authHeaderCheckPassed = false;
             $headers = $requestData['headers'];
             foreach ($headers as $headerName => $headerValue) {
-                if (strtolower($headerName) == 'authorization') {
-                    preg_match('/data="([^"]*)"/', $headerValue, $matches);
+                if (strtolower((string) $headerName) == 'authorization') {
+                    preg_match('/data="([^"]*)"/', (string) $headerValue, $matches);
                     $dataToSign = $matches[1];
-                    preg_match('/sig="([^"]*)"/', $headerValue, $matches);
+                    preg_match('/sig="([^"]*)"/', (string) $headerValue, $matches);
                     $sig = $matches[1];
                     if (function_exists('openssl_verify')) {
                         $fp = fopen('Zend/Gdata/_files/RsaCert.pem', 'r', true);

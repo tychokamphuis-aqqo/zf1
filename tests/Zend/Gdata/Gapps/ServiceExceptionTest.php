@@ -57,7 +57,7 @@ class Zend_Gdata_Gapps_ServiceExceptionTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException Zend_Gdata_Gapps_ServiceException
      */
-    public function testCanThrowServiceException() {
+    public function testCanThrowServiceException(): never {
         throw $this->fixture;
     }
 

@@ -35,7 +35,7 @@ require_once 'Zend/Db/Adapter/Pdo/TestCommon.php';
 class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
 {
 
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -48,8 +48,9 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
         'DOUBLE PRECISION'   => Zend_Db::FLOAT_TYPE,
         'NUMERIC'            => Zend_Db::FLOAT_TYPE,
         'REAL'               => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryAuto()
     {
         $desc = $this->_db->describeTable('zfbugs');
@@ -63,16 +64,17 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * Test the Adapter's insert() method.
      * This requires providing an associative array of column=>value pairs.
      */
+    #[\Override]
     public function testAdapterInsert()
     {
-        $row = array (
+        $row =  [
             'bug_description' => 'New bug',
             'bug_status'      => 'NEW',
             'created_on'      => '2007-04-02',
             'updated_on'      => '2007-04-02',
             'reported_by'     => 'micky',
             'assigned_to'     => 'goofy'
-        );
+        ];
         $rowsAffected = $this->_db->insert('zfbugs', $row);
         $this->assertEquals(1, $rowsAffected);
         $lastInsertId = $this->_db->lastInsertId('zfbugs', 'bug_id');
@@ -83,12 +85,13 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
             'Expected new id to be 5');
     }
 
+    #[\Override]
     public function testAdapterInsertSequence()
     {
-        $row = array (
+        $row =  [
             'product_id' => $this->_db->nextSequenceId('zfproducts_seq'),
             'product_name' => 'Solaris',
-        );
+        ];
         $rowsAffected = $this->_db->insert('zfproducts', $row);
         $this->assertEquals(1, $rowsAffected);
         $lastInsertId = $this->_db->lastInsertId('zfproducts');
@@ -99,6 +102,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
             'Expected new id to be 4');
     }
 
+    #[\Override]
     public function testAdapterInsertDbExpr()
     {
         $bugs = $this->_db->quoteIdentifier('zfbugs');
@@ -107,7 +111,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
 
         $expr = new Zend_Db_Expr('2+3');
 
-        $row = array (
+        $row =  [
             'bug_id'          => $expr,
             'bug_description' => 'New bug 5',
             'bug_status'      => 'NEW',
@@ -116,7 +120,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
             'reported_by'     => 'micky',
             'assigned_to'     => 'goofy',
             'verified_by'     => 'dduck'
-        );
+        ];
         $rowsAffected = $this->_db->insert('zfbugs', $row);
         $this->assertEquals(1, $rowsAffected);
 
@@ -128,9 +132,10 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * Test that quote() takes an array and returns
      * an imploded string of comma-separated, quoted elements.
      */
+    #[\Override]
     public function testAdapterQuoteArray()
     {
-        $array = array("it's", 'all', 'right!');
+        $array = ["it's", 'all', 'right!'];
         $value = $this->_db->quote($array);
         $this->assertEquals("'it''s', 'all', 'right!'", $value);
     }
@@ -139,6 +144,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteDoubleQuote()
     {
         $value = $this->_db->quote('St John"s Wort');
@@ -149,6 +155,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quote() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteSingleQuote()
     {
         $string = "St John's Wort";
@@ -160,6 +167,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoDoubleQuote()
     {
         $value = $this->_db->quoteInto('id=?', 'St John"s Wort');
@@ -170,6 +178,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
      * test that quoteInto() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoSingleQuote()
     {
         $value = $this->_db->quoteInto('id = ?', 'St John\'s Wort');
@@ -187,8 +196,8 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
     public function testAdapterCharacterVarying()
     {
         $this->_util->createTable('zf_pgsql_charvary',
-                                  array('pg_id' => 'character varying(4) NOT NULL',
-                                        'pg_info' => "character varying(1) NOT NULL DEFAULT 'A'::character varying"));
+                                  ['pg_id' => 'character varying(4) NOT NULL',
+                                        'pg_info' => "character varying(1) NOT NULL DEFAULT 'A'::character varying"]);
         $description = $this->_db->describeTable('zf_pgsql_charvary');
         $this->_util->dropTable('zf_pgsql_charvary');
         $this->assertEquals(null , $description['pg_id']['DEFAULT']);
@@ -201,7 +210,7 @@ class Zend_Db_Adapter_Pdo_PgsqlTest extends Zend_Db_Adapter_Pdo_TestCommon
     public function testAdapterBpchar()
     {
         $this->_util->createTable('zf_pgsql_bpchar',
-                                  array('pg_name' => "character(100) DEFAULT 'Default'::bpchar"));
+                                  ['pg_name' => "character(100) DEFAULT 'Default'::bpchar"]);
         $description = $this->_db->describeTable('zf_pgsql_bpchar');
         $this->_util->dropTable('zf_pgsql_bpchar');
         $this->assertEquals('Default', $description['pg_name']['DEFAULT']);

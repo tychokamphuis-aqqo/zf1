@@ -55,7 +55,7 @@ class Zend_Cloud_QueueService_FactoryTest extends PHPUnit_Framework_TestCase
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -67,31 +67,31 @@ class Zend_Cloud_QueueService_FactoryTest extends PHPUnit_Framework_TestCase
     public function testGetAdapterWithConfig()
     {
         // SQS adapter
-        $sqsConfig = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/sqs.ini'));
+        $sqsConfig = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/sqs.ini'));
         $sqsAdapter = Zend_Cloud_QueueService_Factory::getAdapter($sqsConfig);
-        $this->assertEquals('Zend_Cloud_QueueService_Adapter_Sqs', get_class($sqsAdapter));
+        $this->assertEquals('Zend_Cloud_QueueService_Adapter_Sqs', $sqsAdapter::class);
 
         // zend queue adapter
-        $zqConfig = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/zendqueue.ini'));
+        $zqConfig = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/zendqueue.ini'));
         $zq = Zend_Cloud_QueueService_Factory::getAdapter($zqConfig);
-        $this->assertEquals('Zend_Cloud_QueueService_Adapter_ZendQueue', get_class($zq));
+        $this->assertEquals('Zend_Cloud_QueueService_Adapter_ZendQueue', $zq::class);
 
         // Azure adapter
-        $azureConfig = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/windowsazure.ini'));
+        $azureConfig = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/windowsazure.ini'));
         $azureAdapter = Zend_Cloud_QueueService_Factory::getAdapter($azureConfig);
-        $this->assertEquals('Zend_Cloud_QueueService_Adapter_WindowsAzure', get_class($azureAdapter));
+        $this->assertEquals('Zend_Cloud_QueueService_Adapter_WindowsAzure', $azureAdapter::class);
     }
 
     public function testGetAdapterWithArray()
     {
         // No need to overdo it; we'll test the array config with just one adapter.
-        $zqConfig = array(Zend_Cloud_QueueService_Factory::QUEUE_ADAPTER_KEY =>
+        $zqConfig = [Zend_Cloud_QueueService_Factory::QUEUE_ADAPTER_KEY =>
         					     'Zend_Cloud_QueueService_Adapter_ZendQueue',
-                            Zend_Cloud_QueueService_Adapter_ZendQueue::ADAPTER => "Array");
+                            Zend_Cloud_QueueService_Adapter_ZendQueue::ADAPTER => "Array"];
 
         $zq = Zend_Cloud_QueueService_Factory::getAdapter($zqConfig);
 
-        $this->assertEquals('Zend_Cloud_QueueService_Adapter_ZendQueue', get_class($zq));
+        $this->assertEquals('Zend_Cloud_QueueService_Adapter_ZendQueue', $zq::class);
     }
 }
 

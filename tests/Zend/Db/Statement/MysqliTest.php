@@ -143,13 +143,14 @@ INPUT;
     
             $count++;
             $io = explode('out:', $ioLine);
-            $in = str_replace(array('[', ']'),'', trim($io[0]));
-            $out = str_replace(array('[', ']'),'', trim($io[1]));
+            $in = str_replace(['[', ']'],'', trim($io[0]));
+            $out = str_replace(['[', ']'],'', trim($io[1]));
             $actual = $this->_Zend_Db_Statement_Mysqli_Test_Class->stripQuoted($in);
             $this->assertSame($out, $actual, $count . ' - unexpected output');
         }
     }
     
+    #[\Override]
     public function testStatementRowCount()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -170,6 +171,7 @@ INPUT;
         $this->assertEquals(1, $n, 'Expected row count to be one after executing query');
     }
 
+    #[\Override]
     public function testStatementBindParamByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -188,11 +190,12 @@ INPUT;
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals("Invalid bind-variable name ':id'", $e->getMessage());
         }
     }
 
+    #[\Override]
     public function testStatementBindValueByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -211,11 +214,12 @@ INPUT;
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals("Invalid bind-variable name ':id'", $e->getMessage());
         }
     }
 
+    #[\Override]
     public function testStatementGetColumnMeta()
     {
         $this->markTestIncomplete($this->getDriver() . ' has not implemented getColumnMeta() yet [ZF-1424]');
@@ -240,6 +244,7 @@ INPUT;
     /**
      * @group ZF-7706
      */
+    #[\Override]
     public function testStatementCanReturnDriverStatement()
     {
         $statement = parent::testStatementCanReturnDriverStatement();
@@ -266,22 +271,22 @@ INPUT;
      */
     public function testNumberOfBoundParamsDoesNotMatchNumberOfTokens()
     {
-    	$this->_util->createTable('zf_objects', array(
+    	$this->_util->createTable('zf_objects', [
             'object_id'		=> 'INTEGER NOT NULL',
     		'object_type'	=> 'INTEGER NOT NULL',
     		'object_status' => 'INTEGER NOT NULL',
     		'object_lati'   => 'REAL',
     		'object_long'   => 'REAL',
-        ));
+        ]);
         $tableName = $this->_util->getTableName('zf_objects');
 
-        $numRows = $this->_db->insert($tableName, array (
+        $numRows = $this->_db->insert($tableName,  [
         	'object_id' => 1,
         	'object_type' => 1,
         	'object_status' => 1,
         	'object_lati' => 1.12345,
         	'object_long' => 1.54321,
-        ));
+        ]);
 
         $sql = 'SELECT object_id, object_type, object_status,'
              . ' object_lati, object_long FROM ' . $tableName

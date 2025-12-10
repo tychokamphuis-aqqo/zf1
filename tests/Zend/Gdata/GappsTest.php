@@ -75,7 +75,7 @@ class Zend_Gdata_GappsTest extends PHPUnit_Framework_TestCase
       $success = false;
       try {
         $this->gdata->throwServiceExceptionIfDetected($e);
-      } catch (Zend_Gdata_App_IOException $f) {
+      } catch (Zend_Gdata_App_IOException) {
         $success = true;
       }
       $this->assertTrue($success, 'Zend_Gdata_App_IOException not thrown');

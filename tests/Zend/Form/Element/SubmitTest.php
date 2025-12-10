@@ -87,7 +87,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     {
         // require_once 'Zend/View.php';
         $view = new Zend_View();
-        $view->addHelperPath(dirname(__FILE__) . '/../../../../library/Zend/View/Helper/');
+        $view->addHelperPath(__DIR__ . '/../../../../library/Zend/View/Helper/');
         return $view;
     }
 
@@ -119,7 +119,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
 
     public function testGetLabelReturnsTranslatedLabelIfTranslatorIsRegistered()
     {
-        $translations = include dirname(__FILE__) . '/../_files/locale/array.php';
+        $translations = include __DIR__ . '/../_files/locale/array.php';
         $translate = new Zend_Translate('array', $translations, 'en');
         $this->element->setTranslator($translate)
                       ->setLabel('submit');
@@ -153,7 +153,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     public function testLabelIsTranslatedWhenTranslationAvailable()
     {
         // require_once 'Zend/Translate.php';
-        $translations = array('Label' => 'This is the Submit Label');
+        $translations = ['Label' => 'This is the Submit Label'];
         $translate = new Zend_Translate('array', $translations);
         $submit = new Zend_Form_Element_Submit('foo', 'Label');
         $submit->setTranslator($translate);
@@ -163,7 +163,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     public function testLabelWhichIsSetToNameIsTranslatedWhenTranslationAvailable()
     {
         // require_once 'Zend/Translate.php';
-        $translations = array('foo' => 'This is the Submit Label');
+        $translations = ['foo' => 'This is the Submit Label'];
         $translate = new Zend_Translate('array', $translations);
         $submit = new Zend_Form_Element_Submit('foo');
         $submit->setTranslator($translate);
@@ -176,8 +176,8 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     public function testLabelIsNotTranslatedTwice()
     {
         // require_once 'Zend/Translate.php';
-        $translations = array('firstLabel' => 'secondLabel',
-                              'secondLabel' => 'thirdLabel');
+        $translations = ['firstLabel' => 'secondLabel',
+                              'secondLabel' => 'thirdLabel'];
         $translate = new Zend_Translate('array', $translations);
         $submit = new Zend_Form_Element_Submit('foo', 'firstLabel');
         $submit->setTranslator($translate);
@@ -209,7 +209,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
      */
     public function testIsCheckedReturnsExpectedValueWhenUsingTranslator()
     {
-        $translations = array('label' => 'translation');
+        $translations = ['label' => 'translation'];
         $translate = new Zend_Translate('array', $translations);
 
         $submit = new Zend_Form_Element_Submit('foo', 'label');
@@ -230,7 +230,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     public function testTitleAttributeGetsTranslated()
     {
         $this->element->setAttrib('title', 'bar');
-        $translator = new Zend_Translate_Adapter_Array(array("bar" => "baz"), 'de');
+        $translator = new Zend_Translate_Adapter_Array(["bar" => "baz"], 'de');
         $this->element->setTranslator($translator);
         $html = $this->element->render(new Zend_View());
         $this->assertContains('title', $html);
@@ -241,7 +241,7 @@ class Zend_Form_Element_SubmitTest extends PHPUnit_Framework_TestCase
     public function testTitleAttributeDoesNotGetTranslatedIfTranslatorIsDisabled()
     {
         $this->element->setAttrib('title', 'bar');
-        $translator = new Zend_Translate_Adapter_Array(array("bar" => "baz"), 'de');
+        $translator = new Zend_Translate_Adapter_Array(["bar" => "baz"], 'de');
         $this->element->setTranslator($translator);
         // now disable translator and see if that works
         $this->element->setDisableTranslator(true);

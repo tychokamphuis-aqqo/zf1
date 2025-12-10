@@ -40,18 +40,20 @@ require_once 'Zend/Db/TestUtil/Common.php';
 class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
 {
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array(
+        $constants = [
             'host'     => 'TESTS_ZEND_DB_ADAPTER_MYSQL_HOSTNAME',
             'username' => 'TESTS_ZEND_DB_ADAPTER_MYSQL_USERNAME',
             'password' => 'TESTS_ZEND_DB_ADAPTER_MYSQL_PASSWORD',
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_MYSQL_DATABASE',
             'port'     => 'TESTS_ZEND_DB_ADAPTER_MYSQL_PORT'
-        );
+        ];
         return parent::getParams($constants);
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         if ($type == 'IDENTITY') {
@@ -63,6 +65,7 @@ class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         return 'CREATE TABLE IF NOT EXISTS ' . $this->_db->quoteIdentifier($tableName);
@@ -73,6 +76,7 @@ class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
         return ' ENGINE=InnoDB';
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         return 'DROP TABLE IF EXISTS ' . $this->_db->quoteIdentifier($tableName);
@@ -93,32 +97,35 @@ class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
      * Test that describeTable() returns correct float type
      * @group ZF-3624
      */
+    #[\Override]
     protected function _getColumnsPrice()
     {
-        return array(
+        return [
             'product_id'    => 'INTEGER NOT NULL',
             'price_name'    => 'VARCHAR(100)',
             'price'         => 'FLOAT(10,8)',
             'price_total'   => 'DECIMAL(10,2) NOT NULL',
             'PRIMARY KEY'   => 'product_id'
-            );
+            ];
     }
 
     /**
      * Test that describeTable() returns correct float type
      * @group ZF-3624
      */
+    #[\Override]
     protected function _getDataPrice()
     {
-        return array(
-            array(
+        return [
+            [
                 'product_id'   => 1,
                 'price_name'   => 'Price 1',
                 'price_total'  => 200.45
-            )
-        );
+            ]
+        ];
     }
 
+    #[\Override]
     public function setUp(Zend_Db_Adapter_Abstract $db)
     {
         parent::setUp($db);
@@ -126,6 +133,7 @@ class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
         $this->_createTestProcedure();
     }
 
+    #[\Override]
     public function tearDown()
     {
         $this->_dropTestProcedure();
@@ -144,11 +152,13 @@ class Zend_Db_TestUtil_Mysqli extends Zend_Db_TestUtil_Common
         $this->_tryRawQuery('DROP PROCEDURE IF EXISTS zf_test_procedure');
     }
 
+    #[\Override]
     protected function _getSqlCreateView($viewName)
     {
         return 'CREATE OR REPLACE VIEW ' . $this->_db->quoteIdentifier($viewName, true);
     }
 
+    #[\Override]
     protected function _getSqlDropView($viewName)
     {
         return 'DROP VIEW IF EXISTS ' . $this->_db->quoteIdentifier($viewName, true);

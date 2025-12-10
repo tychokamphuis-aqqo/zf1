@@ -58,7 +58,7 @@ class Zend_Cloud_Infrastructure_FactoryTest extends PHPUnit_Framework_TestCase
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -73,14 +73,14 @@ class Zend_Cloud_Infrastructure_FactoryTest extends PHPUnit_Framework_TestCase
                                     new Zend_Config(Zend_Cloud_Infrastructure_Adapter_Ec2Test::getConfigArray())
                                 );
 
-        $this->assertEquals('Zend_Cloud_Infrastructure_Adapter_Ec2', get_class($Ec2Adapter));
+        $this->assertEquals('Zend_Cloud_Infrastructure_Adapter_Ec2', $Ec2Adapter::class);
         
         // Rackspace adapter
         $rackspaceAdapter = Zend_Cloud_Infrastructure_Factory::getAdapter(
                                     new Zend_Config(Zend_Cloud_Infrastructure_Adapter_RackspaceTest::getConfigArray())
                                 );
 
-        $this->assertEquals('Zend_Cloud_Infrastructure_Adapter_Rackspace', get_class($rackspaceAdapter));
+        $this->assertEquals('Zend_Cloud_Infrastructure_Adapter_Rackspace', $rackspaceAdapter::class);
     }
 }
 

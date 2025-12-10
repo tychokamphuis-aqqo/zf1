@@ -70,12 +70,12 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
      *
      * @var array
      */
-    protected $_optionKeys = array();
+    protected $_optionKeys = [];
 
     /**
      * @var array
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
      * @var Zend_Loader_PluginLoader_Interface
@@ -85,17 +85,17 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
     /**
      * @var array Class-based resource plugins
      */
-    protected $_pluginResources = array();
+    protected $_pluginResources = [];
 
     /**
      * @var array Initializers that have been run
      */
-    protected $_run = array();
+    protected $_run = [];
 
     /**
      * @var array Initializers that have been started but not yet completed (circular dependency detection)
      */
-    protected $_started = array();
+    protected $_started = [];
 
     /**
      * @var Zend_Controller_Front
@@ -146,7 +146,7 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
         }
 
         foreach ($options as $key => $value) {
-            $method = 'set' . strtolower($key);
+            $method = 'set' . strtolower((string) $key);
 
             if (in_array($method, $methods)) {
                 $this->$method($value);
@@ -208,7 +208,7 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
         if (is_array($array2)) {
             foreach ($array2 as $key => $val) {
                 if (is_array($array2[$key])) {
-                    $array1[$key] = (array_key_exists($key, $array1) && is_array($array1[$key]))
+                    $array1[$key] = (array_key_exists((string) $key, $array1) && is_array($array1[$key]))
                                   ? $this->mergeOptions($array1[$key], $array2[$key])
                                   : $array2[$key];
                 } else {
@@ -229,9 +229,9 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
         if (null === $this->_classResources) {
             $methodNames = get_class_methods($this);
 
-            $this->_classResources = array();
+            $this->_classResources = [];
             foreach ($methodNames as $method) {
-                if (5 < strlen($method) && '_init' === substr($method, 0, 5)) {
+                if (5 < strlen($method) && str_starts_with($method, '_init')) {
                     $this->_classResources[strtolower(substr($method, 5))] = $method;
                 }
             }
@@ -417,10 +417,10 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
     public function getPluginLoader()
     {
         if ($this->_pluginLoader === null) {
-            $options = array(
+            $options = [
                 'Zend_Application_Resource'  => 'Zend/Application/Resource',
                 'ZendX_Application_Resource' => 'ZendX/Application/Resource'
-            );
+            ];
 
             $this->_pluginLoader = new Zend_Loader_PluginLoader($options);
         }
@@ -445,7 +445,7 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
             }
             $this->_application = $application;
         } else {
-            throw new Zend_Application_Bootstrap_Exception('Invalid application provided to bootstrap constructor (received "' . get_class($application) . '" instance)');
+            throw new Zend_Application_Bootstrap_Exception('Invalid application provided to bootstrap constructor (received "' . $application::class . '" instance)');
         }
         return $this;
     }
@@ -601,7 +601,7 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
      */
     public function __call($method, $args)
     {
-        if (9 < strlen($method) && 'bootstrap' === substr($method, 0, 9)) {
+        if (9 < strlen($method) && str_starts_with($method, 'bootstrap')) {
             $resource = substr($method, 9);
             return $this->bootstrap($resource);
         }
@@ -722,7 +722,7 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
         if (isset($instance->_explicitType)) {
             $resource = $instance->_explicitType;
         }
-        $resource = strtolower($resource);
+        $resource = strtolower((string) $resource);
         $this->_pluginResources[$resource] = $instance;
 
         return $resource;
@@ -759,12 +759,12 @@ abstract class Zend_Application_Bootstrap_BootstrapAbstract
         if (isset($resource->_explicitType)) {
             $pluginName = $resource->_explicitType;
         } else  {
-            $className  = get_class($resource);
+            $className  = $resource::class;
             $pluginName = $className;
             $loader     = $this->getPluginLoader();
             foreach ($loader->getPaths() as $prefix => $paths) {
-                if (0 === strpos($className, $prefix)) {
-                    $pluginName = substr($className, strlen($prefix));
+                if (str_starts_with($className, (string) $prefix)) {
+                    $pluginName = substr($className, strlen((string) $prefix));
                     $pluginName = trim($pluginName, '_');
                     break;
                 }

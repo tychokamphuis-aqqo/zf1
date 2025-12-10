@@ -41,7 +41,7 @@ class Zend_CodeGenerator_Php_FileTest extends PHPUnit_Framework_TestCase
     public function testConstruction()
     {
         $file = new Zend_CodeGenerator_Php_File();
-        $this->assertEquals(get_class($file), 'Zend_CodeGenerator_Php_File');
+        $this->assertEquals($file::class, 'Zend_CodeGenerator_Php_File');
     }
 
     public function testSourceContentGetterAndSetter()
@@ -60,15 +60,15 @@ class Zend_CodeGenerator_Php_FileTest extends PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $codeGenFile = new Zend_CodeGenerator_Php_File(array(
-            'requiredFiles' => array('SampleClass.php'),
-            'class' => array(
+        $codeGenFile = new Zend_CodeGenerator_Php_File([
+            'requiredFiles' => ['SampleClass.php'],
+            'class' => [
                 'abstract' => true,
                 'name' => 'SampleClass',
                 'extendedClass' => 'ExtendedClassName',
-                'implementedInterfaces' => array('Iterator', 'Traversable')
-                )
-            ));
+                'implementedInterfaces' => ['Iterator', 'Traversable']
+                ]
+            ]);
 
 
         $expectedOutput = <<<EOS
@@ -93,11 +93,11 @@ EOS;
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'UnitFile');
 
-        $codeGenFile = new Zend_CodeGenerator_Php_File(array(
-            'class' => array(
+        $codeGenFile = new Zend_CodeGenerator_Php_File([
+            'class' => [
                 'name' => 'SampleClass'
-                )
-            ));
+                ]
+            ]);
 
         file_put_contents($tempFile, $codeGenFile->generate());
 
@@ -107,18 +107,18 @@ EOS;
 
         unlink($tempFile);
 
-        $this->assertEquals(get_class($codeGenFileFromDisk), 'Zend_CodeGenerator_Php_File');
+        $this->assertEquals($codeGenFileFromDisk::class, 'Zend_CodeGenerator_Php_File');
         $this->assertEquals(count($codeGenFileFromDisk->getClasses()), 1);
 
     }
 
     public function testFromReflectionFile()
     {
-        $file = dirname(__FILE__) . '/_files/TestSampleSingleClass.php';
+        $file = __DIR__ . '/_files/TestSampleSingleClass.php';
 
         require_once $file;
         $codeGenFileFromDisk = Zend_CodeGenerator_Php_File::fromReflection(new Zend_Reflection_File($file));
-        $codeGenFileFromDisk->getClass()->setMethod(array('name' => 'foobar'));
+        $codeGenFileFromDisk->getClass()->setMethod(['name' => 'foobar']);
 
         $expectedOutput = <<<EOS
 <?php
@@ -171,7 +171,7 @@ EOS;
      */
     public function testFromReflectionFileKeepsIndents()
     {
-        $file = dirname(__FILE__) . '/_files/TestClassWithCodeInMethod.php';
+        $file = __DIR__ . '/_files/TestClassWithCodeInMethod.php';
 
         require_once $file;
         $codeGenFileFromDisk = Zend_CodeGenerator_Php_File::fromReflection(new Zend_Reflection_File($file));
@@ -219,11 +219,11 @@ EOS;
      */
     public function testFromReflectionFilePreservesIndentsWhenAdditionalMethodAdded()
     {
-        $file = dirname(__FILE__) . '/_files/TestClassWithCodeInMethod.php';
+        $file = __DIR__ . '/_files/TestClassWithCodeInMethod.php';
 
         require_once $file;
         $codeGenFileFromDisk = Zend_CodeGenerator_Php_File::fromReflection(new Zend_Reflection_File($file));
-        $codeGenFileFromDisk->getClass()->setMethod(array('name' => 'foobar'));
+        $codeGenFileFromDisk->getClass()->setMethod(['name' => 'foobar']);
         
         $expectedOutput = <<<EOS
 <?php
@@ -272,15 +272,15 @@ EOS;
 
     public function testFileLineEndingsAreAlwaysLineFeed()
     {
-        $codeGenFile = new Zend_CodeGenerator_Php_File(array(
-            'requiredFiles' => array('SampleClass.php'),
-            'class' => array(
+        $codeGenFile = new Zend_CodeGenerator_Php_File([
+            'requiredFiles' => ['SampleClass.php'],
+            'class' => [
                 'abstract' => true,
                 'name' => 'SampleClass',
                 'extendedClass' => 'ExtendedClassName',
-                'implementedInterfaces' => array('Iterator', 'Traversable')
-                )
-            ));
+                'implementedInterfaces' => ['Iterator', 'Traversable']
+                ]
+            ]);
 
         // explode by newline, this would leave CF in place if it were generated
         $lines = explode("\n", $codeGenFile);
@@ -294,7 +294,7 @@ EOS;
     * @group ZF-11703
     */
     public function testNewMethodKeepDocBlock(){
-        $codeGenFile = Zend_CodeGenerator_Php_File::fromReflectedFileName(dirname(__FILE__).'/_files/zf-11703.php', true, true);
+        $codeGenFile = Zend_CodeGenerator_Php_File::fromReflectedFileName(__DIR__.'/_files/zf-11703.php', true, true);
         $target = <<<EOS
 <?php
 /**
@@ -320,10 +320,10 @@ class Foo
 
 EOS;
 
-        $codeGenFile->getClass()->setMethod(array(
+        $codeGenFile->getClass()->setMethod([
             'name' => 'bar2',
             'body' => '// action body'
-            ));
+            ]);
 
         $this->assertEquals($target, $codeGenFile->generate());
     }
@@ -332,7 +332,7 @@ EOS;
     * @group ZF-11703
     */
     public function testNewMethodKeepTwoDocBlock(){
-        $codeGenFile = Zend_CodeGenerator_Php_File::fromReflectedFileName(dirname(__FILE__).'/_files/zf-11703_1.php', true, true);
+        $codeGenFile = Zend_CodeGenerator_Php_File::fromReflectedFileName(__DIR__.'/_files/zf-11703_1.php', true, true);
         $target = <<<EOS
 <?php
 /**
@@ -362,10 +362,10 @@ class Foo1
 
 EOS;
 
-        $codeGenFile->getClass()->setMethod(array(
+        $codeGenFile->getClass()->setMethod([
             'name' => 'bar2',
             'body' => '// action body'
-            ));
+            ]);
 
         $this->assertEquals($target, $codeGenFile->generate());
     }

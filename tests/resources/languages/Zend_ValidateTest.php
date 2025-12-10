@@ -37,15 +37,15 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
 {
 
     protected $_langDir      = null;
-    protected $_languages    = array();
-    protected $_translations = array();
+    protected $_languages    = [];
+    protected $_translations = [];
 
     public function setUp()
     {
         $this->markTestSkipped('skip this for now, maybe extract and fix original resources into a zend-resources package later...');
         return;
 
-        $this->_langDir = dirname(dirname(dirname(dirname(__FILE__))))
+        $this->_langDir = dirname(__FILE__, 4)
                         . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'languages';
         if (!is_readable($this->_langDir)) {
             throw new Exception('Language resource directory "'.$this->_langDir.'" not readable.');
@@ -109,7 +109,7 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
      */
     public function testEnglishKeySameAsValue()
     {
-        $errors = array();
+        $errors = [];
         $cnt    = 0;
         foreach ($this->_translations['en'] as $key => $value) {
             if ($key !== $value) {
@@ -128,7 +128,7 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
      */
     public function testTranslationAvailableInEnglish()
     {
-        $errors = array();
+        $errors = [];
         $cnt    = 0;
         foreach ($this->_translations as $lang => $translation) {
             if ($lang == 'en') {
@@ -153,7 +153,7 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
      */
     public function testTranslationDiffersFromEnglish()
     {
-        $errors = array();
+        $errors = [];
         $cnt    = 0;
         foreach ($this->_translations as $lang => $translation) {
             if ($lang == 'en') {
@@ -178,7 +178,7 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
      */
     public function testPlaceholder()
     {
-        $errors = array();
+        $errors = [];
         $cnt    = 0;
         foreach ($this->_translations as $lang => $translation) {
             if ($lang == 'en') { // not needed to test - see testEnglishKeySameAsValue
@@ -186,9 +186,9 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
             }
 
             foreach ($translation as $key => $value) {
-                if (preg_match_all('/(\%.+\%)/U', $key, $matches, PREG_SET_ORDER)) {
+                if (preg_match_all('/(\%.+\%)/U', (string) $key, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
-                        if (!strpos($value, $match[1])) {
+                        if (!strpos((string) $value, $match[1])) {
                             ++$cnt;
                             $errors[$lang . ' ' . $cnt] = "Missing placeholder \"" . $match[1] . "\" within \"" . $value . "\"";
                         }
@@ -207,7 +207,7 @@ class resources_languages_Zend_ValidateTest extends PHPUnit_Framework_TestCase
      */
     public function testAllTranslated()
     {
-        $errors = array();
+        $errors = [];
         $cnt    = 0;
         foreach ($this->_translations as $lang => $translation) {
             foreach ($this->_translations['en'] as $key => $value) {

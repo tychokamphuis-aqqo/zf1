@@ -30,10 +30,7 @@
  */
 class Zend_UnusualNamespace_ClassMappedClass
 {
-    public $options;
-
-    public function __construct($options = null)
+    public function __construct(public $options = null)
     {
-        $this->options = $options;
     }
 }

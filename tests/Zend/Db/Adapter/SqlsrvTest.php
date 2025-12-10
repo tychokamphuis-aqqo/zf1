@@ -39,7 +39,7 @@ require_once 'Zend/Db/Adapter/TestCommon.php';
  */
 class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
 {
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -53,19 +53,20 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         'NUMERIC'            => Zend_Db::FLOAT_TYPE,
         'REAL'               => Zend_Db::FLOAT_TYPE,
         'SMALLMONEY'         => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * Test AUTO_QUOTE_IDENTIFIERS option
      * Case: Zend_Db::AUTO_QUOTE_IDENTIFIERS = true
      */
+    #[\Override]
     public function testAdapterAutoQuoteIdentifiersTrue()
     {
         $params = $this->_util->getParams();
 
-        $params['options'] = array(
+        $params['options'] = [
             Zend_Db::AUTO_QUOTE_IDENTIFIERS => true
-        );
+        ];
         $db = Zend_Db::factory($this->getDriver(), $params);
         $db->getConnection();
 
@@ -82,9 +83,10 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * Test the Adapter's insert() method.
      * This requires providing an associative array of column=>value pairs.
      */
+    #[\Override]
     public function testAdapterInsert()
     {
-        $row = array (
+        $row =  [
             'bug_description' => 'New bug',
             'bug_status'      => 'NEW',
             'created_on'      => '2007-04-02',
@@ -92,7 +94,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
             'reported_by'     => 'micky',
             'assigned_to'     => 'goofy',
             'verified_by'     => 'dduck'
-        );
+        ];
 
         $rowsAffected = $this->_db->insert('zfbugs', $row);
         $this->assertEquals(1, $rowsAffected);
@@ -114,7 +116,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      */
     public function testAdapterMultipleInsert()
     {
-        $row = array (
+        $row =  [
             'bug_description' => 'New bug',
             'bug_status'      => 'NEW',
             'created_on'      => '2007-04-02',
@@ -122,15 +124,15 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
             'reported_by'     => 'micky',
             'assigned_to'     => 'goofy',
             'verified_by'     => 'dduck'
-        );
+        ];
 
         $bugs = $this->_db->quoteIdentifier('zfbugs');
 
         $values = '(?, ?, ?, ?, ?, ?, ?)';
 
-        $query = 'INSERT INTO ' . $bugs . ' VALUES ' . implode(',', array($values, $values, $values));
+        $query = 'INSERT INTO ' . $bugs . ' VALUES ' . implode(',', [$values, $values, $values]);
 
-        $data = array();
+        $data = [];
 
         for ($i = 0; $i < 3; $i++) {
             foreach ($row as $value) {
@@ -143,6 +145,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $this->assertEquals(3, $rowsAffected);
     }
 
+    #[\Override]
     public function testAdapterDescribeTableAttributeColumn()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -173,6 +176,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $this->assertEquals(0, count($desc), 'Expected to have empty result');
     }
 
+    #[\Override]
     public function testAdapterDescribeTablePrimaryKeyColumn()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -192,9 +196,10 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * Test that quote() takes an array and returns
      * an imploded string of comma-separated, quoted elements.
      */
+    #[\Override]
     public function testAdapterQuoteArray()
     {
-        $array = array("it's", 'all', 'right!');
+        $array = ["it's", 'all', 'right!'];
         $value = $this->_db->quote($array);
         $this->assertEquals("'it''s', 'all', 'right!'", $value);
     }
@@ -203,6 +208,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * test that quote() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteDoubleQuote()
     {
         $string = 'St John"s Wort';
@@ -214,6 +220,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * test that quote() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteSingleQuote()
     {
         $string = "St John's Wort";
@@ -225,6 +232,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * test that quoteInto() escapes a double-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoDoubleQuote()
     {
         $string = 'id=?';
@@ -237,6 +245,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * test that quoteInto() escapes a single-quote
      * character in a string.
      */
+    #[\Override]
     public function testAdapterQuoteIntoSingleQuote()
     {
         $string = 'id = ?';
@@ -245,18 +254,20 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $this->assertEquals("id = 'St John''s Wort'", $value);
     }
 
+    #[\Override]
     public function testAdapterInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences.');
     }
 
+    #[\Override]
     public function testAdapterInsertDbExpr()
     {
         $bugs   = $this->_db->quoteIdentifier('zfbugs');
         $bug_id = $this->_db->quoteIdentifier('bug_id');
         $expr   = new Zend_Db_Expr('2+3');
 
-        $row = array (
+        $row =  [
             'bug_id'          => $expr,
             'bug_description' => 'New bug',
             'bug_status'      => 'NEW',
@@ -265,7 +276,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
             'reported_by'     => 'micky',
             'assigned_to'     => 'goofy',
             'verified_by'     => 'dduck'
-        );
+        ];
 
         $this->_db->query("SET IDENTITY_INSERT $bugs ON");
 
@@ -281,6 +292,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
     /**
      * @group ZF-1541
      */
+    #[\Override]
     public function testCharacterSetUtf8()
     {
         // Create a new adapter
@@ -297,10 +309,10 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $util->setAdapter($db);
 
         // create test table using no identifier quoting
-        $util->createTable('charsetutf8', array(
+        $util->createTable('charsetutf8', [
             'id'    => 'IDENTITY',
             'stuff' => 'VARCHAR(32)'
-        ));
+        ]);
         $tableName = $this->_util->getTableName('charsetutf8');
 
         $table = $db->quoteIdentifier('charsetutf8');
@@ -308,19 +320,19 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $db->query("SET IDENTITY_INSERT $table ON");
 
         // insert into the table
-        $numRows = $db->insert($tableName, array(
+        $numRows = $db->insert($tableName, [
             'id'    => 1,
             'stuff' => 'äöüß'
-        ));
+        ]);
 
         // check if the row was inserted as expected
-        $select = $db->select()->from($tableName, array('id', 'stuff'));
+        $select = $db->select()->from($tableName, ['id', 'stuff']);
 
         $stmt = $db->query($select);
         $fetched = $stmt->fetchAll(Zend_Db::FETCH_NUM);
-        $a = array(
-            0 => array(0 => 1, 1 => 'äöüß')
-        );
+        $a = [
+            0 => [0 => 1, 1 => 'äöüß']
+        ];
         $this->assertEquals($a, $fetched,
             'result of query not as expected');
 
@@ -331,6 +343,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $util->dropTable($tableName);
     }
 
+    #[\Override]
     public function testAdapterTransactionCommit()
     {
         $bugs   = $this->_db->quoteIdentifier('zfbugs');
@@ -375,6 +388,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         $this->assertEquals(2, $count);
     }
 
+    #[\Override]
     public function testAdapterTransactionRollback()
     {
         $bugs   = $this->_db->quoteIdentifier('zfbugs');
@@ -434,7 +448,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
         try {
             $db->setTransactionIsolationLevel('not existing isolation level');
             $this->fail("Not existing isolation types are allowed to set");
-        } catch (Zend_Db_Adapter_Sqlsrv_Exception $e) {
+        } catch (Zend_Db_Adapter_Sqlsrv_Exception) {
         }
 
         $this->assertTrue($db->setTransactionIsolationLevel(), "Setting to default should work by passsing null or nothing");
@@ -444,6 +458,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * @group ZF-9252
      * @see zf-trunk/tests/Zend/Db/Adapter/Zend_Db_Adapter_TestCommon#testAdapterLimit()
      */
+    #[\Override]
     public function testAdapterLimit()
     {
         parent::testAdapterLimit();
@@ -466,6 +481,7 @@ class Zend_Db_Adapter_SqlsrvTest extends Zend_Db_Adapter_TestCommon
      * @group ZF-9252
      * @see zf-trunk/tests/Zend/Db/Adapter/Zend_Db_Adapter_TestCommon#testAdapterLimitOffset()
      */
+    #[\Override]
     public function testAdapterLimitOffset()
     {
         parent::testAdapterLimitOffset();

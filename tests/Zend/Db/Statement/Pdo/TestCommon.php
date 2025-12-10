@@ -35,6 +35,7 @@ require_once 'Zend/Db/Statement/TestCommon.php';
 abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCommon
 {
 
+    #[\Override]
     public function testStatementConstruct()
     {
         $select = $this->_db->select()
@@ -45,6 +46,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
         $stmt->closeCursor();
     }
 
+    #[\Override]
     public function testStatementConstructWithSelectObject()
     {
         $select = $this->_db->select()
@@ -54,6 +56,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
         $stmt->closeCursor();
     }
 
+    #[\Override]
     public function testStatementNextRowset()
     {
         $select = $this->_db->select()
@@ -64,7 +67,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertEquals('SQLSTATE[IM001]: Driver does not support this function: driver does not support multiple rowsets', $e->getMessage());
         }
         $stmt->closeCursor();
@@ -84,6 +87,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
         $this->assertTrue(is_int(iterator_count($stmt)));
     }
 
+    #[\Override]
     public function testStatementConstructExceptionBadSql()
     {
         $sql = "SELECT * FROM *";
@@ -92,7 +96,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
             $this->fail('Expected to catch Zend_Db_Statement_Exception');
         } catch (Zend_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Statement_Exception,
-                'Expecting object of type Zend_Db_Statement_Exception, got '.get_class($e));
+                'Expecting object of type Zend_Db_Statement_Exception, got '.$e::class);
             $this->assertTrue($e->hasChainedException(), 'Missing Chained Exception');
             $this->assertTrue($e->getChainedException() instanceof PDOException, 'Wrong type of Exception');
         }
@@ -115,7 +119,7 @@ abstract class Zend_Db_Statement_Pdo_TestCommon extends Zend_Db_Statement_TestCo
 
         $params = $this->_db->getProfiler()->getLastQueryProfile()->getQueryParams();
 
-        $target = array(':product_id' => 1);
+        $target = [':product_id' => 1];
         $this->assertEquals($target, $params);
 
     }

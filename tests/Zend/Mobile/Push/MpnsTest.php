@@ -82,7 +82,7 @@ class Zend_Mobile_Push_MpnsTest extends PHPUnit_Framework_TestCase
     public function testGetHttpClientReturnsDefault()
     {
         $mpns = new Zend_Mobile_Push_Mpns();
-        $this->assertEquals('Zend_Http_Client', get_class($mpns->getHttpClient()));
+        $this->assertEquals('Zend_Http_Client', $mpns->getHttpClient()::class);
         $this->assertTrue($mpns->getHttpClient() instanceof Zend_Http_Client);
     }
 

@@ -196,10 +196,10 @@ class Zend_Form_Element_CheckboxTest extends PHPUnit_Framework_TestCase
 
     public function testSetOptionsSetsInitialValueAccordingToCheckedAndUncheckedValues()
     {
-        $options = array(
+        $options = [
             'checkedValue'   => 'foo',
             'uncheckedValue' => 'bar',
-        );
+        ];
 
         $element = new Zend_Form_Element_Checkbox('test', $options);
         $this->assertEquals($options['uncheckedValue'], $element->getValue());
@@ -207,18 +207,18 @@ class Zend_Form_Element_CheckboxTest extends PHPUnit_Framework_TestCase
 
     public function testSetOptionsSetsInitialValueAccordingToSubmittedValues()
     {
-        $options = array(
-            'test1' => array(
+        $options = [
+            'test1' => [
                 'value'          => 'foo',
                 'checkedValue'   => 'foo',
                 'uncheckedValue' => 'bar',
-            ),
-            'test2' => array(
+            ],
+            'test2' => [
                 'value'          => 'bar',
                 'checkedValue'   => 'foo',
                 'uncheckedValue' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         foreach ($options as $current) {
             $element = new Zend_Form_Element_Checkbox('test', $current);
@@ -232,7 +232,7 @@ class Zend_Form_Element_CheckboxTest extends PHPUnit_Framework_TestCase
     {
         $this->element->setValue($this->element->getUncheckedValue());
         $html = $this->element->render($this->getView());
-        if (!preg_match_all('/(<input[^>]+>)/', $html, $matches)) {
+        if (!preg_match_all('/(<input[^>]+>)/', (string) $html, $matches)) {
             $this->fail('Unexpected generated HTML: ' . $html);
         }
         $this->assertEquals(2, count($matches[1]));

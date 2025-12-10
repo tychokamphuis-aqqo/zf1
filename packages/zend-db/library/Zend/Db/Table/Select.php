@@ -168,6 +168,7 @@ class Zend_Db_Table_Select extends Zend_Db_Select
      * @param  string $schema The schema name to specify, if any.
      * @return Zend_Db_Table_Select This Zend_Db_Table_Select object.
      */
+    #[\Override]
     public function from($name, $cols = self::SQL_WILDCARD, $schema = null)
     {
         if ($name instanceof Zend_Db_Table_Abstract) {
@@ -187,6 +188,7 @@ class Zend_Db_Table_Select extends Zend_Db_Select
      *
      * @return string|null This object as a SELECT string (or null if a string cannot be produced)
      */
+    #[\Override]
     public function assemble()
     {
         $fields  = $this->getPart(Zend_Db_Table_Select::COLUMNS);
@@ -206,7 +208,7 @@ class Zend_Db_Table_Select extends Zend_Db_Select
 
             if ($this->_integrityCheck !== false) {
                 foreach ($fields as $columnEntry) {
-                    list($table, $column) = $columnEntry;
+                    [$table, $column] = $columnEntry;
 
                     // Check each column to ensure it only references the primary table
                     if ($column) {

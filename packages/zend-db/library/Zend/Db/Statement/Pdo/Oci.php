@@ -52,10 +52,11 @@ class Zend_Db_Statement_Pdo_Oci extends Zend_Db_Statement_Pdo
     * @return array Collection of rows, each in a format by the fetch mode.
     * @throws Zend_Db_Statement_Exception
     */
+    #[\Override]
     public function fetchAll($style = null, $col = null)
     {
         $data = parent::fetchAll($style, $col);
-        $results = array();
+        $results = [];
         $remove = $this->_adapter->foldCase('zend_db_rownum');
 
         foreach ($data as $row) {
@@ -77,6 +78,7 @@ class Zend_Db_Statement_Pdo_Oci extends Zend_Db_Statement_Pdo
      * @return mixed Array, object, or scalar depending on fetch mode.
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function fetch($style = null, $cursor = null, $offset = null)
     {
         $row = parent::fetch($style, $cursor, $offset);

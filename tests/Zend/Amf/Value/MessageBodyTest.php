@@ -92,11 +92,11 @@ class Zend_Amf_Value_MessageBodyTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Zend_Amf_Value_MessageBodyTest_SerializableData
+class Zend_Amf_Value_MessageBodyTest_SerializableData implements \Stringable
 {
-    public function __toString()
+    public function __toString(): string
     {
-        return __CLASS__;
+        return self::class;
     }
 }
 

@@ -31,10 +31,12 @@ class Foo_Bootstrap extends Zend_Application_Module_Bootstrap
 {
     public $bootstrapped = false;
 
+    #[\Override]
     public function run()
     {
     }
 
+    #[\Override]
     protected function _bootstrap($resource = null)
     {
         $this->bootstrapped = true;

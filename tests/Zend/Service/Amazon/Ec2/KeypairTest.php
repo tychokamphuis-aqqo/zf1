@@ -59,9 +59,9 @@ class Zend_Service_Amazon_Ec2_KeypairTest extends PHPUnit_Framework_TestCase
         $this->Zend_Service_Amazon_Ec2_Keypair = new Zend_Service_Amazon_Ec2_Keypair('access_key', 'secret_access_key');
 
         $adapter = new Zend_Http_Client_Adapter_Test();
-        $client = new Zend_Http_Client(null, array(
+        $client = new Zend_Http_Client(null, [
             'adapter' => $adapter
-        ));
+        ]);
         $this->adapter = $adapter;
         Zend_Service_Amazon_Ec2_Keypair::setHttpClient($client);
 
@@ -85,7 +85,7 @@ class Zend_Service_Amazon_Ec2_KeypairTest extends PHPUnit_Framework_TestCase
         try {
             $this->Zend_Service_Amazon_Ec2_Keypair->create('');
             $this->fail('An exception should be thrown if an empty keyname is passed in.');
-        } catch (Zend_Service_Amazon_Ec2_Exception $zsaee) {
+        } catch (Zend_Service_Amazon_Ec2_Exception) {
         }
     }
 
@@ -193,18 +193,18 @@ class Zend_Service_Amazon_Ec2_KeypairTest extends PHPUnit_Framework_TestCase
                     . "</DescribeKeyPairsResponse>";
         $this->adapter->setResponse($rawHttpResponse);
 
-        $response = $this->Zend_Service_Amazon_Ec2_Keypair->describe(array('example-key-name', 'zend-test-key'));
+        $response = $this->Zend_Service_Amazon_Ec2_Keypair->describe(['example-key-name', 'zend-test-key']);
 
-        $arrKeys = array(
-            array(
+        $arrKeys = [
+            [
                 'keyName'       => 'example-key-name',
                 'keyFingerprint'=> '1f:51:ae:28:bf:89:e9:d8:1f:25:5d:37:2d:7d:b8:ca:9f:f5:f1:6f'
-            ),
-            array(
+            ],
+            [
                 'keyName'       => 'zend-test-key',
                 'keyFingerprint'=> '25:5d:37:2d:7d:b8:ca:9f:f5:f1:6f:1f:51:ae:28:bf:89:e9:d8:1f'
-            )
-        );
+            ]
+        ];
 
         foreach($response as $k => $r) {
             $this->assertSame($arrKeys[$k], $r);
@@ -216,7 +216,7 @@ class Zend_Service_Amazon_Ec2_KeypairTest extends PHPUnit_Framework_TestCase
         try {
             $this->Zend_Service_Amazon_Ec2_Keypair->delete('');
             $this->fail('An exception should be thrown if an empty keyname is passed in.');
-        } catch (Zend_Service_Amazon_Ec2_Exception $zsaee) {
+        } catch (Zend_Service_Amazon_Ec2_Exception) {
         }
     }
 

@@ -78,7 +78,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
     public function testAuthenticateInvalid()
     {
-        $adapter = new Zend_Auth_Adapter_OpenId(null, new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files"));
+        $adapter = new Zend_Auth_Adapter_OpenId(null, new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files"));
         $ret = $adapter->authenticate();
         $this->assertFalse($ret->isValid());
         $this->assertSame("", $ret->getIdentity());
@@ -92,7 +92,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
     public function testAuthenticateLoginInvalid()
     {
-        $adapter = new Zend_Auth_Adapter_OpenId("%sd", new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files"));
+        $adapter = new Zend_Auth_Adapter_OpenId("%sd", new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files"));
         $ret = $adapter->authenticate();
         $this->assertFalse($ret->isValid());
         $this->assertSame("%sd", $ret->getIdentity());
@@ -107,7 +107,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testAuthenticateLoginValid()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -130,14 +130,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -154,7 +154,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testSetIdentity()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -178,14 +178,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -202,7 +202,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testSetStorage()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -226,14 +226,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -250,7 +250,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testSetReturnTo()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -274,14 +274,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -298,7 +298,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testSetRoot()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -322,14 +322,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -347,7 +347,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['SCRIPT_URI'] = "http://www.zf-test.com/test.php";
         unset($_SERVER['REQUEST_METHOD']);
-        $_GET = array('openid_mode'=>'id_res',
+        $_GET = ['openid_mode'=>'id_res',
             "openid_return_to" => "http://www.zf-test.com/test.php",
             "openid_assoc_handle" => self::HANDLE,
             "openid_claimed_id" => self::ID,
@@ -356,8 +356,8 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
             "openid_response_nonce" => "2007-08-14T12:52:33Z46c1a59124fff",
             "openid_signed" => "assoc_handle,return_to,claimed_id,identity,response_nonce,mode,signed,op_endpoint",
             "openid_sig" => "h/5AFD25NpzSok5tzHEGCVUkQSw="
-        );
-        $adapter = new Zend_Auth_Adapter_OpenId(null, new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files"));
+        ];
+        $adapter = new Zend_Auth_Adapter_OpenId(null, new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files"));
         $ret = $adapter->authenticate();
         $this->assertFalse($ret->isValid());
         $this->assertSame(self::ID, $ret->getIdentity());
@@ -372,7 +372,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testAuthenticateVerifyGetValid()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -381,7 +381,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['SCRIPT_URI'] = "http://www.zf-test.com/test.php";
         unset($_SERVER['REQUEST_METHOD']);
-        $_GET = array(
+        $_GET = [
             "openid_return_to" => "http://www.zf-test.com/test.php",
             "openid_assoc_handle" => self::HANDLE,
             "openid_claimed_id" => self::ID,
@@ -391,7 +391,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
             "openid_op_endpoint" => self::SERVER,
             "openid_signed" => "assoc_handle,return_to,claimed_id,identity,response_nonce,mode,signed,op_endpoint",
             "openid_sig" => '7DZUB+y05wJqpYSdFs5cX5FyNMY='
-        );
+        ];
         $adapter = new Zend_Auth_Adapter_OpenId(null, $storage);
         $ret = $adapter->authenticate();
         $this->assertTrue($ret->isValid());
@@ -400,7 +400,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testAuthenticateVerifyPostValid()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -409,8 +409,8 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['SCRIPT_URI'] = "http://www.zf-test.com/test.php";
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET = array();
-        $_POST = array(
+        $_GET = [];
+        $_POST = [
             "openid_return_to" => "http://www.zf-test.com/test.php",
             "openid_assoc_handle" => self::HANDLE,
             "openid_claimed_id" => self::ID,
@@ -420,7 +420,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
             "openid_op_endpoint" => self::SERVER,
             "openid_signed" => "assoc_handle,return_to,claimed_id,identity,response_nonce,mode,signed,op_endpoint",
             "openid_sig" => "7DZUB+y05wJqpYSdFs5cX5FyNMY="
-        );
+        ];
         $adapter = new Zend_Auth_Adapter_OpenId(null, $storage);
         $ret = $adapter->authenticate();
         $this->assertTrue($ret->isValid());
@@ -429,7 +429,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     public function testSetExtensions()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $this->assertTrue( $storage->delDiscoveryInfo(self::ID) );
         $this->assertTrue( $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 2.0, $expiresIn) );
         $storage->delAssociation(self::SERVER);
@@ -438,7 +438,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['SCRIPT_URI'] = "http://www.zf-test.com/test.php";
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET = array(
+        $_GET = [
             "openid_ns"        => Zend_OpenId::NS_2_0,
             "openid_return_to" => "http://www.zf-test.com/test.php",
             "openid_assoc_handle" => self::HANDLE,
@@ -451,10 +451,10 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
             "openid_sreg_nickname" => "test",
             "openid_signed" => "ns,assoc_handle,return_to,claimed_id,identity,response_nonce,mode,ns.sreg,sreg.nickname,signed,op_endpoint",
             "openid_sig" => 'CIJabsMLZWjhJh+rHMnV+brQ7xE='
-        );
-        $_POST = array();
+        ];
+        $_POST = [];
         $adapter = new Zend_Auth_Adapter_OpenId(null, $storage);
-        $sreg= new Zend_OpenId_Extension_Sreg(array("nickname"=>true,"email"=>false));
+        $sreg= new Zend_OpenId_Extension_Sreg(["nickname"=>true,"email"=>false]);
         $this->assertSame($adapter, $adapter->setExtensions($sreg));
         $ret = $adapter->authenticate();
         $this->assertTrue($ret->isValid());
@@ -464,7 +464,7 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
 
     function testSetCheckImmediate() {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->addDiscoveryInfo(self::ID, self::REAL_ID, self::SERVER, 1.1, $expiresIn);
         $storage->delAssociation(self::SERVER);
@@ -488,14 +488,14 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
         $this->assertSame( 'Location', $headers[0]['name'] );
         $this->assertSame( true, $headers[0]['replace'] );
         $url = $headers[0]['value'];
-        $url = parse_url($url);
+        $url = parse_url((string) $url);
         $this->assertSame( "http", $url['scheme'] );
         $this->assertSame( "www.myopenid.com", $url['host'] );
         $this->assertSame( "/", $url['path'] );
         $q = explode("&", $url['query']);
-        $query = array();
+        $query = [];
         foreach($q as $var) {
-            if (list($key, $val) = explode("=", $var, 2)) {
+            if ([$key, $val] = explode("=", $var, 2)) {
                 $query[$key] = $val;
             }
         }
@@ -510,16 +510,16 @@ class Zend_Auth_Adapter_OpenIdTest extends PHPUnit_Framework_TestCase
     }
 
     function testSetHttpClient() {
-        $storage = new Zend_OpenId_Consumer_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Consumer_Storage_File(__DIR__."/_files");
         $storage->delDiscoveryInfo(self::ID);
         $storage->delAssociation(self::SERVER);
         $adapter = new Zend_Auth_Adapter_OpenId(self::ID, $storage);
         $http = new Zend_Http_Client(null,
-            array(
+            [
                 'maxredirects' => 4,
                 'timeout'      => 15,
                 'useragent'    => 'Zend_OpenId'
-            ));
+            ]);
         $test = new Zend_Http_Client_Adapter_Test();
         $http->setAdapter($test);
         $adapter->SetHttpClient($http);

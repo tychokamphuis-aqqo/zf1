@@ -48,13 +48,13 @@ class Zend_Search_Lucene_Index_DictionaryLoaderTest extends PHPUnit_Framework_Te
 {
     public function testCreate()
     {
-        $directory = new Zend_Search_Lucene_Storage_Directory_Filesystem(dirname(__FILE__) . '/_source/_files');
+        $directory = new Zend_Search_Lucene_Storage_Directory_Filesystem(__DIR__ . '/_source/_files');
 
         $stiFile = $directory->getFileObject('_1.sti');
         $stiFileData = $stiFile->readBytes($directory->fileLength('_1.sti'));
 
         // Load dictionary index data
-        list($termDictionary, $termDictionaryInfos) = unserialize($stiFileData);
+        [$termDictionary, $termDictionaryInfos] = unserialize($stiFileData);
 
 
         $segmentInfo = new Zend_Search_Lucene_Index_SegmentInfo($directory, '_1', 2);
@@ -62,7 +62,7 @@ class Zend_Search_Lucene_Index_DictionaryLoaderTest extends PHPUnit_Framework_Te
         $tiiFileData = $tiiFile->readBytes($segmentInfo->compoundFileLength('.tii'));
 
         // Load dictionary index data
-        list($loadedTermDictionary, $loadedTermDictionaryInfos) =
+        [$loadedTermDictionary, $loadedTermDictionaryInfos] =
                     Zend_Search_Lucene_Index_DictionaryLoader::load($tiiFileData);
 
         $this->assertTrue($termDictionary == $loadedTermDictionary);

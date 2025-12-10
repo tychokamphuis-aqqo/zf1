@@ -24,7 +24,7 @@
 if (!defined("PHPUnit_MAIN_METHOD")) {
     define("PHPUnit_MAIN_METHOD", "Zend_Controller_Plugin_BrokerTest::main");
 
-    $basePath = realpath(dirname(__FILE__) . str_repeat(DIRECTORY_SEPARATOR . '..', 3));
+    $basePath = realpath(__DIR__ . str_repeat(DIRECTORY_SEPARATOR . '..', 3));
 
     set_include_path(
         $basePath . DIRECTORY_SEPARATOR . 'tests'
@@ -90,7 +90,7 @@ class Zend_Controller_Plugin_BrokerTest extends PHPUnit_Framework_TestCase
 
     public function testUsingFrontController()
     {
-        $this->controller->setControllerDirectory(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '_files');
+        $this->controller->setControllerDirectory(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . '_files');
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/empty');
         $this->controller->setResponse(new Zend_Controller_Response_Cli());
         $plugin = new Zend_Controller_Plugin_BrokerTest_TestPlugin();
@@ -195,7 +195,7 @@ class Zend_Controller_Plugin_BrokerTest extends PHPUnit_Framework_TestCase
             $broker->preDispatch($request);
             $broker->postDispatch($request);
             $broker->dispatchLoopShutdown();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->fail('Broker should catch exceptions');
         }
 
@@ -218,7 +218,7 @@ class Zend_Controller_Plugin_BrokerTest extends PHPUnit_Framework_TestCase
         $broker->registerPlugin($plugin3, 2);
 
         $plugins = $broker->getPlugins();
-        $expected = array(-5 => $plugin2, 2 => $plugin3, 5 => $plugin1);
+        $expected = [-5 => $plugin2, 2 => $plugin3, 5 => $plugin1];
         $this->assertSame($expected, $plugins);
     }
 
@@ -231,7 +231,7 @@ class Zend_Controller_Plugin_BrokerTest extends PHPUnit_Framework_TestCase
         try {
             $broker->registerPlugin($plugin2, 5);
             $this->fail('Registering plugins with same stack index should raise exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -246,7 +246,7 @@ class Zend_Controller_Plugin_BrokerTest extends PHPUnit_Framework_TestCase
         $broker->registerPlugin($plugin3);
 
         $plugins = $broker->getPlugins();
-        $expected = array(2 => $plugin1, 3 => $plugin2, 4 => $plugin3);
+        $expected = [2 => $plugin1, 3 => $plugin2, 4 => $plugin3];
         $this->assertSame($expected, $plugins);
     }
 

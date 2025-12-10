@@ -144,7 +144,7 @@ class Zend_Gdata_FeedTest extends PHPUnit_Framework_TestCase
         $this->feed->setEtag("Foo");
         try {
             $this->feed->transferFromXML($this->feedTextV2);
-        } catch (Zend_Gdata_App_IOException $e) {
+        } catch (Zend_Gdata_App_IOException) {
             $exceptionCaught = true;
         }
         $this->assertTrue($exceptionCaught, "Exception Zend_Gdata_IO_Exception expected");
@@ -191,12 +191,12 @@ class Zend_Gdata_FeedTest extends PHPUnit_Framework_TestCase
     public function testNoExtensionElementsInV1Feed() {
         $this->feed->setMajorProtocolVersion(1);
         $this->feed->transferFromXML($this->feedTextV1);
-        $this->assertEquals(0, sizeof($this->feed->extensionElements));
+        $this->assertEquals(0, count($this->feed->extensionElements));
     }
 
     public function testNoExtensionElementsInV2Feed() {
         $this->feed->setMajorProtocolVersion(2);
         $this->feed->transferFromXML($this->feedTextV2);
-        $this->assertEquals(0, sizeof($this->feed->extensionElements));
+        $this->assertEquals(0, count($this->feed->extensionElements));
     }
 }

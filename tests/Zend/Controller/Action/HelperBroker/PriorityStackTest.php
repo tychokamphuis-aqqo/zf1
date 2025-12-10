@@ -58,9 +58,9 @@ class Zend_Controller_Action_HelperBroker_PriorityStackTest extends PHPUnit_Fram
         $this->stack->push(new Zend_Controller_Action_Helper_Redirector());
         $this->assertEquals(2, count($this->stack));
         $iterator = $this->stack->getIterator()->getIterator();
-        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', get_class($iterator->current()));
+        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', $iterator->current()::class);
         $iterator->next();
-        $this->assertEquals('Zend_Controller_Action_Helper_ViewRenderer', get_class($iterator->current()));
+        $this->assertEquals('Zend_Controller_Action_Helper_ViewRenderer', $iterator->current()::class);
     }
 
     public function testStackPrioritiesWithDefaults()
@@ -107,10 +107,10 @@ class Zend_Controller_Action_HelperBroker_PriorityStackTest extends PHPUnit_Fram
         $this->stack->push(new Zend_Controller_Action_Helper_Redirector());
         unset($this->stack->ViewRenderer);
         $this->assertEquals(1, count($this->stack));
-        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', get_class($this->stack->getIterator()->getIterator()->current()));
-        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', get_class($this->stack->Redirector));
-        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', get_class($this->stack->offsetGet('Redirector')));
-        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', get_class($this->stack->offsetGet(2)));
+        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', $this->stack->getIterator()->getIterator()->current()::class);
+        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', $this->stack->Redirector::class);
+        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', $this->stack->offsetGet('Redirector')::class);
+        $this->assertEquals('Zend_Controller_Action_Helper_Redirector', $this->stack->offsetGet(2)::class);
     }
 
 }

@@ -37,26 +37,31 @@ require_once 'Zend/Db/Select/TestCommon.php';
  */
 class Zend_Db_Select_SqlsrvTest extends Zend_Db_Select_TestCommon
 {
+    #[\Override]
     public function testSelectQueryWithBinds()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support binding by name.');
     }
 
+    #[\Override]
     public function testSelectColumnWithColonQuotedParameter()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support selecting int columns by varchar param.');
     }
 
+    #[\Override]
     public function testSelectFromForUpdate()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support for update.');
     }
 
+    #[\Override]
     public function testSelectFromQualified()
     {
         $this->markTestIncomplete($this->getDriver() . ' needs more syntax for qualified table names.');
     }
 
+    #[\Override]
     public function testSelectJoinQualified()
     {
         $this->markTestIncomplete($this->getDriver() . ' needs more syntax for qualified table names.');

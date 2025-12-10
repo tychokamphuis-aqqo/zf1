@@ -74,7 +74,7 @@ class Zend_Measure_NumberTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Number('100',Zend_Measure_Number::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -132,7 +132,7 @@ class Zend_Measure_NumberTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Number('100',Zend_Measure_Number::STANDARD,'de');
             $value->setValue('200',Zend_Measure_Number::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
 
@@ -201,7 +201,7 @@ class Zend_Measure_NumberTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Number('-100',Zend_Measure_Number::STANDARD,'de');
             $value->setType('Number::UNKNOWN');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -280,18 +280,18 @@ class Zend_Measure_NumberTest extends PHPUnit_Framework_TestCase
      */
     public function providerConvertingDecimalToRoman()
     {
-        return array(
-            array(10, 'X'),
-            array(11, 'XI'),
-            array(12, 'XII'),
-            array(13, 'XIII'),
-            array(14, 'XIV'),
-            array(15, 'XV'),
-            array(16, 'XVI'),
-            array(17, 'XVII'),
-            array(18, 'XVIII'),
-            array(19, 'XIX'),
-            array(20, 'XX'),
-        );
+        return [
+            [10, 'X'],
+            [11, 'XI'],
+            [12, 'XII'],
+            [13, 'XIII'],
+            [14, 'XIV'],
+            [15, 'XV'],
+            [16, 'XVI'],
+            [17, 'XVII'],
+            [18, 'XVIII'],
+            [19, 'XIX'],
+            [20, 'XX'],
+        ];
     }
 }

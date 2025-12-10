@@ -52,7 +52,7 @@ class Zend_Gdata_App_CaptchaRequiredExceptionTest extends PHPUnit_Framework_Test
         try {
             throw $this->exampleException;
         }
-        catch(Zend_Gdata_App_CaptchaRequiredException $e) {
+        catch(Zend_Gdata_App_CaptchaRequiredException) {
             $caught = true;
         }
 

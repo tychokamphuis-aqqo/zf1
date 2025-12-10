@@ -124,7 +124,7 @@ class Zend_Gdata_EntryTest extends PHPUnit_Framework_TestCase
         $this->entry->setEtag("Foo");
         try {
             $this->entry->transferFromXML($this->entryText);
-        } catch (Zend_Gdata_App_IOException $e) {
+        } catch (Zend_Gdata_App_IOException) {
             $exceptionCaught = true;
         }
         $this->assertTrue($exceptionCaught, "Exception Zend_Gdata_IO_Exception expected");

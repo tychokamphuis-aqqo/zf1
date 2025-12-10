@@ -63,7 +63,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -80,7 +80,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
         'DOUBLE PRECISION'   => Zend_Db::FLOAT_TYPE,
         'FIXED'              => Zend_Db::FLOAT_TYPE,
         'FLOAT'              => Zend_Db::FLOAT_TYPE
-    );
+    ];
 
     /**
      * @var Zend_Db_Statement_Mysqli
@@ -101,6 +101,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      *
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -115,6 +116,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      *
      * @return string
      */
+    #[\Override]
     public function getQuoteIdentifierSymbol()
     {
         return "`";
@@ -127,7 +129,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      */
     public function listTables()
     {
-        $result = array();
+        $result = [];
         // Use mysqli extension API, because SHOW doesn't work
         // well as a prepared statement on MySQL 4.1.
         $sql = 'SHOW TABLES';
@@ -204,9 +206,9 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
             throw new Zend_Db_Adapter_Mysqli_Exception($this->getConnection()->error);
         }
 
-        $desc = array();
+        $desc = [];
 
-        $row_defaults = array(
+        $row_defaults = [
             'Length'          => null,
             'Scale'           => null,
             'Precision'       => null,
@@ -214,33 +216,33 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
             'Primary'         => false,
             'PrimaryPosition' => null,
             'Identity'        => false
-        );
+        ];
         $i = 1;
         $p = 1;
-        foreach ($result as $key => $row) {
+        foreach ($result as $row) {
             $row = array_merge($row_defaults, $row);
-            if (preg_match('/unsigned/', $row['Type'])) {
+            if (preg_match('/unsigned/', (string) $row['Type'])) {
                 $row['Unsigned'] = true;
             }
-            if (preg_match('/^((?:var)?char)\((\d+)\)/', $row['Type'], $matches)) {
+            if (preg_match('/^((?:var)?char)\((\d+)\)/', (string) $row['Type'], $matches)) {
                 $row['Type'] = $matches[1];
                 $row['Length'] = $matches[2];
-            } else if (preg_match('/^decimal\((\d+),(\d+)\)/', $row['Type'], $matches)) {
+            } else if (preg_match('/^decimal\((\d+),(\d+)\)/', (string) $row['Type'], $matches)) {
                 $row['Type'] = 'decimal';
                 $row['Precision'] = $matches[1];
                 $row['Scale'] = $matches[2];
-            } else if (preg_match('/^float\((\d+),(\d+)\)/', $row['Type'], $matches)) {
+            } else if (preg_match('/^float\((\d+),(\d+)\)/', (string) $row['Type'], $matches)) {
                 $row['Type'] = 'float';
                 $row['Precision'] = $matches[1];
                 $row['Scale'] = $matches[2];
-            } else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $row['Type'], $matches)) {
+            } else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', (string) $row['Type'], $matches)) {
                 $row['Type'] = $matches[1];
                 /**
                  * The optional argument of a MySQL int type is not precision
                  * or length; it is only a hint for display width.
                  */
             }
-            if (strtoupper($row['Key']) == 'PRI') {
+            if (strtoupper((string) $row['Key']) == 'PRI') {
                 $row['Primary'] = true;
                 $row['PrimaryPosition'] = $p;
                 if ($row['Extra'] == 'auto_increment') {
@@ -250,7 +252,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
                 }
                 ++$p;
             }
-            $desc[$this->foldCase($row['Field'])] = array(
+            $desc[$this->foldCase($row['Field'])] = [
                 'SCHEMA_NAME'      => null, // @todo
                 'TABLE_NAME'       => $this->foldCase($tableName),
                 'COLUMN_NAME'      => $this->foldCase($row['Field']),
@@ -265,7 +267,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
                 'PRIMARY'          => $row['Primary'],
                 'PRIMARY_POSITION' => $row['PrimaryPosition'],
                 'IDENTITY'         => $row['Identity']
-            );
+            ];
             ++$i;
         }
         return $desc;
@@ -292,7 +294,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
         }
 
         if (isset($this->_config['port'])) {
-            $port = (integer) $this->_config['port'];
+            $port = (int) $this->_config['port'];
         } else {
             $port = null;
         }
@@ -473,29 +475,20 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      */
     public function setFetchMode($mode)
     {
-        switch ($mode) {
-            case Zend_Db::FETCH_LAZY:
-            case Zend_Db::FETCH_ASSOC:
-            case Zend_Db::FETCH_NUM:
-            case Zend_Db::FETCH_BOTH:
-            case Zend_Db::FETCH_NAMED:
-            case Zend_Db::FETCH_OBJ:
-                $this->_fetchMode = $mode;
-                break;
-            case Zend_Db::FETCH_BOUND: // bound to PHP variable
-                /**
-                 * @see Zend_Db_Adapter_Mysqli_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Mysqli/Exception.php';
-                throw new Zend_Db_Adapter_Mysqli_Exception('FETCH_BOUND is not supported yet');
-                break;
-            default:
-                /**
-                 * @see Zend_Db_Adapter_Mysqli_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Mysqli/Exception.php';
-                throw new Zend_Db_Adapter_Mysqli_Exception("Invalid fetch mode '$mode' specified");
-        }
+        $this->_fetchMode = match ($mode) {
+            Zend_Db::FETCH_LAZY, Zend_Db::FETCH_ASSOC, Zend_Db::FETCH_NUM, Zend_Db::FETCH_BOTH, Zend_Db::FETCH_NAMED, Zend_Db::FETCH_OBJ => $mode,
+            // bound to PHP variable
+            /**
+             * @see Zend_Db_Adapter_Mysqli_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Mysqli/Exception.php';
+            Zend_Db::FETCH_BOUND => throw new Zend_Db_Adapter_Mysqli_Exception('FETCH_BOUND is not supported yet'),
+            /**
+             * @see Zend_Db_Adapter_Mysqli_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Mysqli/Exception.php';
+            default => throw new Zend_Db_Adapter_Mysqli_Exception("Invalid fetch mode '$mode' specified"),
+        };
     }
 
     /**
@@ -542,13 +535,10 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
      */
     public function supportsParameters($type)
     {
-        switch ($type) {
-            case 'positional':
-                return true;
-            case 'named':
-            default:
-                return false;
-        }
+        return match ($type) {
+            'positional' => true,
+            default => false,
+        };
     }
 
     /**

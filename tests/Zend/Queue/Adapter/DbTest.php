@@ -38,7 +38,7 @@
 require_once 'MessageTestClass.php';
 
 /** Base Adapter test class */
-require_once dirname(__FILE__) . '/AdapterTest.php';
+require_once __DIR__ . '/AdapterTest.php';
 
 /**
  * @see Zend_Db_Select
@@ -75,6 +75,7 @@ class Zend_Queue_Adapter_DbTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterName()
     {
         return 'Db';
@@ -89,26 +90,29 @@ class Zend_Queue_Adapter_DbTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterFullName()
     {
         return 'Zend_Queue_Adapter_' . $this->getAdapterName();
     }
 
+    #[\Override]
     public function getTestConfig()
     {
-        $driverOptions = array();
+        $driverOptions = [];
         if (defined('TESTS_ZEND_QUEUE_DB')) {
             // require_once 'Zend/Json.php';
             $driverOptions = Zend_Json::decode(TESTS_ZEND_QUEUE_DB);
         }
 
-        return array(
-            'options'       => array(Zend_Db_Select::FOR_UPDATE => true),
+        return [
+            'options'       => [Zend_Db_Select::FOR_UPDATE => true],
             'driverOptions' => $driverOptions,
-        );
+        ];
     }
 
     // test the constants
+    #[\Override]
     public function testConst()
     {
         $this->markTestSkipped('no constants to test');
@@ -124,20 +128,20 @@ class Zend_Queue_Adapter_DbTest extends Zend_Queue_Adapter_AdapterTest
              * @see Zend_Db_Select
              */
             // require_once 'Zend/Db/Select.php';
-            $config['options'][Zend_Db_Select::FOR_UPDATE] = array();
+            $config['options'][Zend_Db_Select::FOR_UPDATE] = [];
             $queue = $this->createQueue(__FUNCTION__, $config);
             $this->fail('FOR_UPDATE accepted an array');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true, 'FOR_UPDATE cannot be an array');
         }
 
-        foreach (array('host', 'username', 'password', 'dbname') as $i => $arg) {
+        foreach (['host', 'username', 'password', 'dbname'] as $arg) {
             try {
                 $config = $this->getTestConfig();
                 unset($config['driverOptions'][$arg]);
                 $queue = $this->createQueue(__FUNCTION__, $config);
                 $this->fail("$arg is required but was missing.");
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $this->assertTrue(true, $arg . ' is required.');
             }
         }

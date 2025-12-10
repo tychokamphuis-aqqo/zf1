@@ -34,19 +34,19 @@ class Zend_EventManager_TestAsset_ClassWithEvents
 {
     protected $events;
 
-    public function events(Zend_EventManager_EventCollection $events = null)
+    public function events(?Zend_EventManager_EventCollection $events = null)
     {
         if (null !== $events) {
             $this->events = $events;
         }
         if (null === $this->events) {
-            $this->events = new Zend_EventManager_EventManager(__CLASS__);
+            $this->events = new Zend_EventManager_EventManager(self::class);
         }
         return $this->events;
     }
 
     public function foo()
     {
-        $this->events()->trigger(__FUNCTION__, $this, array());
+        $this->events()->trigger(__FUNCTION__, $this, []);
     }
 }

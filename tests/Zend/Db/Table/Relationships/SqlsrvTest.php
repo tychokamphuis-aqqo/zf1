@@ -37,11 +37,13 @@ require_once 'Zend/Db/Table/Relationships/TestCommon.php';
 class Zend_Db_Table_Relationships_SqlsrvTest extends Zend_Db_Table_Relationships_TestCommon
 {
 
+    #[\Override]
     public function testTableRelationshipCascadingUpdateUsageBasicString()
     {
         $this->markTestSkipped($this->getDriver() . ' cannot update identity columns.');
     }
 
+    #[\Override]
     public function testTableRelationshipCascadingUpdateUsageInvalidNoop()
     {
         $this->markTestSkipped($this->getDriver() . ' cannot update identity columns.');

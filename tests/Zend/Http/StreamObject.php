@@ -2,17 +2,14 @@
 
 namespace Zend\Http;
 
-class StreamObject
+class StreamObject implements \Stringable
 {
-    private $tempFile;
-
-    public function __construct($tempFile)
+    public function __construct(private $tempFile)
     {
-        $this->tempFile = $tempFile;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->tempFile;
+        return (string) $this->tempFile;
     }
 }

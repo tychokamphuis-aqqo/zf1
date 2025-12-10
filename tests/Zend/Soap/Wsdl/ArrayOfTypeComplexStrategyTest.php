@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__)."/../_files/commontypes.php";
+require_once __DIR__."/../_files/commontypes.php";
 
 /** Zend_Soap_Wsdl */
 // require_once 'Zend/Soap/Wsdl.php';
@@ -53,7 +53,7 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
         try {
             $this->wsdl->addComplexType('Zend_Soap_Wsdl_ComplexTest[][]');
             $this->fail();
-        } catch(Zend_Soap_Wsdl_Exception $e) {
+        } catch(Zend_Soap_Wsdl_Exception) {
 
         }
     }
@@ -62,7 +62,7 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
     {
         try {
             $this->wsdl->addComplexType('Zend_Soap_Wsdl_UnknownClass[]');
-        } catch(Zend_Soap_Wsdl_Exception $e) {
+        } catch(Zend_Soap_Wsdl_Exception) {
 
         }
     }
@@ -152,13 +152,13 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
         $wsdl = $this->wsdl->toXML();
 
         $this->assertEquals(1,
-            substr_count($wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexObjectWithObjectStructure[]"')
+            substr_count((string) $wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexObjectWithObjectStructure[]"')
         );
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexObjectWithObjectStructure">')
+            substr_count((string) $wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexObjectWithObjectStructure">')
         );
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTest">')
+            substr_count((string) $wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTest">')
         );
     }
 
@@ -173,13 +173,13 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
         $wsdl = $this->wsdl->toXML();
 
         $this->assertEquals(1,
-            substr_count($wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexObjectWithObjectStructure[]"')
+            substr_count((string) $wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexObjectWithObjectStructure[]"')
         );
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexObjectWithObjectStructure">')
+            substr_count((string) $wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexObjectWithObjectStructure">')
         );
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTest">')
+            substr_count((string) $wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTest">')
         );
     }
 
@@ -191,7 +191,7 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
         try {
             $return = $this->wsdl->addComplexType("Zend_Soap_Wsdl_ComplexTypeA");
             $wsdl = $this->wsdl->toXml();
-        } catch(Exception $e) {
+        } catch(Exception) {
             $this->fail("Adding object with nested structure should not throw exception.");
         }
     }
@@ -205,15 +205,15 @@ class Zend_Soap_Wsdl_ArrayOfTypeComplexStrategyTest extends PHPUnit_Framework_Te
         $wsdl = $this->wsdl->toXml();
 
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTypeA">'),
+            substr_count((string) $wsdl, '<xsd:complexType name="Zend_Soap_Wsdl_ComplexTypeA">'),
             'No definition of complex type A found.'
         );
         $this->assertEquals(1,
-            substr_count($wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexTypeB">'),
+            substr_count((string) $wsdl, '<xsd:complexType name="ArrayOfZend_Soap_Wsdl_ComplexTypeB">'),
             'No definition of complex type B array found.'
         );
         $this->assertEquals(1,
-            substr_count($wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexTypeB[]"'),
+            substr_count((string) $wsdl, 'wsdl:arrayType="tns:Zend_Soap_Wsdl_ComplexTypeB[]"'),
             'No usage of Complex Type B array found.'
         );
     }

@@ -69,30 +69,30 @@ class Zend_Queue_Message_IteratorTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // Test Zend_Config
-        $this->options = array(
+        $this->options = [
             'name'      => 'queue1',
-            'params'    => array(),
-        );
+            'params'    => [],
+        ];
 
         $this->queue = new Zend_Queue('array', $this->options);
 
         // construct messages
         $this->message_count = 5;
-        $data  = array();
-        $datum = array();
+        $data  = [];
+        $datum = [];
         for ($i = 0; $i < $this->message_count; $i++) {
-            $data[] = array(
+            $data[] = [
                 'id' => $i+1,
                 'handle' => null,
                 'body' => 'Hello world' // This is my 2524'th time writing that.
-            );
+            ];
         }
 
-        $options = array(
+        $options = [
             'queue'    => $this->queue,
             'data'     => $data,
             'messageClass' => $this->queue->getMessageClass()
-        );
+        ];
 
         $classname = $this->queue->getMessageSetClass();
         if (!class_exists($classname)) {
@@ -108,7 +108,7 @@ class Zend_Queue_Message_IteratorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->queue instanceof Zend_Queue);
         $this->assertTrue(is_array($this->options));
 
-        foreach ($this->messages as $i => $message) {
+        foreach ($this->messages as $message) {
             $this->assertTrue($message instanceof Zend_Queue_Message);
             $this->assertEquals('Hello world', $message->body);
         }
@@ -131,7 +131,7 @@ class Zend_Queue_Message_IteratorTest extends PHPUnit_Framework_TestCase
             Zend_Loader::loadClass($classname);
             $this->messages = new $classname($config);
             $this->fail('config[data] must be an array.  a message should have been thrown');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
     }
@@ -160,12 +160,12 @@ class Zend_Queue_Message_IteratorTest extends PHPUnit_Framework_TestCase
 
     public function test_getQueueClass()
     {
-        $this->assertEquals(get_class($this->queue), $this->messages->getQueueClass());
+        $this->assertEquals($this->queue::class, $this->messages->getQueueClass());
     }
 
     public function test_iterator()
     {
-        foreach ($this->messages as $i => $message) {
+        foreach ($this->messages as $message) {
             $this->assertEquals('Hello world', $message->body);
         }
     }

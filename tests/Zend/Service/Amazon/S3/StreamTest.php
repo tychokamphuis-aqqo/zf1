@@ -108,7 +108,7 @@ class Zend_Service_Amazon_S3_StreamTest extends PHPUnit_Framework_TestCase
         $this->_amazon->unregisterStreamWrapper();
         $buckets = $this->_amazon->getBuckets();
         foreach($buckets as $bucket) {
-            if(substr($bucket, 0, strlen($this->_bucket)) != $this->_bucket) {
+            if(!str_starts_with((string) $bucket, (string) $this->_bucket)) {
                 continue;
             }
             $this->_amazon->cleanBucket($bucket);
@@ -220,7 +220,7 @@ class Zend_Service_Amazon_S3_StreamTest extends PHPUnit_Framework_TestCase
      */
     public function testGetBucketList()
     {
-        $buckets = array($this->_bucket.'zf-test1', $this->_bucket.'zf-test2', $this->_bucket.'zf-test3');
+        $buckets = [$this->_bucket.'zf-test1', $this->_bucket.'zf-test2', $this->_bucket.'zf-test3'];
 
         // Create the buckets
         foreach ($buckets as $bucket) {
@@ -228,7 +228,7 @@ class Zend_Service_Amazon_S3_StreamTest extends PHPUnit_Framework_TestCase
             $this->assertTrue($result);
         }
 
-        $online_buckets = array();
+        $online_buckets = [];
 
         // Retrieve list of buckets on S3
         $e = opendir('s3://');

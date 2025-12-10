@@ -53,6 +53,7 @@ class Zend_Filter_File_LowerCase extends Zend_Filter_StringToLower
      * @return string The given $value
      * @throws Zend_Filter_Exception
      */
+    #[\Override]
     public function filter($value)
     {
         if (!file_exists($value)) {

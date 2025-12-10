@@ -56,14 +56,14 @@ class AmamzonAbstract extends PHPUnit_Framework_TestCase
         try {
             $class = new TestAmamzonAbstract();
             $this->fail('Exception should be thrown when no keys are passed in.');
-        } catch(Zend_Service_Amazon_Exception $zsae) {}
+        } catch(Zend_Service_Amazon_Exception) {}
     }
 
     public function testConstructorWithKeysDoesNotThrowException()
     {
         try {
             $class = new TestAmamzonAbstract('TestAccessKey', 'TestSecretKey');
-        } catch(Zend_Service_Amazon_Exception $zsae) {
+        } catch(Zend_Service_Amazon_Exception) {
             $this->fail('Exception should be thrown when no keys are passed in.');
         }
     }

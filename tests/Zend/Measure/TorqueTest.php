@@ -56,7 +56,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Torque('100','Torque::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -71,7 +71,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Torque('novalue',Zend_Measure_Torque::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -86,7 +86,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Torque('100',Zend_Measure_Torque::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -252,7 +252,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Torque('100',Zend_Measure_Torque::STANDARD,'de');
             $value->setValue('-200.200,200','Torque::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -268,7 +268,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Torque('100',Zend_Measure_Torque::STANDARD,'de');
             $value->setValue('novalue',Zend_Measure_Torque::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -284,7 +284,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Torque('100',Zend_Measure_Torque::STANDARD,'de');
             $value->setValue('200',Zend_Measure_Torque::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -348,7 +348,7 @@ class Zend_Measure_TorqueTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Torque('-100',Zend_Measure_Torque::STANDARD,'de');
             $value->setType('Torque::UNKNOWN');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }

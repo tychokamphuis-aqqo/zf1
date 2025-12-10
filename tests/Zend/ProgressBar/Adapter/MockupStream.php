@@ -33,11 +33,11 @@ class Zend_ProgressBar_Adapter_Console_MockupStream {
 
     private $test;
 
-    public static $tests = array();
+    public static $tests = [];
 
     function stream_open($path, $mode, $options, &$opened_path)
     {
-        $url = parse_url($path);
+        $url = parse_url((string) $path);
         $this->test = $url["host"];
         $this->position = 0;
 
@@ -47,18 +47,18 @@ class Zend_ProgressBar_Adapter_Console_MockupStream {
 
     function stream_read($count)
     {
-        $ret = substr(self::$tests[$this->test], $this->position, $count);
+        $ret = substr((string) self::$tests[$this->test], $this->position, $count);
         $this->position += strlen($ret);
         return $ret;
     }
 
     function stream_write($data)
     {
-        $left = substr(self::$tests[$this->test], 0, $this->position);
-        $right = substr(self::$tests[$this->test], $this->position + strlen($data));
+        $left = substr((string) self::$tests[$this->test], 0, $this->position);
+        $right = substr((string) self::$tests[$this->test], $this->position + strlen((string) $data));
         self::$tests[$this->test] = $left . $data . $right;
-        $this->position += strlen($data);
-        return strlen($data);
+        $this->position += strlen((string) $data);
+        return strlen((string) $data);
     }
 
     function stream_tell()
@@ -68,14 +68,14 @@ class Zend_ProgressBar_Adapter_Console_MockupStream {
 
     function stream_eof()
     {
-        return $this->position >= strlen(self::$tests[$this->test]);
+        return $this->position >= strlen((string) self::$tests[$this->test]);
     }
 
     function stream_seek($offset, $whence)
     {
         switch ($whence) {
             case SEEK_SET:
-                if ($offset < strlen(self::$tests[$this->test]) && $offset >= 0) {
+                if ($offset < strlen((string) self::$tests[$this->test]) && $offset >= 0) {
                     $this->position = $offset;
                     return true;
                 } else {
@@ -93,8 +93,8 @@ class Zend_ProgressBar_Adapter_Console_MockupStream {
                 break;
 
             case SEEK_END:
-                if (strlen(self::$tests[$this->test]) + $offset >= 0) {
-                    $this->position = strlen(self::$tests[$this->test]) + $offset;
+                if (strlen((string) self::$tests[$this->test]) + $offset >= 0) {
+                    $this->position = strlen((string) self::$tests[$this->test]) + $offset;
                     return true;
                 } else {
                     return false;

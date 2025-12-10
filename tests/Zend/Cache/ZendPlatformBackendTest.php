@@ -43,32 +43,36 @@ class Zend_Cache_ZendPlatformBackendTest extends Zend_Cache_CommonBackendTest {
 
     protected $_instance;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct('Zend_Cache_Backend_ZendPlatform', $data, $dataName);
     }
 
+    #[\Override]
     public function setUp($notag = false)
     {
         if(!function_exists('output_cache_get')) {
             $this->markTestSkipped('Zend Platform is not installed, skipping test');
             return;
         }
-        $this->_instance = new Zend_Cache_Backend_ZendPlatform(array());
+        $this->_instance = new Zend_Cache_Backend_ZendPlatform([]);
         parent::setUp($notag);
     }
 
+    #[\Override]
     public function tearDown()
     {
         parent::tearDown();
         unset($this->_instance);
     }
 
+    #[\Override]
     public function testConstructorCorrectCall()
     {
         $test = new Zend_Cache_Backend_ZendPlatform();
     }
 
+    #[\Override]
     public function testRemoveCorrectCall()
     {
         $this->assertTrue($this->_instance->remove('bar'));
@@ -77,19 +81,24 @@ class Zend_Cache_ZendPlatformBackendTest extends Zend_Cache_CommonBackendTest {
         $this->assertFalse($this->_instance->test('barbar'));
     }
 
+    #[\Override]
     public function testGetWithAnExpiredCacheId()
     {
     sleep(2);
-        $this->_instance->setDirectives(array('lifetime' => 1));
+        $this->_instance->setDirectives(['lifetime' => 1]);
         $this->assertEquals('bar : data to cache', $this->_instance->load('bar', true));
         $this->assertFalse($this->_instance->load('bar'));
-        $this->_instance->setDirectives(array('lifetime' => 3600));
+        $this->_instance->setDirectives(['lifetime' => 3600]);
     }
 
     // Because of limitations of this backend...
+    #[\Override]
     public function testCleanModeNotMatchingTags2() {}
+    #[\Override]
     public function testCleanModeNotMatchingTags3() {}
+    #[\Override]
     public function testCleanModeOld() {}
+    #[\Override]
     public function testCleanModeNotMatchingTags() {}
 }
 

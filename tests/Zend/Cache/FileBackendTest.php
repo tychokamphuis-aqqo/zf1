@@ -51,25 +51,27 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
     protected $_instance2;
     protected $_cache_dir;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct('Zend_Cache_Backend_File', $data, $dataName);
     }
 
+    #[\Override]
     public function setUp($notag = false)
     {
         $this->mkdir();
         $this->_cache_dir = $this->getTmpDir() . DIRECTORY_SEPARATOR;
-        $this->_instance = new Zend_Cache_Backend_File(array(
+        $this->_instance = new Zend_Cache_Backend_File([
             'cache_dir' => $this->_cache_dir,
-        ));
+        ]);
 
         $logger = new Zend_Log(new Zend_Log_Writer_Null());
-        $this->_instance->setDirectives(array('logger' => $logger));
+        $this->_instance->setDirectives(['logger' => $logger]);
 
         parent::setUp($notag);
     }
 
+    #[\Override]
     public function tearDown()
     {
         parent::tearDown();
@@ -79,10 +81,10 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
     public function testSetDeprecatedHashedDirectoryUmask()
     {
         try {
-            $cache = new Zend_Cache_Backend_File(array(
+            $cache = new Zend_Cache_Backend_File([
                 'cache_dir'              => $this->_cache_dir,
                 'hashed_directory_umask' => 0700,
-            ));
+            ]);
             $this->fail("Missing expected E_USER_NOTICE error");
         } catch (PHPUnit_Framework_Error $e) {
             if ($e->getCode() != E_USER_NOTICE) {
@@ -96,10 +98,10 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
     public function testSetDeprecatedCacheFileUmask()
     {
         try {
-            $cache = new Zend_Cache_Backend_File(array(
+            $cache = new Zend_Cache_Backend_File([
                     'cache_dir'        => $this->_cache_dir,
                     'cache_file_umask' => 0700,
-            ));
+            ]);
             $this->fail("Missing expected E_USER_NOTICE error");
         } catch (PHPUnit_Framework_Error $e) {
             if ($e->getCode() != E_USER_NOTICE) {
@@ -110,18 +112,19 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
         }
     }
 
+    #[\Override]
     public function testConstructorCorrectCall()
     {
-        $test = new Zend_Cache_Backend_File(array());
+        $test = new Zend_Cache_Backend_File([]);
     }
 
     public function testConstructorWithABadFileNamePrefix()
     {
         try {
-            $class = new Zend_Cache_Backend_File(array(
+            $class = new Zend_Cache_Backend_File([
                 'file_name_prefix' => 'foo bar'
-            ));
-        } catch (Zend_Cache_Exception $e) {
+            ]);
+        } catch (Zend_Cache_Exception) {
             return;
         }
         $this->fail('Zend_Cache_Exception was expected but not thrown');
@@ -129,14 +132,14 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
 
     public function testGetWithANonExistingCacheIdAndANullLifeTime()
     {
-        $this->_instance->setDirectives(array('lifetime' => null));
+        $this->_instance->setDirectives(['lifetime' => null]);
         $this->assertFalse($this->_instance->load('barbar'));
     }
 
     public function testSaveCorrectCallWithHashedDirectoryStructure()
     {
         $this->_instance->setOption('hashed_directory_level', 2);
-        $res = $this->_instance->save('data to cache', 'foo', array('tag1', 'tag2'));
+        $res = $this->_instance->save('data to cache', 'foo', ['tag1', 'tag2']);
         $this->assertTrue($res);
     }
 
@@ -162,19 +165,19 @@ class Zend_Cache_FileBackendTest extends Zend_Cache_CommonExtendedBackendTest {
     public function testSaveWithABadCacheDir()
     {
         $this->_instance->setOption('cache_dir', '/foo/bar/lfjlqsdjfklsqd/');
-        $res = $this->_instance->save('data to cache', 'foo', array('tag1', 'tag2'));
+        $res = $this->_instance->save('data to cache', 'foo', ['tag1', 'tag2']);
         $this->assertFalse($res);
     }
 
     public function testShouldProperlyCleanCacheNoMatterTheCacheId()
     {
         // the 'zzz' and 'ďťň' keys will be sorted after internal-metadatas file
-        $keys = array(
+        $keys = [
             '9230de5449e0c818ed4804587ed422d5',
             'zzz',
             'Zend_LocaleC_cs_CZ_date_',
             'ďťň'
-        );
+        ];
 
         foreach ($keys as $key) {
             $this->_instance->save('data to cache', $key);

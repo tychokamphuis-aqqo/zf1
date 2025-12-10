@@ -35,6 +35,7 @@ require_once 'Zend/Db/TestUtil/Common.php';
 class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
 {
 
+    #[\Override]
     public function setUp(Zend_Db_Adapter_Abstract $db)
     {
         $this->setAdapter($db);
@@ -42,15 +43,16 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
         parent::setUp($db);
     }
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array(
+        $constants = [
             'host'     => 'TESTS_ZEND_DB_ADAPTER_DB2_HOSTNAME',
             'username' => 'TESTS_ZEND_DB_ADAPTER_DB2_USERNAME',
             'password' => 'TESTS_ZEND_DB_ADAPTER_DB2_PASSWORD',
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_DB2_DATABASE',
             'port'     => 'TESTS_ZEND_DB_ADAPTER_DB2_PORT'
-        );
+        ];
 
         $params = parent::getParams($constants);
 
@@ -61,6 +63,7 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
         return $params;
     }
 
+    #[\Override]
     public function getSchema()
     {
         $desc = $this->_db->describeTable('zfproducts');
@@ -71,14 +74,16 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
      * For DB2, override the Products table to use an
      * explicit sequence-based column.
      */
+    #[\Override]
     protected function _getColumnsProducts()
     {
-        return array(
+        return [
             'product_id'   => 'INT NOT NULL PRIMARY KEY',
             'product_name' => 'VARCHAR(100)'
-        );
+        ];
     }
 
+    #[\Override]
     protected function _getDataProducts()
     {
         $data = parent::_getDataProducts();
@@ -88,10 +93,11 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
         return $data;
     }
 
+    #[\Override]
     protected function _getDataDocuments()
     {
-        return array (
-            array(
+        return  [
+            [
                 'doc_id'    => 1,
                 'doc_clob'  => 'this is the clob that never ends...'.
                                'this is the clob that never ends...'.
@@ -99,10 +105,11 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
                 'doc_blob'  => new Zend_Db_Expr("BLOB('this is the blob that never ends...".
                                "this is the blob that never ends...".
                                "this is the blob that never ends...')")
-            )
-        );
+            ]
+        ];
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         if ($type == 'IDENTITY') {
@@ -114,6 +121,7 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         if ($this->_db->isI5()) {
@@ -126,12 +134,13 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
             );
         }
 
-        if (in_array(strtoupper($tableName), $tableList)) {
+        if (in_array(strtoupper((string) $tableName), $tableList)) {
             return null;
         }
         return 'CREATE TABLE ' . $this->_db->quoteIdentifier($tableName, true);
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         if ($this->_db->isI5()) {
@@ -144,7 +153,7 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
             );
         }
 
-        if (in_array(strtoupper($tableName), $tableList)) {
+        if (in_array(strtoupper((string) $tableName), $tableList)) {
             return 'DROP TABLE ' . $this->_db->quoteIdentifier($tableName, true);
         }
         return null;
@@ -162,7 +171,7 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
 
         $seqList = $this->_db->fetchCol($sequenceQuery);
 
-        if (in_array(strtoupper($sequenceName), $seqList)) {
+        if (in_array(strtoupper((string) $sequenceName), $seqList)) {
             return null;
         }
         return 'CREATE SEQUENCE ' . $this->_db->quoteIdentifier($sequenceName, true) . ' AS INT START WITH 1 INCREMENT BY 1 MINVALUE 1';
@@ -180,7 +189,7 @@ class Zend_Db_TestUtil_Db2 extends Zend_Db_TestUtil_Common
 
         $seqList = $this->_db->fetchCol($sequenceQuery);
 
-        if (in_array(strtoupper($sequenceName), $seqList)) {
+        if (in_array(strtoupper((string) $sequenceName), $seqList)) {
             return 'DROP SEQUENCE ' . $this->_db->quoteIdentifier($sequenceName, true) . ' RESTRICT';
         }
         return null;

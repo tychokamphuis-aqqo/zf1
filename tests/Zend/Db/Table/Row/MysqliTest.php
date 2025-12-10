@@ -38,6 +38,7 @@ require_once 'Zend/Db/Table/Row/TestCommon.php';
 class Zend_Db_Table_Row_MysqliTest extends Zend_Db_Table_Row_TestCommon
 {
 
+    #[\Override]
     public function testTableRowSaveInsertSequence()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support sequences');

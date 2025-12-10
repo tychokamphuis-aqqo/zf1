@@ -41,6 +41,7 @@ class Zend_Db_Table_Select_Db2Test extends Zend_Db_Table_Select_TestCommon
     /**
      * ZF-5234: this test must be done on string field
      */
+    #[\Override]
     protected function _selectColumnWithColonQuotedParameter ()
     {
         $product_name = $this->_db->quoteIdentifier('product_name');
@@ -51,6 +52,7 @@ class Zend_Db_Table_Select_Db2Test extends Zend_Db_Table_Select_TestCommon
         return $select;
     }
 
+    #[\Override]
     public function testSelectJoinCross()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support CROSS JOIN');
@@ -60,6 +62,7 @@ class Zend_Db_Table_Select_Db2Test extends Zend_Db_Table_Select_TestCommon
      * ZF-2017: Test bind use of the Zend_Db_Select class.
      * @group ZF-2017
      */
+    #[\Override]
     public function testSelectQueryWithBinds()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support named parameters');

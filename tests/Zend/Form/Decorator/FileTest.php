@@ -97,7 +97,7 @@ class Zend_Form_Decorator_FileTest extends PHPUnit_Framework_TestCase
     public function getView()
     {
         $view = new Zend_View();
-        $view->addHelperPath(dirname(__FILE__) . '/../../../../library/Zend/View/Helper');
+        $view->addHelperPath(__DIR__ . '/../../../../library/Zend/View/Helper');
         return $view;
     }
 
@@ -204,8 +204,8 @@ class Zend_Form_Decorator_FileTest extends PHPUnit_Framework_TestCase
     private function _convertIniToInteger($setting)
     {
         if (!is_numeric($setting)) {
-            $type = strtoupper(substr($setting, -1));
-            $setting = (integer) substr($setting, 0, -1);
+            $type = strtoupper(substr((string) $setting, -1));
+            $setting = (int) substr((string) $setting, 0, -1);
 
             switch ($type) {
                 case 'M' :
@@ -221,7 +221,7 @@ class Zend_Form_Decorator_FileTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        return (integer) $setting;
+        return (int) $setting;
     }
 }
 

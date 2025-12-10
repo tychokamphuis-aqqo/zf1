@@ -42,7 +42,7 @@ class HelperFlashMessengerController extends Zend_Controller_Action
     public function indexAction()
     {
         $flashmessenger = $this->_helper->FlashMessenger;
-        $this->getResponse()->appendBody(get_class($flashmessenger));
+        $this->getResponse()->appendBody($flashmessenger::class);
 
         $messages = $flashmessenger->getCurrentMessages();
         if (count($messages) === 0) {

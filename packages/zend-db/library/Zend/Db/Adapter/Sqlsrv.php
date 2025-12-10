@@ -50,11 +50,11 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      *
      * @var array
      */
-    protected $_config = array(
+    protected $_config = [
         'dbname'       => null,
         'username'     => null,
         'password'     => null,
-    );
+    ];
 
     /**
      * Last insert id from INSERT query
@@ -81,7 +81,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -95,7 +95,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
         'NUMERIC'            => Zend_Db::FLOAT_TYPE,
         'REAL'               => Zend_Db::FLOAT_TYPE,
         'SMALLMONEY'         => Zend_Db::FLOAT_TYPE,
-    );
+    ];
 
     /**
      * Default class name for a DB statement.
@@ -127,20 +127,20 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
 
         $serverName = $this->_config['host'];
         if (isset($this->_config['port'])) {
-            $port        = (integer) $this->_config['port'];
+            $port        = (int) $this->_config['port'];
             $serverName .= ', ' . $port;
         }
 
-        $connectionInfo = array(
+        $connectionInfo = [
             'Database' => $this->_config['dbname'],
-        );
+        ];
 
         if (isset($this->_config['username']) && isset($this->_config['password']))
         {
-            $connectionInfo += array(
+            $connectionInfo += [
                 'UID'      => $this->_config['username'],
                 'PWD'      => $this->_config['password'],
-            );
+            ];
         }
         // else - windows authentication
 
@@ -176,6 +176,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      * @param array $config
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     protected function _checkRequiredOptions(array $config)
     {
         // we need at least a dbname
@@ -222,26 +223,15 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
             $level = SQLSRV_TXN_READ_COMMITTED;
         }
 
-        switch ($level) {
-            case SQLSRV_TXN_READ_UNCOMMITTED:
-                $sql = "READ UNCOMMITTED";
-                break;
-            case SQLSRV_TXN_READ_COMMITTED:
-                $sql = "READ COMMITTED";
-                break;
-            case SQLSRV_TXN_REPEATABLE_READ:
-                $sql = "REPEATABLE READ";
-                break;
-            case SQLSRV_TXN_SNAPSHOT:
-                $sql = "SNAPSHOT";
-                break;
-            case SQLSRV_TXN_SERIALIZABLE:
-                $sql = "SERIALIZABLE";
-                break;
-            default:
-                // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
-                throw new Zend_Db_Adapter_Sqlsrv_Exception("Invalid transaction isolation level mode '$level' specified");
-        }
+        $sql = match ($level) {
+            SQLSRV_TXN_READ_UNCOMMITTED => "READ UNCOMMITTED",
+            SQLSRV_TXN_READ_COMMITTED => "READ COMMITTED",
+            SQLSRV_TXN_REPEATABLE_READ => "REPEATABLE READ",
+            SQLSRV_TXN_SNAPSHOT => "SNAPSHOT",
+            SQLSRV_TXN_SERIALIZABLE => "SERIALIZABLE",
+            // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
+            default => throw new Zend_Db_Adapter_Sqlsrv_Exception("Invalid transaction isolation level mode '$level' specified"),
+        };
 
         if (!sqlsrv_query($this->_connection, "SET TRANSACTION ISOLATION LEVEL $sql;")) {
             // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
@@ -306,6 +296,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      * @param string $value     Raw string
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value)) {
@@ -355,11 +346,12 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      * @param array $bind Column-value pairs.
      * @return int The number of affected rows.
      */
+    #[\Override]
     public function insert($table, array $bind)
     {
         // extract and quote col names from the array keys
-        $cols = array();
-        $vals = array();
+        $cols = [];
+        $vals = [];
         foreach ($bind as $col => $val) {
             $cols[] = $this->quoteIdentifier($col, true);
             if ($val instanceof Zend_Db_Expr) {
@@ -443,7 +435,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
         $stmt->closeCursor();
 
         if (count($result) == 0) {
-            return array();
+            return [];
         }
 
         $owner           = 1;
@@ -466,7 +458,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
         $stmt       = $this->query($sql);
 
         $primaryKeysResult = $stmt->fetchAll(Zend_Db::FETCH_NUM);
-        $primaryKeyColumn  = array();
+        $primaryKeyColumn  = [];
 
         // Per http://msdn.microsoft.com/en-us/library/ms189813.aspx,
         // results from sp_keys stored procedure are:
@@ -478,11 +470,11 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
             $primaryKeyColumn[$pkeysRow[$pkey_column_name]] = $pkeysRow[$pkey_key_seq];
         }
 
-        $desc = array();
+        $desc = [];
         $p    = 1;
-        foreach ($result as $key => $row) {
+        foreach ($result as $row) {
             $identity = false;
-            $words    = explode(' ', $row[$type_name], 2);
+            $words    = explode(' ', (string) $row[$type_name], 2);
             if (isset($words[0])) {
                 $type = $words[0];
                 if (isset($words[1])) {
@@ -490,14 +482,14 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
                 }
             }
 
-            $isPrimary = array_key_exists($row[$column_name], $primaryKeyColumn);
+            $isPrimary = array_key_exists((string) $row[$column_name], $primaryKeyColumn);
             if ($isPrimary) {
                 $primaryPosition = $primaryKeyColumn[$row[$column_name]];
             } else {
                 $primaryPosition = null;
             }
 
-            $desc[$this->foldCase($row[$column_name])] = array(
+            $desc[$this->foldCase($row[$column_name])] = [
                 'SCHEMA_NAME'      => null, // @todo
                 'TABLE_NAME'       => $this->foldCase($row[$table_name]),
                 'COLUMN_NAME'      => $this->foldCase($row[$column_name]),
@@ -512,7 +504,7 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
                 'PRIMARY'          => $isPrimary,
                 'PRIMARY_POSITION' => $primaryPosition,
                 'IDENTITY'         => $identity,
-            );
+            ];
         }
 
         return $desc;
@@ -571,22 +563,15 @@ class Zend_Db_Adapter_Sqlsrv extends Zend_Db_Adapter_Abstract
      */
     public function setFetchMode($mode)
     {
-        switch ($mode) {
-            case Zend_Db::FETCH_NUM:   // seq array
-            case Zend_Db::FETCH_ASSOC: // assoc array
-            case Zend_Db::FETCH_BOTH:  // seq+assoc array
-            case Zend_Db::FETCH_OBJ:   // object
-                $this->_fetchMode = $mode;
-                break;
-            case Zend_Db::FETCH_BOUND: // bound to PHP variable
-                // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
-                throw new Zend_Db_Adapter_Sqlsrv_Exception('FETCH_BOUND is not supported yet');
-                break;
-            default:
-                // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
-                throw new Zend_Db_Adapter_Sqlsrv_Exception("Invalid fetch mode '$mode' specified");
-                break;
-        }
+        $this->_fetchMode = match ($mode) {
+            // object
+            Zend_Db::FETCH_NUM, Zend_Db::FETCH_ASSOC, Zend_Db::FETCH_BOTH, Zend_Db::FETCH_OBJ => $mode,
+            // bound to PHP variable
+            // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
+            Zend_Db::FETCH_BOUND => throw new Zend_Db_Adapter_Sqlsrv_Exception('FETCH_BOUND is not supported yet'),
+            // require_once 'Zend/Db/Adapter/Sqlsrv/Exception.php';
+            default => throw new Zend_Db_Adapter_Sqlsrv_Exception("Invalid fetch mode '$mode' specified"),
+        };
     }
 
     /**

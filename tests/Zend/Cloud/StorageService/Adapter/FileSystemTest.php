@@ -52,7 +52,7 @@ class Zend_Cloud_StorageService_Adapter_FileSystemTest
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -61,6 +61,7 @@ class Zend_Cloud_StorageService_Adapter_FileSystemTest
      *
      * @return void
      */
+    #[\Override]
     public function setUp()
     {
         parent::setUp();
@@ -75,17 +76,20 @@ class Zend_Cloud_StorageService_Adapter_FileSystemTest
         mkdir($path, 0755);
     }
 
+    #[\Override]
     public function testGetClient()
     {
     	$this->assertTrue(is_string($this->_commonStorage->getClient()));
     }
 
+    #[\Override]
     public function testNoParams()
     {
 		$this->markTestSkipped('No config params needed for FileSystem');
     }
 
     // TODO: Create a custom test for FileSystem that checks fetchMetadata() with file system MD.
+    #[\Override]
     public function testFetchMetadata()
     {
         $this->markTestIncomplete('FileSystem doesn\'t support writable metadata.');
@@ -139,10 +143,10 @@ class Zend_Cloud_StorageService_Adapter_FileSystemTest
 
     protected function _getConfig()
     {
-        $config = new Zend_Config(array(
+        $config = new Zend_Config([
             Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY        => 'Zend_Cloud_StorageService_Adapter_Filesystem',
-            Zend_Cloud_StorageService_Adapter_FileSystem::LOCAL_DIRECTORY => dirname(__FILE__) . '/../_files/data/FileSystemTest',
-        ));
+            Zend_Cloud_StorageService_Adapter_FileSystem::LOCAL_DIRECTORY => __DIR__ . '/../_files/data/FileSystemTest',
+        ]);
 
         return $config;
     }

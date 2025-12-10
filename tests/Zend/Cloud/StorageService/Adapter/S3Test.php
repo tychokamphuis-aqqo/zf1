@@ -53,7 +53,7 @@ class Zend_Cloud_StorageService_Adapter_S3Test
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -62,6 +62,7 @@ class Zend_Cloud_StorageService_Adapter_S3Test
      *
      * @return void
      */
+    #[\Override]
     public function setUp()
     {
         parent::setUp();
@@ -78,6 +79,7 @@ class Zend_Cloud_StorageService_Adapter_S3Test
     }
 
     // TODO: Create a custom test for S3 that checks fetchMetadata() with an object that has custom metadata.
+    #[\Override]
     public function testFetchMetadata()
     {
         $this->markTestIncomplete('S3 doesn\'t support storing metadata after an item is created.');
@@ -127,12 +129,12 @@ class Zend_Cloud_StorageService_Adapter_S3Test
             $this->markTestSkipped("Amazon S3 access not configured, skipping test");
         }
 
-        $config = new Zend_Config(array(
+        $config = new Zend_Config([
             Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY => 'Zend_Cloud_StorageService_Adapter_S3',
             Zend_Cloud_StorageService_Adapter_S3::AWS_ACCESS_KEY   => constant('TESTS_ZEND_SERVICE_AMAZON_ONLINE_ACCESSKEYID'),
             Zend_Cloud_StorageService_Adapter_S3::AWS_SECRET_KEY   => constant('TESTS_ZEND_SERVICE_AMAZON_ONLINE_SECRETKEY'),
             Zend_Cloud_StorageService_Adapter_S3::BUCKET_NAME      => constant('TESTS_ZEND_SERVICE_AMAZON_S3_BUCKET'),
-        ));
+        ]);
 
         return $config;
     }

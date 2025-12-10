@@ -138,27 +138,13 @@ abstract class Zend_Pdf_Image
         /* If it turns out that the file is named improperly and we guess the
          * wrong type, we'll get null instead of an image object.
          */
-        switch ($fileExtension) {
-            case 'tif':
-                //Fall through to next case;
-            case 'tiff':
-                $image = Zend_Pdf_Image::_extractTiffImage($dataSource);
-                break;
-            case 'png':
-                $image = Zend_Pdf_Image::_extractPngImage($dataSource);
-                break;
-            case 'jpg':
-                //Fall through to next case;
-            case 'jpe':
-                //Fall through to next case;
-            case 'jpeg':
-                $image = Zend_Pdf_Image::_extractJpegImage($dataSource);
-                break;
-            default:
-                // require_once 'Zend/Pdf/Exception.php';
-                throw new Zend_Pdf_Exception("Cannot create image resource. File extension not known or unsupported type.");
-                break;
-        }
+        $image = match ($fileExtension) {
+            'tif', 'tiff' => Zend_Pdf_Image::_extractTiffImage($dataSource),
+            'png' => Zend_Pdf_Image::_extractPngImage($dataSource),
+            'jpg', 'jpe', 'jpeg' => Zend_Pdf_Image::_extractJpegImage($dataSource),
+            // require_once 'Zend/Pdf/Exception.php';
+            default => throw new Zend_Pdf_Exception("Cannot create image resource. File extension not known or unsupported type."),
+        };
 
         /* Done with the data source object.
          */

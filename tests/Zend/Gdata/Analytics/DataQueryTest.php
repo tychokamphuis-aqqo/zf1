@@ -89,7 +89,7 @@ class Zend_GData_Analytics_DataQueryTest extends PHPUnit_Framework_TestCase
             ->addDimension(Zend_GData_Analytics_DataQuery::DIMENSION_CITY)
             ->addMetric(Zend_GData_Analytics_DataQuery::METRIC_PAGEVIEWS)
             ->addMetric(Zend_GData_Analytics_DataQuery::METRIC_VISITS);
-        $url = parse_url($this->dataQuery->getQueryUrl());
+        $url = parse_url((string) $this->dataQuery->getQueryUrl());
         parse_str($url['query'], $parameter);
 
         $this->assertEquals(count($parameter), 4);

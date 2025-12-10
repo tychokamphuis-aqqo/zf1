@@ -51,7 +51,7 @@ abstract class Zend_Pdf_Outline implements RecursiveIterator, Countable
      *
      * @var array
      */
-    public $childOutlines = array();
+    public $childOutlines = [];
 
 
     /**
@@ -161,12 +161,12 @@ abstract class Zend_Pdf_Outline implements RecursiveIterator, Countable
      */
     public function getOptions()
     {
-        return array('title'  => $this->_title,
+        return ['title'  => $this->_title,
                      'open'   => $this->_open,
                      'color'  => $this->_color,
                      'italic' => $this->_italic,
                      'bold'   => $this->_bold,
-                     'target' => $this->_target);
+                     'target' => $this->_target];
     }
 
     /**
@@ -179,35 +179,16 @@ abstract class Zend_Pdf_Outline implements RecursiveIterator, Countable
     public function setOptions(array $options)
     {
         foreach ($options as $key => $value) {
-            switch ($key) {
-                case 'title':
-                    $this->setTitle($value);
-                    break;
-
-                case 'open':
-                    $this->setIsOpen($value);
-                    break;
-
-                case 'color':
-                    $this->setColor($value);
-                    break;
-                case 'italic':
-                    $this->setIsItalic($value);
-                    break;
-
-                case 'bold':
-                    $this->setIsBold($value);
-                    break;
-
-                case 'target':
-                    $this->setTarget($value);
-                    break;
-
-                default:
-                    // require_once 'Zend/Pdf/Exception.php';
-                    throw new Zend_Pdf_Exception("Unknown option name - '$key'.");
-                    break;
-            }
+            match ($key) {
+                'title' => $this->setTitle($value),
+                'open' => $this->setIsOpen($value),
+                'color' => $this->setColor($value),
+                'italic' => $this->setIsItalic($value),
+                'bold' => $this->setIsBold($value),
+                'target' => $this->setTarget($value),
+                // require_once 'Zend/Pdf/Exception.php';
+                default => throw new Zend_Pdf_Exception("Unknown option name - '$key'."),
+            };
         }
 
         return $this;
@@ -242,8 +223,8 @@ abstract class Zend_Pdf_Outline implements RecursiveIterator, Countable
                 throw new Zend_Pdf_Exception('Outline create method takes $title (string) and $target (Zend_Pdf_Target or string) or an array as an input');
             }
 
-            return new Zend_Pdf_Outline_Created(array('title'  => $param1,
-                                                      'target' => $param2));
+            return new Zend_Pdf_Outline_Created(['title'  => $param1,
+                                                      'target' => $param2]);
         } else {
             if (!is_array($param1)  ||  $param2 !== null) {
                 // require_once 'Zend/Pdf/Exception.php';
@@ -288,8 +269,8 @@ abstract class Zend_Pdf_Outline implements RecursiveIterator, Countable
     abstract public function dumpOutline(Zend_Pdf_ElementFactory_Interface $factory,
                                                                            $updateNavigation,
                                                           Zend_Pdf_Element $parent,
-                                                          Zend_Pdf_Element $prev = null,
-                                                          SplObjectStorage $processedOutlines = null);
+                                                          ?Zend_Pdf_Element $prev = null,
+                                                          ?SplObjectStorage $processedOutlines = null);
 
 
     ////////////////////////////////////////////////////////////////////////

@@ -38,6 +38,7 @@ require_once 'Zend/Db/TestUtil/Pdo/Common.php';
 class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
 {
 
+    #[\Override]
     public function setUp(Zend_Db_Adapter_Abstract $db)
     {
         $this->_db = $db;
@@ -45,17 +46,19 @@ class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
         parent::setUp($db);
     }
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array (
+        $constants =  [
             'host'     => 'TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_HOSTNAME',
             'username' => 'TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_USERNAME',
             'password' => 'TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_PASSWORD',
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_DATABASE'
-        );
+        ];
         return parent::getParams($constants);
     }
 
+    #[\Override]
     public function getSchema()
     {
         return 'public';
@@ -65,14 +68,16 @@ class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
      * For PostgreSQL, override the Products table to use an
      * explicit sequence-based column.
      */
+    #[\Override]
     protected function _getColumnsProducts()
     {
-        return array(
+        return [
             'product_id'   => 'INT NOT NULL PRIMARY KEY',
             'product_name' => 'VARCHAR(100)'
-        );
+        ];
     }
 
+    #[\Override]
     protected function _getDataProducts()
     {
         $data = parent::_getDataProducts();
@@ -82,6 +87,7 @@ class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
         return $data;
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         if ($type == 'IDENTITY') {
@@ -99,6 +105,7 @@ class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         $tableList = $this->_db->fetchCol('SELECT relname AS table_name FROM pg_class '
@@ -110,6 +117,7 @@ class Zend_Db_TestUtil_Pdo_Pgsql extends Zend_Db_TestUtil_Pdo_Common
         return 'CREATE TABLE ' . $this->_db->quoteIdentifier($tableName);
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         $tableList = $this->_db->fetchCol('SELECT relname AS table_name FROM pg_class '

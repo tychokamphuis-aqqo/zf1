@@ -49,7 +49,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $tmp = dirname(__FILE__)."/_files";
+        $tmp = __DIR__."/_files";
         $dir = $tmp . '/openid_provider';
         @rmdir($dir);
         $storage = new Zend_OpenId_Provider_Storage_File($dir);
@@ -82,7 +82,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
     public function testGetAssociation()
     {
         $expiresIn = time() + 600;
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delAssociation(self::HANDLE);
         $this->assertTrue( $storage->addAssociation(self::HANDLE, self::MAC_FUNC, self::SECRET, $expiresIn) );
         $this->assertTrue( $storage->getAssociation(self::HANDLE, $macFunc, $secret, $expires) );
@@ -92,7 +92,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
         $this->assertTrue( $storage->delAssociation(self::HANDLE) );
         $this->assertFalse( $storage->getAssociation(self::HANDLE, $macFunc, $secret, $expires) );
 
-        $tmp = dirname(__FILE__)."/_files";
+        $tmp = __DIR__."/_files";
         $dir = $tmp . '/openid_consumer';
         @rmdir($dir);
         $storage = new Zend_OpenId_Provider_Storage_File($dir);
@@ -115,7 +115,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
     public function testGetAssociationExpiratin()
     {
         $expiresIn = time() + 1;
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delAssociation(self::HANDLE);
         $this->assertTrue( $storage->addAssociation(self::HANDLE, self::MAC_FUNC, self::SECRET, $expiresIn) );
         sleep(2);
@@ -128,7 +128,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
      */
     public function testAddUser()
     {
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delUser(self::USER);
         $this->assertTrue( $storage->addUser(self::USER, self::PASSWORD) );
         $this->assertFalse( $storage->addUser(self::USER, self::PASSWORD) );
@@ -143,7 +143,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
      */
     public function testHasUser()
     {
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delUser(self::USER);
         $this->assertTrue( $storage->addUser(self::USER, self::PASSWORD) );
         $this->assertTrue( $storage->hasUser(self::USER) );
@@ -157,7 +157,7 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
      */
     public function testCheckUser()
     {
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delUser(self::USER);
         $this->assertTrue( $storage->addUser(self::USER, self::PASSWORD) );
         $this->assertTrue( $storage->checkUser(self::USER, self::PASSWORD) );
@@ -172,15 +172,14 @@ class Zend_OpenId_Provider_Storage_FileTest extends PHPUnit_Framework_TestCase
      */
     public function testAddSite()
     {
-        $storage = new Zend_OpenId_Provider_Storage_File(dirname(__FILE__)."/_files");
+        $storage = new Zend_OpenId_Provider_Storage_File(__DIR__."/_files");
         $storage->delUser(self::USER);
         $this->assertTrue( $storage->addUser(self::USER, self::PASSWORD) );
         $this->assertTrue( $storage->addSite(self::USER, self::SITE1, true) );
         $trusted = $storage->getTrustedSites(self::USER);
         $this->assertTrue( is_array($trusted) );
         $this->assertSame( 1, count($trusted) );
-        reset($trusted);
-        $this->assertSame( self::SITE1, key($trusted) );
+        $this->assertSame( self::SITE1, array_key_first($trusted) );
         $this->assertSame( true, current($trusted) );
         $this->assertTrue( $storage->delUser(self::USER) );
         $this->assertFalse( $storage->addSite(self::USER, self::SITE1, true) );

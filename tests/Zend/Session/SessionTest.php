@@ -60,13 +60,13 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function __construct($name = NULL, array $data = array(), $dataName = '')
+    public function __construct($name = NULL, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
         $this->_script = 'php '
             . '-c ' . escapeshellarg(php_ini_loaded_file()) . ' '
             . '-d include_path=' . get_include_path() . ' '
-            . escapeshellarg(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'SessionTestHelper.php');
+            . escapeshellarg(__DIR__ . DIRECTORY_SEPARATOR . 'SessionTestHelper.php');
 
         $this->_savePath = ini_get('session.save_path');
     }
@@ -109,7 +109,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
      */
     public function sortResult(array $result)
     {
-        $results = explode(';', array_pop($result));
+        $results = explode(';', (string) array_pop($result));
         sort($results);
         return implode(';', $results);
     }
@@ -162,17 +162,17 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
     public function testSetOptions()
     {
         try {
-            Zend_Session::setOptions(array('foo' => 'break me'));
+            Zend_Session::setOptions(['foo' => 'break me']);
             $this->fail('Expected Zend_Session_Exception not thrown when trying to set an invalid option');
         } catch (Zend_Session_Exception $e) {
             $this->assertRegexp('/unknown.option/i', $e->getMessage());
         }
 
-        Zend_Session::setOptions(array('save_path' => '1;777;/tmp'));
+        Zend_Session::setOptions(['save_path' => '1;777;/tmp']);
 
-        Zend_Session::setOptions(array('save_path' => '2;/tmp'));
+        Zend_Session::setOptions(['save_path' => '2;/tmp']);
 
-        Zend_Session::setOptions(array('save_path' => '/tmp'));
+        Zend_Session::setOptions(['save_path' => '/tmp']);
     }
 
     /**
@@ -246,7 +246,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->tree = 'fig';
             $dog = $s->dog;
             $this->assertTrue($dog === null, "getting value of non-existent key failed to return null ($dog)");
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception returned when attempting to fetch the value of non-existent key');
         }
     }
@@ -270,7 +270,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->cherry = 'bing';
             $this->assertTrue(Zend_Session::namespaceIsset('trees'),
                 'namespaceIsset() should have returned true for a namespace with keys set');
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception returned when attempting to fetch the value of non-existent key');
         }
     }
@@ -505,7 +505,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->o = 'orange';
             $s->p = 'papaya';
             $s->c = 'cherry';
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception when writing to namespaces after unlocking it.');
         }
     }
@@ -518,7 +518,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
      */
     public function testUnLockAll()
     {
-        $sessions = array('one', 'two', 'default', 'three');
+        $sessions = ['one', 'two', 'default', 'three'];
         foreach ($sessions as $namespace) {
             $s = new Zend_Session_Namespace($namespace);
             $s->a = 'apple';
@@ -579,7 +579,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->p = 'papaya';
             $s->c = 'cherry';
             $this->assertFalse($s->isLocked(), 'isLocked() returned incorrect status (locked)');
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception when writing to named namespaces after unlocking them.');
         }
     }
@@ -606,7 +606,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->o = 'orange';
             $s->p = 'papaya';
             $s->c = 'cherry';
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception when writing to named namespaces after unlocking them.');
         }
     }
@@ -641,7 +641,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             $s->p = 'papaya';
             $s->c = 'cherry';
             $this->assertFalse($s->isLocked(), 'isLocked() returned incorrect status (locked)');
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             $this->fail('Unexpected exception when writing to named namespaces after unlocking them.');
         }
     }
@@ -1033,12 +1033,12 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
     public function testGetNameSpaceMethod()
     {
         Zend_Session::$_unitTestEnabled = true;
-        $namespace = array(
+        $namespace = [
             'FooBar',
             'Foo_Bar',
             'Foo-Bar',
             'Foo1000'
-        );
+        ];
         foreach ($namespace as $v) {
             $s = new Zend_Session_Namespace($v);
             $this->assertEquals($v, $s->getNamespace());
@@ -1052,7 +1052,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
     {
         try {
             Zend_Session::start();
-            require_once dirname(__FILE__) . '/Validator/NoticeValidator.php';
+            require_once __DIR__ . '/Validator/NoticeValidator.php';
             Zend_Session::registerValidator(new Zend_Session_Validator_NoticeValidator);
         } catch (PHPUnit_Framework_Error_Notice $exception) {
             $this->fail($exception->getMessage());
@@ -1069,7 +1069,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
 
         // Session store
         $sessionCharSet = array_merge(range(0,9), range('a','v'));
-        $sessionStore = dirname(__FILE__)
+        $sessionStore = __DIR__
                       . DIRECTORY_SEPARATOR . "_files"
                       . DIRECTORY_SEPARATOR . "ZF-3378";
         if ( !is_dir($sessionStore) ) @mkdir($sessionStore, 0755, true);
@@ -1089,7 +1089,7 @@ class Zend_SessionTest extends PHPUnit_Framework_TestCase
             /** @see Zend_Session */
             // require_once "Zend/Session.php";
             Zend_Session::start();
-        } catch (Zend_Session_Exception $e) {
+        } catch (Zend_Session_Exception) {
             Zend_Session::regenerateId();
         }
         // Get the current SID

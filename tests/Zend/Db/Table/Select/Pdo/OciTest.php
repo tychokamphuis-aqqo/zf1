@@ -41,6 +41,7 @@ class Zend_Db_Table_Select_Pdo_OciTest extends Zend_Db_Table_Select_TestCommon
     /**
      * ZF-4330: this test must be done on string field
      */
+    #[\Override]
     protected function _selectColumnWithColonQuotedParameter ()
     {
         $product_name = $this->_db->quoteIdentifier('product_name');
@@ -54,6 +55,7 @@ class Zend_Db_Table_Select_Pdo_OciTest extends Zend_Db_Table_Select_TestCommon
     /**
      * ZF-4330 : Oracle doesn't use 'AS' to identify table alias
      */
+    #[\Override]
     public function testSelectFromSelectObject ()
     {
         $select = $this->_selectFromSelectObject();

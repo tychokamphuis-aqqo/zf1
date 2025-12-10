@@ -37,35 +37,21 @@ class Zend_Pdf_Resource_ImageFactory
             // require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception("Cannot create image resource. File not found.");
         }
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $extension = pathinfo((string) $filename, PATHINFO_EXTENSION);
         /*
          * There are plans to use Zend_Mime and not file extension. In the mean time, if you need to
          * use an alternate file extension just spin up the right processor directly.
          */
-        switch (strtolower($extension)) {
-            case 'tif':
-                //Fall through to next case;
-            case 'tiff':
-                // require_once 'Zend/Pdf/Resource/Image/Tiff.php';
-                return new Zend_Pdf_Resource_Image_Tiff($filename);
-                break;
-            case 'png':
-                // require_once 'Zend/Pdf/Resource/Image/Png.php';
-                return new Zend_Pdf_Resource_Image_Png($filename);
-                break;
-            case 'jpg':
-                //Fall through to next case;
-            case 'jpe':
-                //Fall through to next case;
-            case 'jpeg':
-                // require_once 'Zend/Pdf/Resource/Image/Jpeg.php';
-                return new Zend_Pdf_Resource_Image_Jpeg($filename);
-                break;
-            default:
-                // require_once 'Zend/Pdf/Exception.php';
-                throw new Zend_Pdf_Exception("Cannot create image resource. File extension not known or unsupported type.");
-                break;
-        }
+        return match (strtolower($extension)) {
+            // require_once 'Zend/Pdf/Resource/Image/Tiff.php';
+            'tif', 'tiff' => new Zend_Pdf_Resource_Image_Tiff($filename),
+            // require_once 'Zend/Pdf/Resource/Image/Png.php';
+            'png' => new Zend_Pdf_Resource_Image_Png($filename),
+            // require_once 'Zend/Pdf/Resource/Image/Jpeg.php';
+            'jpg', 'jpe', 'jpeg' => new Zend_Pdf_Resource_Image_Jpeg($filename),
+            // require_once 'Zend/Pdf/Exception.php';
+            default => throw new Zend_Pdf_Exception("Cannot create image resource. File extension not known or unsupported type."),
+        };
     }
 }
 

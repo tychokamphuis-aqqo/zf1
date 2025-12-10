@@ -89,8 +89,8 @@ class Zend_View_Helper_CurrencyTest extends PHPUnit_Framework_TestCase
         $this->clearRegistry();
         // require_once 'Zend/Cache.php';
         $this->_cache = Zend_Cache::factory('Core', 'File',
-                 array('lifetime' => 120, 'automatic_serialization' => true),
-                 array('cache_dir' => dirname(__FILE__) . '/../../_files/'));
+                 ['lifetime' => 120, 'automatic_serialization' => true],
+                 ['cache_dir' => __DIR__ . '/../../_files/']);
         Zend_Currency::setCache($this->_cache);
 
         $this->helper = new Zend_View_Helper_Currency('de_AT');
@@ -139,7 +139,7 @@ class Zend_View_Helper_CurrencyTest extends PHPUnit_Framework_TestCase
         try {
             $helper = new Zend_View_Helper_Currency('something');
         } catch (Exception $e) {
-            if (substr($e->getMessage(), 0, 15) == 'No region found') {
+            if (str_starts_with($e->getMessage(), 'No region found')) {
                 $this->assertContains('within the locale', $e->getMessage());
             } else {
                 $this->assertContains('not found', $e->getMessage());
@@ -152,7 +152,7 @@ class Zend_View_Helper_CurrencyTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->setCurrency('something');
         } catch (Exception $e) {
-            if (substr($e->getMessage(), 0, 15) == 'No region found') {
+            if (str_starts_with($e->getMessage(), 'No region found')) {
                 $this->assertContains('within the locale', $e->getMessage());
             } else {
                 $this->assertContains('not found', $e->getMessage());

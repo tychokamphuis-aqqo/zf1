@@ -42,6 +42,7 @@ class Zend_Filter_Decompress extends Zend_Filter_Compress
      * @param  string $value Content to decompress
      * @return string The decompressed content
      */
+    #[\Override]
     public function filter($value)
     {
         return $this->getAdapter()->decompress($value);

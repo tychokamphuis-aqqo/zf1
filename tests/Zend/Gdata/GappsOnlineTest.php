@@ -73,7 +73,7 @@ class Zend_Gdata_GappsOnlineTest extends PHPUnit_Framework_TestCase
         //
         // Failed deletions are okay, so add everying creatd in here, even if
         // you plan to delete the user yourself!
-        $this->autoDeletePool = array();
+        $this->autoDeletePool = [];
     }
 
     public function tearDown()
@@ -82,7 +82,7 @@ class Zend_Gdata_GappsOnlineTest extends PHPUnit_Framework_TestCase
         foreach ($this->autoDeletePool as $x) {
             try {
                 $x->delete();
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // Failed deletes are okay. Try and delete the rest anyway.
             }
         }
@@ -110,7 +110,7 @@ class Zend_Gdata_GappsOnlineTest extends PHPUnit_Framework_TestCase
         try {
             Zend_Gdata_ClientLogin::getHTTPClient($this->id . '@' .
                 $this->domain, self::PASSWORD, 'xapi');
-        } catch (Zend_Gdata_App_AuthException $e) {
+        } catch (Zend_Gdata_App_AuthException) {
            $this->fail("Unable to authenticate new user via ClientLogin.");
         }
 

@@ -104,11 +104,11 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
             @mkdir($this->testDir);
         }
         $this->element = new Zend_Form_Element_Captcha('captchaI',
-                    array('captcha' => array('Image',
+                    ['captcha' => ['Image',
                                              'sessionClass' => 'Zend_Captcha_ImageTest_SessionContainer',
                                              'imgDir' => $this->testDir,
-                                             'font' => dirname(__FILE__). '/../Pdf/_fonts/Vera.ttf')
-                         ));
+                                             'font' => __DIR__. '/../Pdf/_fonts/Vera.ttf']
+                         ]);
         $this->captcha =  $this->element->getCaptcha();
     }
 
@@ -148,7 +148,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
                 $tmpdir = realpath($_ENV['TEMP']);
             } else {
                 // Attemp to detect by creating a temporary file
-                $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
+                $tempFile = tempnam(md5(uniqid(random_int(0, mt_getrandmax()), TRUE)), '');
                 if ($tempFile) {
                     $tmpdir = realpath(dirname($tempFile));
                     unlink($tempFile);
@@ -166,7 +166,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
     {
         // require_once 'Zend/View.php';
         $view = new Zend_View();
-        $view->addHelperPath(dirname(__FILE__) . '/../../../../library/Zend/View/Helper');
+        $view->addHelperPath(__DIR__ . '/../../../../library/Zend/View/Helper');
         return $view;
     }
 
@@ -276,7 +276,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
         $word = $this->captcha->getWord();
         $this->assertFalse(empty($word));
         $this->assertTrue(is_string($word));
-        $this->assertTrue(strlen($word) == 8);
+        $this->assertTrue(strlen((string) $word) == 8);
         $this->word = $word;
     }
 
@@ -286,7 +286,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
         $this->captcha->generate();
         $word = $this->captcha->getWord();
         $this->assertTrue(is_string($word));
-        $this->assertTrue(strlen($word) == 4);
+        $this->assertTrue(strlen((string) $word) == 4);
         $this->word = $word;
     }
 
@@ -333,22 +333,22 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
     public function testWordValidates()
     {
         $this->testCaptchaIsRendered();
-        $input = array($this->element->getName() => array("id" => $this->captcha->getId(), "input" => $this->captcha->getWord()));
+        $input = [$this->element->getName() => ["id" => $this->captcha->getId(), "input" => $this->captcha->getWord()]];
         $this->assertTrue($this->element->isValid("", $input));
     }
 
     public function testMissingNotValid()
     {
         $this->testCaptchaIsRendered();
-        $this->assertFalse($this->element->isValid("", array()));
-        $input = array($this->element->getName() => array("input" => "blah"));
+        $this->assertFalse($this->element->isValid("", []));
+        $input = [$this->element->getName() => ["input" => "blah"]];
         $this->assertFalse($this->element->isValid("", $input));
     }
 
     public function testWrongWordNotValid()
     {
         $this->testCaptchaIsRendered();
-        $input = array($this->element->getName() => array("id" => $this->captcha->getId(), "input" => "blah"));
+        $input = [$this->element->getName() => ["id" => $this->captcha->getId(), "input" => "blah"]];
         $this->assertFalse($this->element->isValid("", $input));
     }
 
@@ -358,7 +358,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
     public function testIsValidShouldAllowPassingArrayValueWithNoContext()
     {
         $this->testCaptchaIsRendered();
-        $input = array($this->element->getName() => array("id" => $this->captcha->getId(), "input" => $this->captcha->getWord()));
+        $input = [$this->element->getName() => ["id" => $this->captcha->getId(), "input" => $this->captcha->getWord()]];
         $this->assertTrue($this->element->isValid($input));
     }
 
@@ -368,7 +368,7 @@ class Zend_Captcha_ImageTest extends PHPUnit_Framework_TestCase
     public function testIsValidShouldNotRequireValueToBeNestedArray()
     {
         $this->testCaptchaIsRendered();
-        $input = array("id" => $this->captcha->getId(), "input" => $this->captcha->getWord());
+        $input = ["id" => $this->captcha->getId(), "input" => $this->captcha->getWord()];
         $this->assertTrue($this->element->isValid($input));
     }
     

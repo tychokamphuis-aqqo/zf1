@@ -90,7 +90,7 @@ class Zend_Dom_QueryTest extends PHPUnit_Framework_TestCase
     public function getHtml()
     {
         if (null === $this->html) {
-            $this->html  = file_get_contents(dirname(__FILE__) . '/_files/sample.xhtml');
+            $this->html  = file_get_contents(__DIR__ . '/_files/sample.xhtml');
         }
         return $this->html;
     }
@@ -172,7 +172,7 @@ class Zend_Dom_QueryTest extends PHPUnit_Framework_TestCase
 
     public function testQueryingInvalidDocumentShouldThrowException()
     {
-        set_error_handler(array($this, 'handleError'));
+        set_error_handler($this->handleError(...));
         $this->query->setDocumentXml('some bogus string');
         try {
             $this->query->query('.foo');
@@ -267,7 +267,7 @@ EOF;
      */
     public function testLoadingDocumentWithErrorsShouldNotRaisePhpErrors()
     {
-        $file = file_get_contents(dirname(__FILE__) . '/_files/bad-sample.html');
+        $file = file_get_contents(__DIR__ . '/_files/bad-sample.html');
         $this->query->setDocument($file);
         $this->query->query('p');
         $errors = $this->query->getDocumentErrors();

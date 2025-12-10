@@ -39,21 +39,21 @@ class Zend_Log_Writer_NullTest extends PHPUnit_Framework_TestCase
 {
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
     public function testWrite()
     {
         $writer = new Zend_Log_Writer_Null();
-        $writer->write(array('message' => 'foo', 'priority' => 42));
+        $writer->write(['message' => 'foo', 'priority' => 42]);
     }
 
     public function testFactory()
     {
-        $cfg = array('log' => array('memory' => array(
+        $cfg = ['log' => ['memory' => [
             'writerName' => "Null"
-        )));
+        ]]];
 
         // require_once 'Zend/Log.php';
         $logger = Zend_Log::factory($cfg['log']);

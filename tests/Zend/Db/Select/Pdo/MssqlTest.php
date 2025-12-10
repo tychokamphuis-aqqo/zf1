@@ -38,11 +38,13 @@ require_once 'Zend/Db/Select/TestCommon.php';
 class Zend_Db_Select_Pdo_MssqlTest extends Zend_Db_Select_TestCommon
 {
 
+    #[\Override]
     public function testSelectFromQualified()
     {
         $this->markTestIncomplete($this->getDriver() . ' needs more syntax for qualified table names.');
     }
 
+    #[\Override]
     public function testSelectJoinQualified()
     {
         $this->markTestIncomplete($this->getDriver() . ' needs more syntax for qualified table names.');

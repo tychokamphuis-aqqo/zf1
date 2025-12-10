@@ -30,12 +30,14 @@
  */
 class Zend_Ldap_SortTest extends Zend_Ldap_OnlineTestCase
 {
+    #[\Override]
     protected function setUp()
     {
         parent::setUp();
         $this->_prepareLdapServer();
     }
 
+    #[\Override]
     protected function tearDown()
     {
         $this->_cleanupLdapServer();
@@ -51,15 +53,14 @@ class Zend_Ldap_SortTest extends Zend_Ldap_OnlineTestCase
             $this->_getLdap()->getResource(),
             TESTS_ZEND_LDAP_WRITEABLE_SUBTREE,
             '(l=*)',
-            array('l')
+            ['l']
         );
 
         $iterator     = new Zend_Ldap_Collection_Iterator_Default($this->_getLdap(), $search);
-        $sortFunction = function($a, $b) { return 1; };
+        $sortFunction = (fn($a, $b) => 1);
 
         $reflectionObject   = new ReflectionObject($iterator);
         $reflectionProperty = $reflectionObject->getProperty('_sortFunction');
-        $reflectionProperty->setAccessible(true);
         $this->assertEquals('strnatcasecmp', $reflectionProperty->getValue($iterator));
         $iterator->setSortFunction($sortFunction);
         $this->assertEquals($sortFunction, $reflectionProperty->getValue($iterator));
@@ -70,24 +71,22 @@ class Zend_Ldap_SortTest extends Zend_Ldap_OnlineTestCase
      */
     public function testSorting()
     {
-        $lSorted = array('a', 'b', 'c', 'd', 'e');
+        $lSorted = ['a', 'b', 'c', 'd', 'e'];
 
         $search = ldap_search(
             $this->_getLdap()->getResource(),
             TESTS_ZEND_LDAP_WRITEABLE_SUBTREE,
             '(l=*)',
-            array('l')
+            ['l']
         );
 
         $iterator = new Zend_Ldap_Collection_Iterator_Default($this->_getLdap(), $search);
 
         $reflectionObject   = new ReflectionObject($iterator);
         $reflectionProperty = $reflectionObject->getProperty('_sortFunction');
-        $reflectionProperty->setAccessible(true);
         $this->assertEquals('strnatcasecmp', $reflectionProperty->getValue($iterator));
 
         $reflectionProperty = $reflectionObject->getProperty('_entries');
-        $reflectionProperty->setAccessible(true);
 
         $iterator->sort('l');
 
@@ -102,13 +101,13 @@ class Zend_Ldap_SortTest extends Zend_Ldap_OnlineTestCase
      */
     public function testCustomSorting()
     {
-        $lSorted = array('d', 'e', 'a', 'b', 'c');
+        $lSorted = ['d', 'e', 'a', 'b', 'c'];
 
         $search = ldap_search(
             $this->_getLdap()->getResource(),
             TESTS_ZEND_LDAP_WRITEABLE_SUBTREE,
             '(l=*)',
-            array('l')
+            ['l']
         );
 
         $iterator     = new Zend_Ldap_Collection_Iterator_Default($this->_getLdap(), $search);
@@ -128,11 +127,9 @@ class Zend_Ldap_SortTest extends Zend_Ldap_OnlineTestCase
 
         $reflectionObject   = new ReflectionObject($iterator);
         $reflectionProperty = $reflectionObject->getProperty('_sortFunction');
-        $reflectionProperty->setAccessible(true);
         $this->assertEquals($sortFunction, $reflectionProperty->getValue($iterator));
 
         $reflectionProperty = $reflectionObject->getProperty('_entries');
-        $reflectionProperty->setAccessible(true);
 
         $iterator->sort('l');
 

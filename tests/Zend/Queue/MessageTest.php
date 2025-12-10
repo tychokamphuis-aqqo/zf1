@@ -72,23 +72,23 @@ class Zend_Queue_MessageTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         // Test Zend_Config
-        $this->options = array(
+        $this->options = [
             'name'      => 'queue1',
-            'params'    => array(),
-        );
+            'params'    => [],
+        ];
 
         $this->queue = new Zend_Queue('array', $this->options);
 
-        $this->data = array(
+        $this->data = [
             'id'     => 123,
             'handle' => 567,
             'body'   => 'Hello world' // This is my 2524'th time writing that.
-        );
+        ];
 
-        $this->options = array(
+        $this->options = [
             'queue'     => $this->queue,
             'data'      => $this->data,
-        );
+        ];
 
         $this->message = new Zend_Queue_Message($this->options);
     }
@@ -121,7 +121,7 @@ class Zend_Queue_MessageTest extends PHPUnit_Framework_TestCase
             $config2['data'] = 'weee';
             $message = new Zend_Queue_Message($config2);
             $this->fail('should have thrown an exception bad queue var');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
     }
@@ -171,7 +171,7 @@ class Zend_Queue_MessageTest extends PHPUnit_Framework_TestCase
             $config2['data'] = 'weee';
             $message = new Zend_Queue_Message($config2);
             $this->fail('should have thrown an exception bad queue var');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
     }
@@ -188,10 +188,10 @@ class Zend_Queue_MessageTest extends PHPUnit_Framework_TestCase
         // parameter verification
 
         try {
-            $null = new Zend_Queue('Null', array());
+            $null = new Zend_Queue('Null', []);
             $this->message->setQueue($null);
             $this->fail('invalid class passed to setQueue()');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->assertTrue(true);
         }
     }

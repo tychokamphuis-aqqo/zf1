@@ -28,7 +28,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
  * Test helpers
  */
 // require_once dirname(__FILE__) . '/../../../TestHelper.php';
-require_once dirname(__FILE__) . '/../../../TestConfiguration.dist.php';
+require_once __DIR__ . '/../../../TestConfiguration.dist.php';
 
 /** Zend_Service_WindowsAzure_Storage_Table */
 // require_once 'Zend/Service/WindowsAzure/Storage/Table.php';
@@ -70,7 +70,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
         $storageClient = $this->createStorageInstance();
         for ($i = 1; $i <= self::$uniqId; $i++)
         {
-            try { $storageClient->deleteTable(TESTS_ZEND_SERVICE_WINDOWSAZURE_TABLE_TABLENAME_PREFIX . $i); } catch (Exception $e) { }
+            try { $storageClient->deleteTable(TESTS_ZEND_SERVICE_WINDOWSAZURE_TABLE_TABLENAME_PREFIX . $i); } catch (Exception) { }
         }
     }
     
@@ -282,7 +282,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $exceptionThrown = false;
             try {
                 $storageClient->deleteEntity($tableName, $entity, true);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -422,7 +422,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $exceptionThrown = false;
             try {
                 $storageClient->updateEntity($tableName, $entity, true);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -449,7 +449,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $dynamicEntity->Otherproperty = "Test";
             $dynamicEntity->Age = 0;
             
-            $storageClient->mergeEntity($tableName, $dynamicEntity, false, array('Myproperty', 'Otherproperty')); // only update 'Myproperty' and 'Otherproperty'
+            $storageClient->mergeEntity($tableName, $dynamicEntity, false, ['Myproperty', 'Otherproperty']); // only update 'Myproperty' and 'Otherproperty'
             
             $result = $storageClient->retrieveEntityById($tableName, $entity->getPartitionKey(), $entity->getRowKey());
 
@@ -488,7 +488,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $exceptionThrown = false;
             try {
                 $storageClient->mergeEntity($tableName, $dynamicEntity, true);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -759,7 +759,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $exceptionThrown = false;
             try {
                 $batch->commit();
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -785,7 +785,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             // Insert entities in batch
             foreach ($entities as $entity)
             {
-                $entity->setPartitionKey('partition' . rand(1, 9));
+                $entity->setPartitionKey('partition' . random_int(1, 9));
                 $storageClient->insertEntity($tableName, $entity);
             }
             
@@ -793,7 +793,7 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
             $exceptionThrown = false;
             try {
                 $batch->commit();
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 $exceptionThrown = true;
             }
             $this->assertTrue($exceptionThrown);
@@ -873,14 +873,14 @@ class Zend_Service_WindowsAzure_TableStorageTest extends PHPUnit_Framework_TestC
      */
     protected function _generateEntities($amount = 1)
     {
-        $returnValue = array();
+        $returnValue = [];
         
         for ($i = 0; $i < $amount; $i++)
         {
             $entity = new TSTest_TestEntity('partition1', 'row' . ($i + 1));
-            $entity->FullName = md5(uniqid(rand(), true));
-            $entity->Age      = rand(1, 130);
-            $entity->Visible  = rand(1,2) == 1;
+            $entity->FullName = md5(uniqid(random_int(0, mt_getrandmax()), true));
+            $entity->Age      = random_int(1, 130);
+            $entity->Visible  = random_int(1,2) == 1;
             $entity->DateInService = new DateTime('now', new DateTimeZone('UTC'));
             
             $returnValue[] = $entity;

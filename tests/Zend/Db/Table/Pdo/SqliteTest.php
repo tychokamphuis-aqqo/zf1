@@ -42,6 +42,7 @@ require_once 'Zend/Db/Table/TestCommon.php';
 class Zend_Db_Table_Pdo_SqliteTest extends Zend_Db_Table_TestCommon
 {
 
+    #[\Override]
     public function testTableInsertSequence()
     {
         $this->markTestSkipped($this->getDriver().' does not support sequences.');

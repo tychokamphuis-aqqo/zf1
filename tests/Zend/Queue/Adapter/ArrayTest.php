@@ -38,7 +38,7 @@
 require_once 'MessageTestClass.php';
 
 /** Base Adapter test class */
-require_once dirname(__FILE__) . '/AdapterTest.php';
+require_once __DIR__ . '/AdapterTest.php';
 
 /**
  * @category   Zend
@@ -58,6 +58,7 @@ class Zend_Queue_Adapter_ArrayTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterName()
     {
         return 'Array';
@@ -72,17 +73,20 @@ class Zend_Queue_Adapter_ArrayTest extends Zend_Queue_Adapter_AdapterTest
      *
      * @return string
      */
+    #[\Override]
     public function getAdapterFullName()
     {
         return 'Zend_Queue_Adapter_' . $this->getAdapterName();
     }
 
+    #[\Override]
     public function getTestConfig()
     {
-        return array('driverOptions' => array());
+        return ['driverOptions' => []];
     }
 
     // test the constants
+    #[\Override]
     public function testConst()
     {
         $this->markTestSkipped('no constants to test');
@@ -105,7 +109,7 @@ class Zend_Queue_Adapter_ArrayTest extends Zend_Queue_Adapter_AdapterTest
         $queue = $this->createQueue(__FUNCTION__);
         $adapter = $queue->getAdapter();
 
-        $data = array('test' => 1);
+        $data = ['test' => 1];
         $adapter->setData($data);
         $got = $adapter->getData();
         $this->assertEquals($data['test'], $got['test']);

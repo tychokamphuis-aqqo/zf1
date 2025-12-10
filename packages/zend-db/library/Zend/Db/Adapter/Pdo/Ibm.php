@@ -68,7 +68,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
                         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
                         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
                         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
@@ -81,7 +81,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
                         'NUMERIC'            => Zend_Db::FLOAT_TYPE,
                         'DOUBLE PRECISION'   => Zend_Db::FLOAT_TYPE,
                         'FLOAT'              => Zend_Db::FLOAT_TYPE
-                        );
+                        ];
 
     /**
      * Creates a PDO object and connects to the database.
@@ -93,6 +93,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @return void
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     public function _connect()
     {
         if ($this->_connection) {
@@ -104,7 +105,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
 
         try {
             if ($this->_serverType === null) {
-                $server = substr($this->getConnection()->getAttribute(PDO::ATTR_SERVER_INFO), 0, 3);
+                $server = substr((string) $this->getConnection()->getAttribute(PDO::ATTR_SERVER_INFO), 0, 3);
 
                 switch ($server) {
                     case 'DB2':
@@ -147,6 +148,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @return string
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     protected function _dsn()
     {
         $this->_checkRequiredOptions($this->_config);
@@ -172,6 +174,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @throws Zend_Db_Adapter_Exception
      * @return void
      */
+    #[\Override]
     protected function _checkRequiredOptions(array $config)
     {
         parent::_checkRequiredOptions($config);
@@ -192,6 +195,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @return PDOStatement
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     public function prepare($sql)
     {
         $this->_connect();
@@ -259,10 +263,11 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @return int The number of affected rows.
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     public function insert($table, array $bind)
     {
         $this->_connect();
-        $newbind = array();
+        $newbind = [];
         if (is_array($bind)) {
             foreach ($bind as $name => $value) {
                 if($value !== null) {
@@ -298,6 +303,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @return integer
      * @throws Zend_Db_Adapter_Exception
      */
+    #[\Override]
     public function lastInsertId($tableName = null, $primaryKey = null)
     {
         $this->_connect();
@@ -350,6 +356,7 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
      * @throws Zend_Db_Adapter_Exception
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function getServerVersion()
     {
         try {
@@ -357,14 +364,14 @@ class Zend_Db_Adapter_Pdo_Ibm extends Zend_Db_Adapter_Pdo_Abstract
             $result = $stmt->fetchAll(Zend_Db::FETCH_NUM);
             if (count($result)) {
                 $matches = null;
-                if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', $result[0][0], $matches)) {
+                if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', (string) $result[0][0], $matches)) {
                     return $matches[1];
                 } else {
                     return null;
                 }
             }
             return null;
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return null;
         }
     }

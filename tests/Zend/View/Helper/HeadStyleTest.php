@@ -82,7 +82,7 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
             $registry = Zend_Registry::getInstance();
             unset($registry[$regKey]);
         }
-        $this->basePath = dirname(__FILE__) . '/_files/modules';
+        $this->basePath = __DIR__ . '/_files/modules';
         $this->helper = new Zend_View_Helper_HeadStyle();
     }
 
@@ -131,7 +131,7 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->set('foo');
             $this->fail('Non-style value should not set');
-        } catch (Zend_View_Exception $e) { }
+        } catch (Zend_View_Exception) { }
     }
 
     public function testOverloadAppendStyleAppendsStyleToStack()
@@ -188,13 +188,13 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
 
     public function testCanBuildStyleTagsWithAttributes()
     {
-        $this->helper->setStyle('a {}', array(
+        $this->helper->setStyle('a {}', [
             'lang'  => 'us_en',
             'title' => 'foo',
             'media' => 'projection',
             'dir'   => 'rtol',
             'bogus' => 'unused'
-        ));
+        ]);
         $value = $this->helper->getValue();
 
         $this->assertObjectHasAttribute('attributes', $value);
@@ -214,13 +214,13 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
 
     public function testRenderedStyleTagsContainHtmlEscaping()
     {
-        $this->helper->setStyle('a {}', array(
+        $this->helper->setStyle('a {}', [
             'lang'  => 'us_en',
             'title' => 'foo',
             'media' => 'screen',
             'dir'   => 'rtol',
             'bogus' => 'unused'
-        ));
+        ]);
         $value = $this->helper->toString();
         $this->assertContains('<!--' . PHP_EOL, $value);
         $this->assertContains(PHP_EOL . '-->', $value);
@@ -228,8 +228,8 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
 
     public function testRenderedStyleTagsContainsDefaultMedia()
     {
-        $this->helper->setStyle('a {}', array(
-        ));
+        $this->helper->setStyle('a {}', [
+        ]);
         $value = $this->helper->toString();
         $this->assertRegexp('#<style [^>]*?media="screen"#', $value, $value);
     }
@@ -239,7 +239,7 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
      */
     public function testMediaAttributeCanHaveSpaceInCommaSeparatedString()
     {
-        $this->helper->appendStyle('a { }', array('media' => 'screen, projection'));
+        $this->helper->appendStyle('a { }', ['media' => 'screen, projection']);
         $string = $this->helper->toString();
         $this->assertContains('media="screen,projection"', $string);
     }
@@ -255,9 +255,9 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
                      ->headStyle($style3, 'APPEND');
         $this->assertEquals(3, count($this->helper));
         $values = $this->helper->getArrayCopy();
-        $this->assertTrue((strstr($values[0]->content, $style2)) ? true : false);
-        $this->assertTrue((strstr($values[1]->content, $style1)) ? true : false);
-        $this->assertTrue((strstr($values[2]->content, $style3)) ? true : false);
+        $this->assertTrue((strstr((string) $values[0]->content, $style2)) ? true : false);
+        $this->assertTrue((strstr((string) $values[1]->content, $style1)) ? true : false);
+        $this->assertTrue((strstr((string) $values[2]->content, $style3)) ? true : false);
     }
 
     public function testToStyleGeneratesValidHtml()
@@ -274,9 +274,9 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
         $dom  = $doc->loadHtml($html);
         $this->assertTrue(($dom !== false));
 
-        $styles = substr_count($html, '<style type="text/css"');
+        $styles = substr_count((string) $html, '<style type="text/css"');
         $this->assertEquals(3, $styles);
-        $styles = substr_count($html, '</style>');
+        $styles = substr_count((string) $html, '</style>');
         $this->assertEquals(3, $styles);
         $this->assertContains($style3, $html);
         $this->assertContains($style2, $html);
@@ -309,7 +309,7 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->bogusMethod();
             $this->fail('Invalid method should raise exception');
-        } catch (Zend_View_Exception $e) { }
+        } catch (Zend_View_Exception) { }
     }
 
     public function testTooFewArgumentsRaisesException()
@@ -317,7 +317,7 @@ class Zend_View_Helper_HeadStyleTest extends PHPUnit_Framework_TestCase
         try {
             $this->helper->appendStyle();
             $this->fail('Too few arguments should raise exception');
-        } catch (Zend_View_Exception $e) { }
+        } catch (Zend_View_Exception) { }
     }
 
     public function testIndentationIsHonored()
@@ -333,7 +333,7 @@ h1 {
 }');
         $string = $this->helper->toString();
 
-        $scripts = substr_count($string, '    <style');
+        $scripts = substr_count((string) $string, '    <style');
         $this->assertEquals(2, $scripts);
         $this->assertContains('    <!--', $string);
         $this->assertContains('    a {', $string);
@@ -351,7 +351,7 @@ h1 {
 
         try {
             $this->helper->headStyle()->captureStart();
-        } catch (Zend_View_Exception $e) {
+        } catch (Zend_View_Exception) {
             $this->fail('Serial capturing should work');
         }
         $this->helper->headStyle()->captureEnd();
@@ -377,10 +377,10 @@ h1 {
         $this->helper->appendStyle('
 a {
     display: none;
-}', array('media' => array('screen', 'projection')));
+}', ['media' => ['screen', 'projection']]);
         $string = $this->helper->toString();
 
-        $scripts = substr_count($string, '    <style');
+        $scripts = substr_count((string) $string, '    <style');
         $this->assertEquals(1, $scripts);
         $this->assertContains('    <!--', $string);
         $this->assertContains('    a {', $string);
@@ -394,10 +394,10 @@ a {
         $this->helper->appendStyle('
 a {
     display: none;
-}', array('media' => 'screen,projection'));
+}', ['media' => 'screen,projection']);
         $string = $this->helper->toString();
 
-        $scripts = substr_count($string, '    <style');
+        $scripts = substr_count((string) $string, '    <style');
         $this->assertEquals(1, $scripts);
         $this->assertContains('    <!--', $string);
         $this->assertContains('    a {', $string);
@@ -410,7 +410,7 @@ a {
         $this->helper->appendStyle('
 a {
     display: none;
-}', array('media' => 'screen,projection', 'conditional' => 'lt IE 7'));
+}', ['media' => 'screen,projection', 'conditional' => 'lt IE 7']);
         $test = $this->helper->toString();
         $this->assertContains('<!--[if lt IE 7]>', $test);
     }
@@ -448,9 +448,9 @@ a {
     public function testRenderConditionalCommentsShouldNotContainHtmlEscaping()
     {
         $style = 'a{display:none;}';
-        $this->helper->appendStyle($style, array(
+        $this->helper->appendStyle($style, [
         	'conditional' => 'IE 8'
-        ));
+        ]);
         $value = $this->helper->toString();
 
         $this->assertNotContains('<!--' . PHP_EOL, $value);
@@ -465,7 +465,7 @@ a {
         $this->helper->appendStyle('
 a {
     display: none;
-}', array('media' => 'screen,projection', 'conditional' => '!IE'));
+}', ['media' => 'screen,projection', 'conditional' => '!IE']);
         $test = $this->helper->toString();
         $this->assertContains('<!--[if !IE]><!--><', $test);
         $this->assertContains('<!--<![endif]-->', $test);
@@ -479,7 +479,7 @@ a {
         $this->helper->appendStyle('
 a {
     display: none;
-}', array('media' => 'screen,projection', 'conditional' => '! IE'));
+}', ['media' => 'screen,projection', 'conditional' => '! IE']);
         $test = $this->helper->toString();
         $this->assertContains('<!--[if ! IE]><!--><', $test);
         $this->assertContains('<!--<![endif]-->', $test);

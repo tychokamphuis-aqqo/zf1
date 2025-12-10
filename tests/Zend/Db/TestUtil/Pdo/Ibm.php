@@ -37,12 +37,14 @@ require_once 'Zend/Db/TestUtil/Db2.php';
  */
 class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
 {
+    #[\Override]
     public function getSchema()
     {
         $desc = $this->_db->describeTable('zfproducts');
         return $desc['product_id']['SCHEMA_NAME'];
     }
 
+    #[\Override]
     protected function _getDataProducts()
     {
         $data = parent::_getDataProducts();
@@ -56,13 +58,14 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
         return $data;
     }
 
+    #[\Override]
     protected function _getDataDocuments()
     {
         $server = $this->getServer();
 
         if ($server == 'IDS') {
-            return array (
-            array(
+            return  [
+            [
                 'doc_id'    => 1,
                 'doc_clob'  => 'this is the clob that never ends...'.
                                'this is the clob that never ends...'.
@@ -70,13 +73,14 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
                 'doc_blob'  => 'this is the blob that never ends...'.
                                'this is the blob that never ends...'.
                                'this is the blob that never ends...'
-                )
-            );
+                ]
+            ];
         }
 
         return parent::_getDataDocuments();
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         $server = $this->getServer();
@@ -94,6 +98,7 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
         return parent::getSqlType($type);
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         $server = $this->getServer();
@@ -111,6 +116,7 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
         return parent::_getSqlCreateTable($tableName);
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         $server = $this->getServer();
@@ -128,6 +134,7 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
         return parent::_getSqlDropTable($tableName);
     }
 
+    #[\Override]
     protected function _getSqlCreateSequence($sequenceName)
     {
         $server = $this->getServer();
@@ -147,6 +154,7 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
         return parent::_getSqlCreateSequence($sequenceName);
     }
 
+    #[\Override]
     protected function _getSqlDropSequence($sequenceName)
     {
         $server = $this->getServer();
@@ -168,9 +176,10 @@ class Zend_Db_TestUtil_Pdo_Ibm extends Zend_Db_TestUtil_Db2
 
     public function getServer()
     {
-        return substr($this->_db->getConnection()->getAttribute(PDO::ATTR_SERVER_INFO), 0, 3);
+        return substr((string) $this->_db->getConnection()->getAttribute(PDO::ATTR_SERVER_INFO), 0, 3);
     }
 
+    #[\Override]
     protected function _rawQuery($sql)
     {
         $conn = $this->_db->getConnection();

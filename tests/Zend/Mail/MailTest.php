@@ -101,6 +101,7 @@ class Zend_Mail_Transport_Sendmail_Mock extends Zend_Mail_Transport_Sendmail
     public $subject = null;
     public $called  = false;
 
+    #[\Override]
     public function _sendMail()
     {
         $this->mail    = $this->_mail;
@@ -175,9 +176,9 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $res = $mail->setBodyText('Test #2');
         $mail->setFrom('eli@example.com', 'test Mail User');
         $mail->setSubject('Subject #2');
-        $mail->addTo(array('heather@example.com', 'Ramsey White' => 'ramsey@example.com'));
-        $mail->addCc(array('keith@example.com', 'Cal Evans' => 'cal@example.com'));
-        $mail->addBcc(array('ralph@example.com', 'matthew@example.com'));
+        $mail->addTo(['heather@example.com', 'Ramsey White' => 'ramsey@example.com']);
+        $mail->addCc(['keith@example.com', 'Cal Evans' => 'cal@example.com']);
+        $mail->addBcc(['ralph@example.com', 'matthew@example.com']);
 
         $mock = new Zend_Mail_Transport_Mock();
         $mail->send($mock);
@@ -695,7 +696,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setType('text/plain');
             $this->fail('Invalid Zend_Mime type should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -713,7 +714,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($mock->called);
         $this->assertTrue(isset($mock->headers['Date']));
         $this->assertTrue(isset($mock->headers['Date'][0]));
-        $this->assertTrue(strlen($mock->headers['Date'][0]) > 0);
+        $this->assertTrue(strlen((string) $mock->headers['Date'][0]) > 0);
     }
 
     public function testSetDateInt()
@@ -729,7 +730,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $mail->send($mock);
 
         $this->assertTrue($mock->called);
-        $this->assertTrue(strpos(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981') === 0);
+        $this->assertTrue(str_starts_with(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981'));
     }
 
     public function testSetDateString()
@@ -745,7 +746,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $mail->send($mock);
 
         $this->assertTrue($mock->called);
-        $this->assertTrue(strpos(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981') === 0);
+        $this->assertTrue(str_starts_with(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981'));
     }
 
     public function testSetDateObject()
@@ -761,7 +762,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $mail->send($mock);
 
         $this->assertTrue($mock->called);
-        $this->assertTrue(strpos(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981') === 0);
+        $this->assertTrue(str_starts_with(implode('', $mock->headers['Date']), 'Mon, 29 Jun 1981'));
     }
 
     public function testSetDateInvalidString()
@@ -771,7 +772,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setDate('invalid date');
             $this->fail('Invalid date should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -782,7 +783,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setDate(true);
             $this->fail('Invalid date should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -793,7 +794,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setDate($mail);
             $this->fail('Invalid date should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -805,7 +806,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setDate(123456789);
             $this->fail('setting date twice should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -833,7 +834,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($mock->called);
         $this->assertTrue(isset($mock->headers['Message-Id']));
         $this->assertTrue(isset($mock->headers['Message-Id'][0]));
-        $this->assertTrue(strlen($mock->headers['Message-Id'][0]) > 0);
+        $this->assertTrue(strlen((string) $mock->headers['Message-Id'][0]) > 0);
     }
 
     public function testSetMessageIdTwice()
@@ -844,7 +845,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->setMessageId();
             $this->fail('setting message-id twice should throw an exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -919,24 +920,24 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultFrom() {
         Zend_Mail::setDefaultFrom('john@example.com','John Doe');
-        $this->assertEquals(array('email' => 'john@example.com','name' =>'John Doe'), Zend_Mail::getDefaultFrom());
+        $this->assertEquals(['email' => 'john@example.com','name' =>'John Doe'], Zend_Mail::getDefaultFrom());
 
         Zend_Mail::clearDefaultFrom();
         $this->assertEquals(null, Zend_Mail::getDefaultFrom());
 
         Zend_Mail::setDefaultFrom('john@example.com');
-        $this->assertEquals(array('email' => 'john@example.com','name' => null), Zend_Mail::getDefaultFrom());
+        $this->assertEquals(['email' => 'john@example.com','name' => null], Zend_Mail::getDefaultFrom());
     }
 
     public function testDefaultReplyTo() {
         Zend_Mail::setDefaultReplyTo('john@example.com','John Doe');
-        $this->assertEquals(array('email' => 'john@example.com','name' =>'John Doe'), Zend_Mail::getDefaultReplyTo());
+        $this->assertEquals(['email' => 'john@example.com','name' =>'John Doe'], Zend_Mail::getDefaultReplyTo());
 
         Zend_Mail::clearDefaultReplyTo();
         $this->assertEquals(null, Zend_Mail::getDefaultReplyTo());
 
         Zend_Mail::setDefaultReplyTo('john@example.com');
-        $this->assertEquals(array('email' => 'john@example.com','name' => null), Zend_Mail::getDefaultReplyTo());
+        $this->assertEquals(['email' => 'john@example.com','name' => null], Zend_Mail::getDefaultReplyTo());
     }
 
     public function testSettingFromDefaults() {
@@ -982,7 +983,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         $mail->addTo('foobar@example.com');
         $mail->setSubject('hello world!');
 
-        $params = array('envelope'=> '-tjohn@example.com', 'foo' => '-fbar');
+        $params = ['envelope'=> '-tjohn@example.com', 'foo' => '-fbar'];
         $expected = '-tjohn@example.com -fbar';
 
         $transportMock = new Zend_Mail_Transport_Sendmail_Mock($params);
@@ -1008,7 +1009,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
         try {
             $mail->send($transport);
             $this->fail('Exception should have been thrown, but wasn\'t');
-        } catch(Zend_Mail_Transport_Exception $e) {
+        } catch(Zend_Mail_Transport_Exception) {
         	// do nothing
         }
     }
@@ -1031,16 +1032,16 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
 
     public static function dataSubjects()
     {
-        return array(
-            array("Simple Ascii Subject"),
-            array("Subject with US Specialchars: &%$/()"),
-            array("Gimme more \xe2\x82\xa0!"),
-            array("This is \xc3\xa4n germ\xc3\xa4n multiline s\xc3\xbcbject with rand\xc3\xb6m \xc3\xbcml\xc3\xa4uts."),
-            array("Alle meine Entchen schwimmen in dem See, schwimmen in dem See, K\xc3\xb6pfchen in das Wasser, Schw\xc3\xa4nzchen in die H\xc3\xb6h!"),
-            array("\xc3\xa4\xc3\xa4xxxxx\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4"),
-            array("\xd0\x90\xd0\x91\xd0\x92\xd0\x93\xd0\x94\xd0\x95 \xd0\x96\xd0\x97\xd0\x98\xd0\x99 \xd0\x9a\xd0\x9b\xd0\x9c\xd0\x9d"),
-            array("Ich. Denke. Also. Bin. Ich! (Ein \xc3\xbcml\xc3\xa4\xc3\xbctautomat!)"),
-        );
+        return [
+            ["Simple Ascii Subject"],
+            ["Subject with US Specialchars: &%$/()"],
+            ["Gimme more \xe2\x82\xa0!"],
+            ["This is \xc3\xa4n germ\xc3\xa4n multiline s\xc3\xbcbject with rand\xc3\xb6m \xc3\xbcml\xc3\xa4uts."],
+            ["Alle meine Entchen schwimmen in dem See, schwimmen in dem See, K\xc3\xb6pfchen in das Wasser, Schw\xc3\xa4nzchen in die H\xc3\xb6h!"],
+            ["\xc3\xa4\xc3\xa4xxxxx\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4\xc3\xa4"],
+            ["\xd0\x90\xd0\x91\xd0\x92\xd0\x93\xd0\x94\xd0\x95 \xd0\x96\xd0\x97\xd0\x98\xd0\x99 \xd0\x9a\xd0\x9b\xd0\x9c\xd0\x9d"],
+            ["Ich. Denke. Also. Bin. Ich! (Ein \xc3\xbcml\xc3\xa4\xc3\xbctautomat!)"],
+        ];
     }
 
     /**
@@ -1058,7 +1059,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
                 if(preg_match('/(=?[a-z0-9-_]+\?[q|b]{1}\?)/i', $parts[$i], $matches)) {
                     $dce = sprintf("=?%s", $matches[0]);
                     // Check that Delimiter, Charset, Encoding are at the front of the string
-                    if(substr(trim($parts[$i]), 0, strlen($dce)) != $dce) {
+                    if(!str_starts_with(trim($parts[$i]), $dce)) {
                         $this->fail(sprintf(
                             "Header-Part '%s' in line '%d' has missing or malformated delimiter, charset, encoding information.",
                             $parts[$i],
@@ -1076,7 +1077,7 @@ class Zend_Mail_MailTest extends PHPUnit_Framework_TestCase
                         ));
                     }*/
                     // Check that the end-delmiter ?= is correctly placed
-                    if(substr(trim($parts[$i]), -2, 2) != "?=") {
+                    if(!str_ends_with(trim($parts[$i]), "?=")) {
                         $this->fail(sprintf(
                             "Lines with an encoded-word have to end in ?=, but line %d does not: %s",
                             $i+1,

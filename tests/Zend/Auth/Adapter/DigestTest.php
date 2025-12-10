@@ -56,7 +56,7 @@ class Zend_Auth_Adapter_DigestTest extends PHPUnit_Framework_TestCase
      */
     public function __construct()
     {
-        $this->_filesPath = dirname(__FILE__) . '/Digest/_files';
+        $this->_filesPath = __DIR__ . '/Digest/_files';
     }
 
     /**
@@ -197,7 +197,7 @@ class Zend_Auth_Adapter_DigestTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->isValid());
         $this->assertEquals($result->getCode(), Zend_Auth_Result::SUCCESS);
 
-        $this->assertEquals(array(), $result->getMessages());
+        $this->assertEquals([], $result->getMessages());
 
         $identity = $result->getIdentity();
         $this->assertEquals($identity['realm'], $realm);

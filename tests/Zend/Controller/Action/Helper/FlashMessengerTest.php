@@ -32,7 +32,7 @@ if (!defined("PHPUnit_MAIN_METHOD")) {
 // require_once 'Zend/Controller/Action/Helper/FlashMessenger.php';
 // require_once 'Zend/Controller/Exception.php';
 // require_once 'Zend/Session.php';
-require_once dirname(dirname(dirname(__FILE__))) . '/_files/HelperFlashMessengerController.php';
+require_once dirname(__FILE__, 3) . '/_files/HelperFlashMessengerController.php';
 require_once 'Zend/Session/SessionHelper.php';
 
 /**
@@ -102,12 +102,12 @@ class Zend_Controller_Action_Helper_FlashMessengerTest extends PHPUnit_Framework
 
         $this->front      = Zend_Controller_Front::getInstance();
         $this->front->resetInstance();
-        $this->front->setControllerDirectory(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . '_files');
+        $this->front->setControllerDirectory(dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . '_files');
         $this->front->returnResponse(true);
         $this->request    = new Zend_Controller_Request_Http();
         $this->request->setControllerName('helper-flash-messenger');
         $this->response   = new Zend_Controller_Response_Cli();
-        $this->controller = new HelperFlashMessengerController($this->request, $this->response, array());
+        $this->controller = new HelperFlashMessengerController($this->request, $this->response, []);
         $this->helper     = new Zend_Controller_Action_Helper_FlashMessenger;
     }
 
@@ -165,7 +165,7 @@ class Zend_Controller_Action_Helper_FlashMessengerTest extends PHPUnit_Framework
         $this->assertTrue($this->helper->hasCurrentMessages('foobar'));
 
         $foobarMessages = $this->helper->getCurrentMessages('foobar');
-        $this->assertEquals(array('testmessage', 'testmessage2'), $foobarMessages);
+        $this->assertEquals(['testmessage', 'testmessage2'], $foobarMessages);
 
         // Ensure it didnt' bleed over into default namespace
         $defaultMessages = $this->helper->getCurrentMessages();
@@ -235,7 +235,7 @@ class FlashMessengerControllerActionHelper extends Zend_Controller_Action_Helper
 
     public function reset()
     {
-        self::$_messages = array();
+        self::$_messages = [];
         self::$_session = NULL;
         self::$_messageAdded = false;
     }

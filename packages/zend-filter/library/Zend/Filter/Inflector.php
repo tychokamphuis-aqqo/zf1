@@ -63,7 +63,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     /**
      * @var array
      */
-    protected $_rules = array();
+    protected $_rules = [];
 
     /**
      * Constructor
@@ -76,7 +76,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
             $options = $options->toArray();
         } else if (!is_array($options)) {
             $options = func_get_args();
-            $temp    = array();
+            $temp    = [];
 
             if (!empty($options)) {
                 $temp['target'] = array_shift($options);
@@ -108,7 +108,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     public function getPluginLoader()
     {
         if (!$this->_pluginLoader instanceof Zend_Loader_PluginLoader_Interface) {
-            $this->_pluginLoader = new Zend_Loader_PluginLoader(array('Zend_Filter_' => 'Zend/Filter/'), __CLASS__);
+            $this->_pluginLoader = new Zend_Loader_PluginLoader(['Zend_Filter_' => 'Zend/Filter/'], self::class);
         }
 
         return $this->_pluginLoader;
@@ -129,10 +129,10 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     /**
      * Use Zend_Config object to set object state
      *
-     * @deprecated Use setOptions() instead
      * @param  Zend_Config $config
      * @return Zend_Filter_Inflector
      */
+    #[\Deprecated(message: 'Use setOptions() instead')]
     public function setConfig(Zend_Config $config)
     {
         return $this->setOptions($config);
@@ -330,10 +330,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     {
         if (null !== $spec) {
             $spec = $this->_normalizeSpec($spec);
-            if (isset($this->_rules[$spec])) {
-                return $this->_rules[$spec];
-            }
-            return false;
+            return $this->_rules[$spec] ?? false;
         }
 
         return $this->_rules;
@@ -364,7 +361,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
      */
     public function clearRules()
     {
-        $this->_rules = array();
+        $this->_rules = [];
         return $this;
     }
 
@@ -379,7 +376,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     public function setFilterRule($spec, $ruleSet)
     {
         $spec = $this->_normalizeSpec($spec);
-        $this->_rules[$spec] = array();
+        $this->_rules[$spec] = [];
         return $this->addFilterRule($spec, $ruleSet);
     }
 
@@ -394,16 +391,16 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     {
         $spec = $this->_normalizeSpec($spec);
         if (!isset($this->_rules[$spec])) {
-            $this->_rules[$spec] = array();
+            $this->_rules[$spec] = [];
         }
 
         if (!is_array($ruleSet)) {
-            $ruleSet = array($ruleSet);
+            $ruleSet = [$ruleSet];
         }
 
         if (is_string($this->_rules[$spec])) {
             $temp = $this->_rules[$spec];
-            $this->_rules[$spec] = array();
+            $this->_rules[$spec] = [];
             $this->_rules[$spec][] = $temp;
         }
 
@@ -456,11 +453,11 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
     {
         // clean source
         foreach ( (array) $source as $sourceName => $sourceValue) {
-            $source[ltrim($sourceName, ':')] = $sourceValue;
+            $source[ltrim((string) $sourceName, ':')] = $sourceValue;
         }
 
         $pregQuotedTargetReplacementIdentifier = preg_quote($this->_targetReplacementIdentifier, '#');
-        $processedParts = array();
+        $processedParts = [];
 
         foreach ($this->_rules as $ruleName => $ruleValue) {
             if (isset($source[$ruleName])) {
@@ -482,7 +479,7 @@ class Zend_Filter_Inflector implements Zend_Filter_Interface
         // all of the values of processedParts would have been str_replace('\\', '\\\\', ..)'d to disable preg_replace backreferences
         $inflectedTarget = preg_replace(array_keys($processedParts), array_values($processedParts), $this->_target);
 
-        if ($this->_throwTargetExceptionsOn && (preg_match('#(?='.$pregQuotedTargetReplacementIdentifier.'[A-Za-z]{1})#', $inflectedTarget) == true)) {
+        if ($this->_throwTargetExceptionsOn && (preg_match('#(?='.$pregQuotedTargetReplacementIdentifier.'[A-Za-z]{1})#', (string) $inflectedTarget) == true)) {
             // require_once 'Zend/Filter/Exception.php';
             throw new Zend_Filter_Exception('A replacement identifier ' . $this->_targetReplacementIdentifier . ' was found inside the inflected target, perhaps a rule was not satisfied with a target source?  Unsatisfied inflected target: ' . $inflectedTarget);
         }

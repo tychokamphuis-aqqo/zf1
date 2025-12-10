@@ -30,6 +30,7 @@
 class ZfModule_Bootstrap extends Zend_Application_Module_Bootstrap
 {
     public $foo = null;
+    #[\Override]
     public function run()
     {
     }

@@ -61,7 +61,7 @@ class Zend_Cloud_StorageService_FactoryTest extends PHPUnit_Framework_TestCase
      */
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -75,17 +75,17 @@ class Zend_Cloud_StorageService_FactoryTest extends PHPUnit_Framework_TestCase
         $httptest = new Zend_Http_Client_Adapter_Test();
 
         // S3 adapter
-        $s3Config = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/s3.ini'));
+        $s3Config = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/s3.ini'));
         $s3Adapter = Zend_Cloud_StorageService_Factory::getAdapter($s3Config);
-        $this->assertEquals('Zend_Cloud_StorageService_Adapter_S3', get_class($s3Adapter));
+        $this->assertEquals('Zend_Cloud_StorageService_Adapter_S3', $s3Adapter::class);
 
         // file system adapter
-        $fileSystemConfig = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/filesystem.ini'));
+        $fileSystemConfig = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/filesystem.ini'));
         $fileSystemAdapter = Zend_Cloud_StorageService_Factory::getAdapter($fileSystemConfig);
-        $this->assertEquals('Zend_Cloud_StorageService_Adapter_FileSystem', get_class($fileSystemAdapter));
+        $this->assertEquals('Zend_Cloud_StorageService_Adapter_FileSystem', $fileSystemAdapter::class);
 
         // Azure adapter
-        $azureConfig    = new Zend_Config_Ini(realpath(dirname(__FILE__) . '/_files/config/windowsazure.ini'));
+        $azureConfig    = new Zend_Config_Ini(realpath(__DIR__ . '/_files/config/windowsazure.ini'));
         $azureConfig    = $azureConfig->toArray();
         $azureContainer = $azureConfig[Zend_Cloud_StorageService_Adapter_WindowsAzure::CONTAINER];
         $azureConfig[Zend_Cloud_StorageService_Adapter_WindowsAzure::HTTP_ADAPTER] = $httptest;
@@ -107,21 +107,21 @@ class Zend_Cloud_StorageService_FactoryTest extends PHPUnit_Framework_TestCase
         $doc->appendChild($root);
         $body = $doc->saveXML();
 
-        $resp = new Zend_Http_Response(200, array('x-ms-request-id' => 0), $body);
+        $resp = new Zend_Http_Response(200, ['x-ms-request-id' => 0], $body);
         $httptest->setResponse($resp);
         $azureAdapter = Zend_Cloud_StorageService_Factory::getAdapter($azureConfig);
-        $this->assertEquals('Zend_Cloud_StorageService_Adapter_WindowsAzure', get_class($azureAdapter));
+        $this->assertEquals('Zend_Cloud_StorageService_Adapter_WindowsAzure', $azureAdapter::class);
     }
 
     public function testGetAdapterWithArray()
     {
         // No need to overdo it; we'll test the array config with just one adapter.
-        $fileSystemConfig = array(
+        $fileSystemConfig = [
             Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY        => 'Zend_Cloud_StorageService_Adapter_FileSystem',
-            Zend_Cloud_StorageService_Adapter_FileSystem::LOCAL_DIRECTORY => dirname(__FILE__) ."/_files/data",
-        );
+            Zend_Cloud_StorageService_Adapter_FileSystem::LOCAL_DIRECTORY => __DIR__ ."/_files/data",
+        ];
         $fileSystemAdapter = Zend_Cloud_StorageService_Factory::getAdapter($fileSystemConfig);
-        $this->assertEquals('Zend_Cloud_StorageService_Adapter_FileSystem', get_class($fileSystemAdapter));
+        $this->assertEquals('Zend_Cloud_StorageService_Adapter_FileSystem', $fileSystemAdapter::class);
     }
 }
 

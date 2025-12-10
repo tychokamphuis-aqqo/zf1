@@ -38,24 +38,28 @@ require_once 'Zend/Db/TestUtil/Pdo/Common.php';
 class Zend_Db_TestUtil_Pdo_Sqlite extends Zend_Db_TestUtil_Pdo_Common
 {
 
-    public function getParams(array $constants = array())
+    #[\Override]
+    public function getParams(array $constants = [])
     {
-        $constants = array (
+        $constants =  [
             'dbname'   => 'TESTS_ZEND_DB_ADAPTER_PDO_SQLITE_DATABASE'
-        );
+        ];
         return parent::getParams($constants);
     }
 
+    #[\Override]
     protected function _getSqlCreateTable($tableName)
     {
         return 'CREATE TABLE IF NOT EXISTS ' . $this->_db->quoteIdentifier($tableName);
     }
 
+    #[\Override]
     protected function _getSqlDropTable($tableName)
     {
         return 'DROP TABLE IF EXISTS ' . $this->_db->quoteIdentifier($tableName);
     }
 
+    #[\Override]
     public function getSqlType($type)
     {
         if ($type == 'IDENTITY') {
@@ -64,11 +68,13 @@ class Zend_Db_TestUtil_Pdo_Sqlite extends Zend_Db_TestUtil_Pdo_Common
         return $type;
     }
 
+    #[\Override]
     protected function _getSqlCreateView($viewName)
     {
         return 'CREATE VIEW IF NOT EXISTS ' . $this->_db->quoteIdentifier($viewName, true);
     }
 
+    #[\Override]
     protected function _getSqlDropView($viewName)
     {
         return 'DROP VIEW IF EXISTS ' . $this->_db->quoteIdentifier($viewName, true);

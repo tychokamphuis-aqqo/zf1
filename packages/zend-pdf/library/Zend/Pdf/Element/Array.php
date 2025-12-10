@@ -136,6 +136,7 @@ class Zend_Pdf_Element_Array extends Zend_Pdf_Element
      * @param integer $mode  Cloning mode (defines filter for objects cloning)
      * @returns Zend_Pdf_Element
      */
+    #[\Override]
     public function makeClone(Zend_Pdf_ElementFactory $factory, array &$processed, $mode)
     {
         $newArray = new self();
@@ -152,6 +153,7 @@ class Zend_Pdf_Element_Array extends Zend_Pdf_Element
      *
      * @param Zend_Pdf_Element_Object $parent
      */
+    #[\Override]
     public function setParentObject(Zend_Pdf_Element_Object $parent)
     {
         parent::setParentObject($parent);
@@ -168,9 +170,10 @@ class Zend_Pdf_Element_Array extends Zend_Pdf_Element
      *
      * @return mixed
      */
+    #[\Override]
     public function toPhp()
     {
-        $phpArray = array();
+        $phpArray = [];
 
         foreach ($this->items as $item) {
             $phpArray[] = $item->toPhp();

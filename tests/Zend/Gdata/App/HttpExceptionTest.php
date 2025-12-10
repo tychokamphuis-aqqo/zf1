@@ -65,14 +65,14 @@ class Zend_Gdata_App_HttpExceptionTest extends PHPUnit_Framework_TestCase
     public function testGetRawResponseBody()
     {
         try {
-            $rowData = array();
+            $rowData = [];
             $entry = $this->gdata->insertRow($rowData, $this->sprKey);
             $this->fail('Expecting Zend_Gdata_App_HttpException');
         } catch (Zend_Gdata_App_HttpException $hExc) {
             $this->assertThat($hExc,
                 $this->isInstanceOf('Zend_Gdata_App_HttpException'),
                 'Expecting Zend_Gdata_App_HttpException, got '
-                . get_class($hExc));
+                . $hExc::class);
 
             $message = $hExc->getMessage();
             $this->assertEquals($message, 'Expected response code 200, got 400');

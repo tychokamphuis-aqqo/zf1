@@ -83,8 +83,8 @@ class Zend_Form_Decorator_ViewScriptTest extends PHPUnit_Framework_TestCase
     public function getView()
     {
         $view = new Zend_View();
-        $view->addHelperPath(dirname(__FILE__) . '/../../../../library/Zend/View/Helper');
-        $view->addScriptPath(dirname(__FILE__) . '/../_files/views/');
+        $view->addHelperPath(__DIR__ . '/../../../../library/Zend/View/Helper');
+        $view->addScriptPath(__DIR__ . '/../_files/views/');
         return $view;
     }
 
@@ -177,13 +177,13 @@ class Zend_Form_Decorator_ViewScriptTest extends PHPUnit_Framework_TestCase
 
     public function testOptionsArePassedToPartialAsVariables()
     {
-        $this->decorator->setOptions(array(
+        $this->decorator->setOptions([
             'foo'        => 'Foo Value',
             'bar'        => 'Bar Value',
             'baz'        => 'Baz Value',
             'bat'        => 'Bat Value',
             'viewScript' => 'decorator.phtml',
-        ));
+        ]);
         $this->getElement();
         $test = $this->decorator->render('');
         foreach ($this->decorator->getOptions() as $key => $value) {
@@ -221,7 +221,7 @@ class Zend_Form_Decorator_ViewScriptTest extends PHPUnit_Framework_TestCase
         $test = $this->decorator->render('content to decorate');
         $this->assertContains('content to decorate', $test, $test);
 
-        $count = substr_count($test, 'content to decorate');
+        $count = substr_count((string) $test, 'content to decorate');
         $this->assertEquals(1, $count);
 
         $this->assertContains('This text prefixes the content', $test);

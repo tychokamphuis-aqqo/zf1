@@ -85,14 +85,14 @@ class Zend_Db_AllTests
 
     protected static function _addDbTestSuites($suite, $driver)
     {
-        $DRIVER = strtoupper($driver);
+        $DRIVER = strtoupper((string) $driver);
         $enabledConst = "TESTS_ZEND_DB_ADAPTER_{$DRIVER}_ENABLED";
         if (!defined($enabledConst) || constant($enabledConst) != true) {
             self::_skipTestSuite($driver, "this Adapter is not enabled in TestConfiguration.php");
             return;
         }
 
-        $ext = array(
+        $ext = [
             'Oracle' => 'oci8',
             'Db2'    => 'ibm_db2',
             'Mysqli' => 'mysqli',
@@ -100,14 +100,14 @@ class Zend_Db_AllTests
             /**
              * @todo  'Odbc'
              */
-        );
+        ];
 
         if (isset($ext[$driver]) && !extension_loaded($ext[$driver])) {
             self::_skipTestSuite($driver, "extension '{$ext[$driver]}' is not loaded");
             return;
         }
 
-        if (preg_match('/^pdo_(.*)/i', $driver, $matches)) {
+        if (preg_match('/^pdo_(.*)/i', (string) $driver, $matches)) {
             // check for PDO extension
             if (!extension_loaded('pdo')) {
                 self::_skipTestSuite($driver, "extension 'PDO' is not loaded");

@@ -266,7 +266,7 @@ class Zend_Session_SaveHandler_DbTable
      */
     public function setOverrideLifetime($overrideLifetime)
     {
-        $this->_overrideLifetime = (boolean) $overrideLifetime;
+        $this->_overrideLifetime = (bool) $overrideLifetime;
 
         return $this;
     }
@@ -316,7 +316,7 @@ class Zend_Session_SaveHandler_DbTable
     {
         $return = '';
 
-        $rows = call_user_func_array(array(&$this, 'find'), $this->_getPrimary($id));
+        $rows = call_user_func_array($this->find(...), $this->_getPrimary($id));
 
         if (count($rows)) {
             if ($this->_getExpirationTime($row = $rows->current()) > time()) {
@@ -340,10 +340,10 @@ class Zend_Session_SaveHandler_DbTable
     {
         $return = false;
 
-        $data = array($this->_modifiedColumn => time(),
-                      $this->_dataColumn     => (string) $data);
+        $data = [$this->_modifiedColumn => time(),
+                      $this->_dataColumn     => (string) $data];
 
-        $rows = call_user_func_array(array(&$this, 'find'), $this->_getPrimary($id));
+        $rows = call_user_func_array($this->find(...), $this->_getPrimary($id));
 
         if (count($rows)) {
             $data[$this->_lifetimeColumn] = $this->_getLifetime($rows->current());
@@ -398,6 +398,7 @@ class Zend_Session_SaveHandler_DbTable
      *
      * @return void
      */
+    #[\Override]
     protected function _setup()
     {
         parent::_setup();
@@ -414,6 +415,7 @@ class Zend_Session_SaveHandler_DbTable
      * @return void
      * @throws Zend_Session_SaveHandler_Exception
      */
+    #[\Override]
     protected function _setupTableName()
     {
         if (empty($this->_name) && basename(($this->_name = session_save_path())) != $this->_name) {
@@ -426,7 +428,7 @@ class Zend_Session_SaveHandler_DbTable
         }
 
         if (strpos($this->_name, '.')) {
-            list($this->_schema, $this->_name) = explode('.', $this->_name);
+            [$this->_schema, $this->_name] = explode('.', $this->_name);
         }
     }
 
@@ -439,9 +441,9 @@ class Zend_Session_SaveHandler_DbTable
     protected function _setupPrimaryAssignment()
     {
         if ($this->_primaryAssignment === null) {
-            $this->_primaryAssignment = array(1 => self::PRIMARY_ASSIGNMENT_SESSION_ID);
+            $this->_primaryAssignment = [1 => self::PRIMARY_ASSIGNMENT_SESSION_ID];
         } else if (!is_array($this->_primaryAssignment)) {
-            $this->_primaryAssignment = array(1 => (string) $this->_primaryAssignment);
+            $this->_primaryAssignment = [1 => (string) $this->_primaryAssignment];
         } else if (isset($this->_primaryAssignment[0])) {
             array_unshift($this->_primaryAssignment, null);
 
@@ -522,23 +524,15 @@ class Zend_Session_SaveHandler_DbTable
             $type = self::PRIMARY_TYPE_NUM;
         }
 
-        $primaryArray = array();
+        $primaryArray = [];
 
         foreach ($this->_primary as $index => $primary) {
-            switch ($this->_primaryAssignment[$index]) {
-                case self::PRIMARY_ASSIGNMENT_SESSION_SAVE_PATH:
-                    $value = $this->_sessionSavePath;
-                    break;
-                case self::PRIMARY_ASSIGNMENT_SESSION_NAME:
-                    $value = $this->_sessionName;
-                    break;
-                case self::PRIMARY_ASSIGNMENT_SESSION_ID:
-                    $value = (string) $id;
-                    break;
-                default:
-                    $value = (string) $this->_primaryAssignment[$index];
-                    break;
-            }
+            $value = match ($this->_primaryAssignment[$index]) {
+                self::PRIMARY_ASSIGNMENT_SESSION_SAVE_PATH => $this->_sessionSavePath,
+                self::PRIMARY_ASSIGNMENT_SESSION_NAME => $this->_sessionName,
+                self::PRIMARY_ASSIGNMENT_SESSION_ID => (string) $id,
+                default => (string) $this->_primaryAssignment[$index],
+            };
 
             switch ((string) $type) {
                 case self::PRIMARY_TYPE_PRIMARYNUM:

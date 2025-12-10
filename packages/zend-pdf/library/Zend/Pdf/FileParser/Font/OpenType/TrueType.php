@@ -44,6 +44,7 @@ class Zend_Pdf_FileParser_Font_OpenType_TrueType extends Zend_Pdf_FileParser_Fon
      *
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function screen()
     {
         if ($this->_isScreened) {
@@ -74,6 +75,7 @@ class Zend_Pdf_FileParser_Font_OpenType_TrueType extends Zend_Pdf_FileParser_Fon
      *
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function parse()
     {
         if ($this->_isParsed) {

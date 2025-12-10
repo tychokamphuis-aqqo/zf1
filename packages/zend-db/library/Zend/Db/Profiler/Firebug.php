@@ -41,12 +41,6 @@
 class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
 {
     /**
-     * The original label for this profiler.
-     * @var string
-     */
-    protected $_label = null;
-
-    /**
      * The label template for this profiler
      * @var string
      */
@@ -67,12 +61,14 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
     /**
      * Constructor
      *
-     * @param string $label OPTIONAL Label for the profiling info.
+     * @param string $_label OPTIONAL Label for the profiling info.
      * @return void
      */
-    public function __construct($label = null)
+    public function __construct(/**
+     * The original label for this profiler.
+     */
+    protected $_label = null)
     {
-        $this->_label = $label;
         if(!$this->_label) {
             $this->_label = 'Zend_Db_Profiler_Firebug';
         }
@@ -85,6 +81,7 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
      * @param  boolean $enable
      * @return Zend_Db_Profiler Provides a fluent interface
      */
+    #[\Override]
     public function setEnabled($enable)
     {
         parent::setEnabled($enable);
@@ -94,7 +91,7 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
             if (!$this->_message) {
                 $this->_message = new Zend_Wildfire_Plugin_FirePhp_TableMessage($this->_label);
                 $this->_message->setBuffered(true);
-                $this->_message->setHeader(array('Time','Event','Parameters'));
+                $this->_message->setHeader(['Time','Event','Parameters']);
                 $this->_message->setDestroy(true);
                 $this->_message->setOption('includeLineNumbers', false);
                 Zend_Wildfire_Plugin_FirePhp::getInstance()->send($this->_message);
@@ -119,6 +116,7 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
      * @throws Zend_Db_Profiler_Exception
      * @return void
      */
+    #[\Override]
     public function queryEnd($queryId)
     {
         $state = parent::queryEnd($queryId);
@@ -133,9 +131,9 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
 
         $this->_totalElapsedTime += $profile->getElapsedSecs();
 
-        $this->_message->addRow(array((string)round($profile->getElapsedSecs(),5),
+        $this->_message->addRow([(string)round($profile->getElapsedSecs(),5),
                                       $profile->getQuery(),
-                                      ($params=$profile->getQueryParams())?$params:null));
+                                      ($params=$profile->getQueryParams())?$params:null]);
 
         $this->updateMessageLabel();
     }
@@ -150,12 +148,12 @@ class Zend_Db_Profiler_Firebug extends Zend_Db_Profiler
         if (!$this->_message) {
             return;
         }
-        $this->_message->setLabel(str_replace(array('%label%',
+        $this->_message->setLabel(str_replace(['%label%',
                                                     '%totalCount%',
-                                                    '%totalDuration%'),
-                                              array($this->_label,
+                                                    '%totalDuration%'],
+                                              [$this->_label,
                                                     $this->getTotalNumQueries(),
-                                                    (string)round($this->_totalElapsedTime,5)),
+                                                    (string)round($this->_totalElapsedTime,5)],
                                               $this->_label_template));
     }
 }

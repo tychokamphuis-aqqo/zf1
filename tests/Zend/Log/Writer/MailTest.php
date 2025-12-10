@@ -71,7 +71,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public static function main()
     {
-        $suite = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -79,7 +79,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
     {
         $this->_transport = $this->getMockForAbstractClass(
             'Zend_Mail_Transport_Abstract',
-            array()
+            []
         );
         Zend_Mail::setDefaultTransport($this->_transport);
     }
@@ -96,7 +96,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testNormalLoggingMultiplePerLevel()
     {
-        list(, , $log) = $this->_getSimpleLogger();
+        [, , $log] = $this->_getSimpleLogger();
         $log->info('an info message');
         $log->info('a second info message');
     }
@@ -108,7 +108,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testNormalLoggingNoLayout()
     {
-        list(, , $log) = $this->_getSimpleLogger();
+        [, , $log] = $this->_getSimpleLogger();
         $log->info('an info message');
         $log->warn('a warning message');
     }
@@ -120,7 +120,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testNormalLoggingWithLayout()
     {
-        list(, , $log) = $this->_getSimpleLogger(true);
+        [, , $log] = $this->_getSimpleLogger(true);
         $log->info('an info message');
         $log->warn('a warning message');
     }
@@ -132,7 +132,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testNormalLoggingWithLayoutAndItsFormatter()
     {
-        list(, $writer, $log) = $this->_getSimpleLogger(true);
+        [, $writer, $log] = $this->_getSimpleLogger(true);
 
         // Since I'm using Zend_Layout, I should be able to set a formatter
         // for it.
@@ -151,7 +151,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testNormalLoggingWithLayoutFormatterAndSubjectPrependText()
     {
-        list(, $writer, $log) = $this->_getSimpleLogger(true);
+        [, $writer, $log] = $this->_getSimpleLogger(true);
         $writer->setLayoutFormatter(new Zend_Log_Formatter_Simple());
         $return = $writer->setSubjectPrependText('foo');
 
@@ -169,7 +169,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testSetSubjectPrependTextNormal()
     {
-        list($mail, $writer, $log) = $this->_getSimpleLogger();
+        [$mail, $writer, $log] = $this->_getSimpleLogger();
 
         $return = $writer->setSubjectPrependText('foo');
 
@@ -185,7 +185,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testSetSubjectPrependTextPreExisting()
     {
-        list($mail, $writer, $log) = $this->_getSimpleLogger();
+        [$mail, $writer, $log] = $this->_getSimpleLogger();
 
         // Expect a Zend_Log_Exception because the subject prepend text cannot
         // be set of the Zend_Mail object already has a subject line set.
@@ -205,7 +205,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testSetLayoutFormatter()
     {
-        list(, $writer) = $this->_getSimpleLogger(true);
+        [, $writer] = $this->_getSimpleLogger(true);
         $return = $writer->setLayoutFormatter(new Zend_Log_Formatter_Simple());
         $this->assertSame($writer, $return);
     }
@@ -217,7 +217,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testGetLayoutFormatter()
     {
-        list(, $writer) = $this->_getSimpleLogger(true);
+        [, $writer] = $this->_getSimpleLogger(true);
         $formatter = new Zend_Log_Formatter_Simple();
 
         // Ensure that fluent interface is present.
@@ -237,7 +237,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testSetLayoutFormatterWithoutLayout()
     {
-        list(, $writer) = $this->_getSimpleLogger();
+        [, $writer] = $this->_getSimpleLogger();
 
         // If Zend_Layout is not being used, a formatter cannot be set for it.
         $this->setExpectedException('Zend_Log_Exception');
@@ -253,7 +253,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testDestructorMailError()
     {
-        list($mail, $writer, $log) = $this->_getSimpleLogger(false);
+        [$mail, $writer, $log] = $this->_getSimpleLogger(false);
 
         // Force the send() method to throw the same exception that would be
         // thrown if, say, the SMTP server couldn't be contacted.
@@ -280,7 +280,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testDestructorLayoutError()
     {
-        list($mail, $writer, $log, $layout) = $this->_getSimpleLogger(true);
+        [$mail, $writer, $log, $layout] = $this->_getSimpleLogger(true);
 
         // Force the render() method to throw the same exception that would
         // be thrown if, say, the layout template file couldn't be found.
@@ -304,7 +304,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
     public function testFluentInterface()
     {
         // require_once 'Zend/Log/Formatter/Simple.php';
-        list(, $writer) = $this->_getSimpleLogger(true);
+        [, $writer] = $this->_getSimpleLogger(true);
         $instance = $writer->setLayoutFormatter(new Zend_Log_Formatter_Simple())
                            ->setSubjectPrependText('subject');
 
@@ -316,13 +316,13 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactory()
     {
-    	$config = array(
-    		'from' => array(
+    	$config = [
+    		'from' => [
     		    'email' => 'log@test.framework.zend.com'
-    	    ),
+    	    ],
     		'to' => 'admin@domain.com',
     		'subject' => '[error] exceptions on my application'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$this->assertTrue($writer instanceof Zend_Log_Writer_Mail);
@@ -342,9 +342,9 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldSetSubjectPrependText()
     {
-    	$config = array(
+    	$config = [
     		'subjectPrependText' => '[error] exceptions on my application'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$writer->write($this->_getEvent());
@@ -358,10 +358,10 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldAcceptCustomMailClass()
     {
-        $this->getMock('Zend_Mail', array(), array(), 'Zend_Stub_Mail_Custom');
-        $config = array(
+        $this->getMock('Zend_Mail', [], [], 'Zend_Stub_Mail_Custom');
+        $config = [
             'class' => 'Zend_Stub_Mail_Custom'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$this->assertTrue($writer instanceof Zend_Log_Writer_Mail);
@@ -372,9 +372,9 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldSetCharsetForMail()
     {
-        $config = array(
+        $config = [
             'charset' => 'UTF-8'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$writer->write($this->_getEvent());
@@ -388,16 +388,16 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldAllowToSetMultipleRecipientsInArray()
     {
-    	$config = array(
-    		'to' => array(
+    	$config = [
+    		'to' => [
     		    'John Doe' => 'admin1@domain.com',
     	        'admin2@domain.com'
-    	    ),
-    	    'cc' => array(
+    	    ],
+    	    'cc' => [
     	        'bug@domain.com',
     		    'project' => 'projectname@domain.com'
-    	    )
-    	);
+    	    ]
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$writer->write($this->_getEvent());
@@ -418,11 +418,11 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryWithLayout()
     {
-    	$config = array(
-    	    'layoutOptions' => array(
-    	        'layoutPath' => dirname(__FILE__) . '/_files'
-    	    )
-    	);
+    	$config = [
+    	    'layoutOptions' => [
+    	        'layoutPath' => __DIR__ . '/_files'
+    	    ]
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$writer->write($this->_getEvent());
@@ -442,12 +442,12 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryShouldSetLayoutFormatter()
     {
-    	$config = array(
-    	    'layoutOptions' => array(
+    	$config = [
+    	    'layoutOptions' => [
     	        'layoutPath' => '/path/to/layout/scripts'
-    	    ),
+    	    ],
     	    'layoutFormatter' => 'Zend_Log_Formatter_Simple'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$this->assertTrue($writer->getLayoutFormatter() instanceof Zend_Log_Formatter_Simple);
@@ -458,10 +458,10 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     public function testFactoryWithCustomLayoutClass()
     {
-        $this->getMock('Zend_Layout', null, array(), 'Zend_Stub_Layout_Custom');
-    	$config = array(
+        $this->getMock('Zend_Layout', null, [], 'Zend_Stub_Layout_Custom');
+    	$config = [
     	    'layout' => 'Zend_Stub_Layout_Custom'
-    	);
+    	];
 
     	$writer = Zend_Log_Writer_Mail::factory($config);
     	$this->assertTrue($writer instanceof Zend_Log_Writer_Mail);
@@ -481,7 +481,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
     {
         // Get a mock object for Zend_Mail so that no emails are actually
         // sent.
-        $mail = $this->getMock('Zend_Mail', array('send'));
+        $mail = $this->getMock('Zend_Mail', ['send']);
 
         // The send() method can be called any number of times.
         $mail->expects($this->any())
@@ -493,7 +493,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
         // Setup a mock object for Zend_Layout because we can't rely on any
         // layout files being in place.
         if ($useLayout) {
-            $layout = $this->getMock('Zend_Layout', array('render'));
+            $layout = $this->getMock('Zend_Layout', ['render']);
             $writer = new Zend_Log_Writer_Mail($mail, $layout);
         } else {
             $writer = new Zend_Log_Writer_Mail($mail);
@@ -503,7 +503,7 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
         $log = new Zend_Log();
         $log->addWriter($writer);
 
-        return array($mail, $writer, $log, $layout);
+        return [$mail, $writer, $log, $layout];
     }
 
     /**
@@ -513,12 +513,12 @@ class Zend_Log_Writer_MailTest extends PHPUnit_Framework_TestCase
      */
     protected function _getEvent()
     {
-        return array(
+        return [
     	    'timestamp'    => date('c'),
             'message'      => 'an info message',
             'priority'     => 6,
             'priorityName' => 'INFO'
-    	);
+    	];
     }
 }
 

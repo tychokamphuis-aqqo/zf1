@@ -36,11 +36,8 @@ Zend_OpenId::$exitOnRedirect = false;
  */
 class Zend_OpenId_ResponseHelper extends Zend_Controller_Response_Abstract
 {
-    private $_canSendHeaders;
-
-    public function __construct($canSendHeaders)
+    public function __construct(private $_canSendHeaders)
     {
-        $this->_canSendHeaders = $canSendHeaders;
     }
 
     public function canSendHeaders($throw = false)

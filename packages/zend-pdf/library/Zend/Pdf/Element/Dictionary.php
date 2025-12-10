@@ -43,7 +43,7 @@ class Zend_Pdf_Element_Dictionary extends Zend_Pdf_Element
      *
      * @var array
      */
-    private $_items = array();
+    private $_items = [];
 
 
     /**
@@ -106,8 +106,7 @@ class Zend_Pdf_Element_Dictionary extends Zend_Pdf_Element
      */
     public function __get($item)
     {
-        $element = isset($this->_items[$item]) ? $this->_items[$item]
-                                               : null;
+        $element = $this->_items[$item] ?? null;
 
         return $element;
     }
@@ -177,6 +176,7 @@ class Zend_Pdf_Element_Dictionary extends Zend_Pdf_Element
      * @returns Zend_Pdf_Element
      * @throws Zend_Pdf_Exception
      */
+    #[\Override]
     public function makeClone(Zend_Pdf_ElementFactory $factory, array &$processed, $mode)
     {
         if (isset($this->_items['Type'])) {
@@ -207,6 +207,7 @@ class Zend_Pdf_Element_Dictionary extends Zend_Pdf_Element
      *
      * @param Zend_Pdf_Element_Object $parent
      */
+    #[\Override]
     public function setParentObject(Zend_Pdf_Element_Object $parent)
     {
         parent::setParentObject($parent);
@@ -223,9 +224,10 @@ class Zend_Pdf_Element_Dictionary extends Zend_Pdf_Element
      *
      * @return mixed
      */
+    #[\Override]
     public function toPhp()
     {
-        $phpArray = array();
+        $phpArray = [];
 
         foreach ($this->_items as $itemName => $item) {
             $phpArray[$itemName] = $item->toPhp();

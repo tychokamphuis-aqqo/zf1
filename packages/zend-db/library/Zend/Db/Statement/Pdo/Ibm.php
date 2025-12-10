@@ -51,10 +51,11 @@ class Zend_Db_Statement_Pdo_Ibm extends Zend_Db_Statement_Pdo
     * @return array Collection of rows, each in a format by the fetch mode.
     * @throws Zend_Db_Statement_Exception
     */
+    #[\Override]
     public function fetchAll($style = null, $col = null)
     {
         $data = parent::fetchAll($style, $col);
-        $results = array();
+        $results = [];
         $remove = $this->_adapter->foldCase('ZEND_DB_ROWNUM');
 
         foreach ($data as $row) {
@@ -77,6 +78,7 @@ class Zend_Db_Statement_Pdo_Ibm extends Zend_Db_Statement_Pdo
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function _bindParam($parameter, &$variable, $type = null, $length = null, $options = null)
     {
         try {

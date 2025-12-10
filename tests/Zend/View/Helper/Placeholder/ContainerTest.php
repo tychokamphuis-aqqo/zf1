@@ -66,7 +66,7 @@ class Zend_View_Helper_Placeholder_ContainerTest extends PHPUnit_Framework_TestC
      */
     public function setUp()
     {
-        $this->container = new Zend_View_Helper_Placeholder_Container(array());
+        $this->container = new Zend_View_Helper_Placeholder_Container([]);
     }
 
     /**
@@ -111,7 +111,7 @@ class Zend_View_Helper_Placeholder_ContainerTest extends PHPUnit_Framework_TestC
     {
         $this->container['foo'] = 'bar';
         $this->container['bar'] = 'baz';
-        $expected = array('foo' => 'bar', 'bar' => 'baz');
+        $expected = ['foo' => 'bar', 'bar' => 'baz'];
         $return   = $this->container->getValue();
         $this->assertEquals($expected, $return);
     }
@@ -324,7 +324,7 @@ class Zend_View_Helper_Placeholder_ContainerTest extends PHPUnit_Framework_TestC
                 $this->container->captureStart('SET');
                 $this->container->captureEnd();
             $this->container->captureEnd();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->container->captureEnd();
             $caught = true;
         }
@@ -421,7 +421,7 @@ class Zend_View_Helper_Placeholder_ContainerTest extends PHPUnit_Framework_TestC
         $this->container['foo'] = 'bar';
         $this->container->prepend('baz');
 
-        $expected = array('baz', 'foo' => 'bar');
+        $expected = ['baz', 'foo' => 'bar'];
         $array = $this->container->getArrayCopy();
         $this->assertSame($expected, $array);
     }
@@ -437,10 +437,10 @@ class Zend_View_Helper_Placeholder_ContainerTest extends PHPUnit_Framework_TestC
         $this->container->append('baz');
         $string = $this->container->toString();
 
-        $lis = substr_count($string, "\n        <li>");
+        $lis = substr_count((string) $string, "\n        <li>");
         $this->assertEquals(3, $lis);
-        $this->assertTrue((strstr($string, "    <ul>\n")) ? true : false, $string);
-        $this->assertTrue((strstr($string, "\n    </ul>")) ? true : false);
+        $this->assertTrue((strstr((string) $string, "    <ul>\n")) ? true : false, $string);
+        $this->assertTrue((strstr((string) $string, "\n    </ul>")) ? true : false);
     }
 
     /**

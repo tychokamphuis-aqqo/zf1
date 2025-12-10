@@ -170,7 +170,7 @@ class Zend_Pdf_ActionTest extends PHPUnit_Framework_TestCase
         $action = Zend_Pdf_Action::load($dictionary);
 
         $actionsCount = 0;
-        $iterator = new RecursiveIteratorIterator(new Zend_Pdf_RecursivelyIteratableObjectsContainer(array($action)),
+        $iterator = new RecursiveIteratorIterator(new Zend_Pdf_RecursivelyIteratableObjectsContainer([$action]),
                                                   RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $chainedAction) {
             $actionsCount++;
@@ -290,8 +290,8 @@ class Zend_Pdf_ActionTest extends PHPUnit_Framework_TestCase
 
         $action = Zend_Pdf_Action::load($dictionary);
 
-        $actionsToClean        = array();
-        $deletionCandidateKeys = array();
+        $actionsToClean        = [];
+        $deletionCandidateKeys = [];
         $iterator = new RecursiveIteratorIterator($action, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $chainedAction) {
             if ($chainedAction instanceof Zend_Pdf_Action_GoTo) {
@@ -303,7 +303,7 @@ class Zend_Pdf_ActionTest extends PHPUnit_Framework_TestCase
             unset($action->next[$deletionCandidateKeys[$id]]);
         }
         $actionsCount = 0;
-        $iterator = new RecursiveIteratorIterator(new Zend_Pdf_RecursivelyIteratableObjectsContainer(array($action)),
+        $iterator = new RecursiveIteratorIterator(new Zend_Pdf_RecursivelyIteratableObjectsContainer([$action]),
                                                   RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $chainedAction) {
             $actionsCount++;
@@ -442,10 +442,10 @@ class Zend_Pdf_ActionTest extends PHPUnit_Framework_TestCase
     public function testPhpVersionBug()
     {
         try {
-            $file = dirname(__FILE__) . '/_files/ZF-8462.pdf';
+            $file = __DIR__ . '/_files/ZF-8462.pdf';
             $pdf = Zend_Pdf::load($file);
         } catch (Zend_Pdf_Exception $e) {
-            if (strpos($e->getMessage(), 'Cross-reference streams are not supported yet.') !== false) {
+            if (str_contains($e->getMessage(), 'Cross-reference streams are not supported yet.')) {
                 // Skip expected exception
                 return;
             }

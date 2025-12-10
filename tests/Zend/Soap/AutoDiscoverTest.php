@@ -49,7 +49,7 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         // This has to be done because some CLI setups don't have $_SERVER variables
         // to simuulate that we have an actual webserver.
         if(!isset($_SERVER) || !is_array($_SERVER)) {
-            $_SERVER = array();
+            $_SERVER = [];
         }
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REQUEST_URI'] = '/my_script.php?wsdl';
@@ -59,7 +59,7 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
 
     protected function sanitizeWsdlXmlOutputForOsCompability($xmlstring)
     {
-        $xmlstring = str_replace(array("\r", "\n"), "", $xmlstring);
+        $xmlstring = str_replace(["\r", "\n"], "", $xmlstring);
         $xmlstring = preg_replace('/(>[\s]{1,}<)/', '', $xmlstring);
         return $xmlstring;
     }
@@ -146,11 +146,11 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
               .     '<message name="testFunc4Out"><part name="return" type="xsd:string"/></message>'
               . '</definitions>';
 
-        $dom->save(dirname(__FILE__).'/_files/setclass.wsdl');
+        $dom->save(__DIR__.'/_files/setclass.wsdl');
         $this->assertEquals($wsdl, $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
-        unlink(dirname(__FILE__).'/_files/setclass.wsdl');
+        unlink(__DIR__.'/_files/setclass.wsdl');
     }
 
     function testSetClassWithDifferentStyles()
@@ -158,8 +158,8 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         $scriptUri = 'http://localhost/my_script.php';
 
         $server = new Zend_Soap_AutoDiscover();
-        $server->setBindingStyle(array('style' => 'document', 'transport' => 'http://framework.zend.com'));
-        $server->setOperationBodyStyle(array('use' => 'literal', 'namespace' => 'http://framework.zend.com'));
+        $server->setBindingStyle(['style' => 'document', 'transport' => 'http://framework.zend.com']);
+        $server->setOperationBodyStyle(['use' => 'literal', 'namespace' => 'http://framework.zend.com']);
         $server->setClass('Zend_Soap_AutoDiscover_Test');
         $dom = new DOMDocument();
         ob_start();
@@ -303,11 +303,11 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
               .     '</message>'
               . '</definitions>';
 
-        $dom->save(dirname(__FILE__).'/_files/setclass.wsdl');
+        $dom->save(__DIR__.'/_files/setclass.wsdl');
         $this->assertEquals($wsdl, $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
-        unlink(dirname(__FILE__).'/_files/setclass.wsdl');
+        unlink(__DIR__.'/_files/setclass.wsdl');
     }
 
     /**
@@ -324,13 +324,13 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         $server->handle();
         $dom->loadXML(ob_get_clean());
 
-        $dom->save(dirname(__FILE__).'/_files/setclass.wsdl');
+        $dom->save(__DIR__.'/_files/setclass.wsdl');
         $this->assertContains('<message name="testFunc1Out"><part name="return"', $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
         $this->assertContains('<message name="testFunc2Out"><part name="return"', $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
         $this->assertContains('<message name="testFunc3Out"><part name="return"', $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
         $this->assertContains('<message name="testFunc4Out"><part name="return"', $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()));
 
-        unlink(dirname(__FILE__).'/_files/setclass.wsdl');
+        unlink(__DIR__.'/_files/setclass.wsdl');
     }
 
 
@@ -344,9 +344,9 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         ob_start();
         $server->handle();
         $dom->loadXML(ob_get_clean());
-        $dom->save(dirname(__FILE__).'/_files/addfunction.wsdl');
+        $dom->save(__DIR__.'/_files/addfunction.wsdl');
 
-        $parts = explode('.', basename($_SERVER['SCRIPT_NAME']));
+        $parts = explode('.', basename((string) $_SERVER['SCRIPT_NAME']));
         $name = $parts[0];
 
         $wsdl = '<?xml version="1.0"?>'.
@@ -372,9 +372,9 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
                 '<message name="Zend_Soap_AutoDiscover_TestFuncOut"><part name="return" type="xsd:string"/></message>'.
                 '</definitions>';
         $this->assertEquals($wsdl, $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()), "Bad WSDL generated");
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
-        unlink(dirname(__FILE__).'/_files/addfunction.wsdl');
+        unlink(__DIR__.'/_files/addfunction.wsdl');
     }
 
     function testAddFunctionSimpleWithDifferentStyle()
@@ -382,16 +382,16 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         $scriptUri = 'http://localhost/my_script.php';
 
         $server = new Zend_Soap_AutoDiscover();
-        $server->setBindingStyle(array('style' => 'document', 'transport' => 'http://framework.zend.com'));
-        $server->setOperationBodyStyle(array('use' => 'literal', 'namespace' => 'http://framework.zend.com'));
+        $server->setBindingStyle(['style' => 'document', 'transport' => 'http://framework.zend.com']);
+        $server->setOperationBodyStyle(['use' => 'literal', 'namespace' => 'http://framework.zend.com']);
         $server->addFunction('Zend_Soap_AutoDiscover_TestFunc');
         $dom = new DOMDocument();
         ob_start();
         $server->handle();
         $dom->loadXML(ob_get_clean());
-        $dom->save(dirname(__FILE__).'/_files/addfunction.wsdl');
+        $dom->save(__DIR__.'/_files/addfunction.wsdl');
 
-        $parts = explode('.', basename($_SERVER['SCRIPT_NAME']));
+        $parts = explode('.', basename((string) $_SERVER['SCRIPT_NAME']));
         $name = $parts[0];
 
         $wsdl = '<?xml version="1.0"?>'.
@@ -422,9 +422,9 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
                 '<message name="Zend_Soap_AutoDiscover_TestFuncOut"><part name="parameters" element="tns:Zend_Soap_AutoDiscover_TestFuncResponse"/></message>'.
                 '</definitions>';
         $this->assertEquals($wsdl, $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()), "Bad WSDL generated");
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
-        unlink(dirname(__FILE__).'/_files/addfunction.wsdl');
+        unlink(__DIR__.'/_files/addfunction.wsdl');
     }
 
     /**
@@ -440,17 +440,17 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         ob_start();
         $server->handle();
         $dom->loadXML(ob_get_clean());
-        $dom->save(dirname(__FILE__).'/_files/addfunction.wsdl');
+        $dom->save(__DIR__.'/_files/addfunction.wsdl');
 
-        $parts = explode('.', basename($_SERVER['SCRIPT_NAME']));
+        $parts = explode('.', basename((string) $_SERVER['SCRIPT_NAME']));
         $name = $parts[0];
 
         $wsdl = $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML());
         $this->assertContains('<message name="Zend_Soap_AutoDiscover_TestFuncOut"><part name="return" type="xsd:string"/>', $wsdl);
         $this->assertNotContains('<message name="Zend_Soap_AutoDiscover_TestFuncOut"><part name="Zend_Soap_AutoDiscover_TestFuncReturn"', $wsdl);
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
-        unlink(dirname(__FILE__).'/_files/addfunction.wsdl');
+        unlink(__DIR__.'/_files/addfunction.wsdl');
     }
 
     function testAddFunctionMultiple()
@@ -471,9 +471,9 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         ob_start();
         $server->handle();
         $dom->loadXML(ob_get_clean());
-        $dom->save(dirname(__FILE__).'/_files/addfunction2.wsdl');
+        $dom->save(__DIR__.'/_files/addfunction2.wsdl');
 
-        $parts = explode('.', basename($_SERVER['SCRIPT_NAME']));
+        $parts = explode('.', basename((string) $_SERVER['SCRIPT_NAME']));
         $name = $parts[0];
 
         $wsdl = '<?xml version="1.0"?>'.
@@ -553,11 +553,11 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
                 '<message name="Zend_Soap_AutoDiscover_TestFunc9Out"><part name="return" type="xsd:string"/></message>'.
                 '</definitions>';
         $this->assertEquals($wsdl, $this->sanitizeWsdlXmlOutputForOsCompability($dom->saveXML()), "Generated WSDL did not match expected XML");
-        $this->assertTrue($dom->schemaValidate(dirname(__FILE__) .'/schemas/wsdl.xsd'), "WSDL Did not validate");
+        $this->assertTrue($dom->schemaValidate(__DIR__ .'/schemas/wsdl.xsd'), "WSDL Did not validate");
 
 
 
-        unlink(dirname(__FILE__).'/_files/addfunction2.wsdl');
+        unlink(__DIR__.'/_files/addfunction2.wsdl');
     }
 
     /**
@@ -619,9 +619,9 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
     {
         $server = new Zend_Soap_AutoDiscover();
         try {
-            $server->setUri(array("bogus"));
+            $server->setUri(["bogus"]);
             $this->fail();
-        } catch(Zend_Soap_AutoDiscover_Exception $e) {
+        } catch(Zend_Soap_AutoDiscover_Exception) {
 
         }
     }
@@ -695,7 +695,7 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
         try {
             $server->loadFunctions("bogus");
             $this->fail();
-        } catch(Zend_Soap_AutoDiscover_Exception $e) {
+        } catch(Zend_Soap_AutoDiscover_Exception) {
 
         }
     }
@@ -708,7 +708,7 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
 
         $functions = $server->getFunctions();
         $this->assertEquals(
-            array('Zend_Soap_AutoDiscover_TestFunc', 'testFunc1', 'testFunc2', 'testFunc3', 'testFunc4'),
+            ['Zend_Soap_AutoDiscover_TestFunc', 'testFunc1', 'testFunc2', 'testFunc3', 'testFunc4'],
             $functions
         );
     }
@@ -719,35 +719,35 @@ class Zend_Soap_AutoDiscoverTest extends PHPUnit_Framework_TestCase
     public function testUsingRequestUriWithoutParametersAsDefault()
     {
         // Apache
-        $_SERVER = array('REQUEST_URI' => '/my_script.php?wsdl', 'HTTP_HOST' => 'localhost');
+        $_SERVER = ['REQUEST_URI' => '/my_script.php?wsdl', 'HTTP_HOST' => 'localhost'];
         $server = new Zend_Soap_AutoDiscover();
         $uri = $server->getUri()->getUri();
         $this->assertNotContains("?wsdl", $uri);
         $this->assertEquals("http://localhost/my_script.php", $uri);
 
         // Apache plus SSL
-        $_SERVER = array('REQUEST_URI' => '/my_script.php?wsdl', 'HTTP_HOST' => 'localhost', 'HTTPS' => 'on');
+        $_SERVER = ['REQUEST_URI' => '/my_script.php?wsdl', 'HTTP_HOST' => 'localhost', 'HTTPS' => 'on'];
         $server = new Zend_Soap_AutoDiscover();
         $uri = $server->getUri()->getUri();
         $this->assertNotContains("?wsdl", $uri);
         $this->assertEquals("https://localhost/my_script.php", $uri);
 
         // IIS 5 + PHP as FastCGI
-        $_SERVER = array('ORIG_PATH_INFO' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost');
+        $_SERVER = ['ORIG_PATH_INFO' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost'];
         $server = new Zend_Soap_AutoDiscover();
         $uri = $server->getUri()->getUri();
         $this->assertNotContains("?wsdl", $uri);
         $this->assertEquals("http://localhost/my_script.php", $uri);
 
         // IIS with ISAPI_Rewrite
-        $_SERVER = array('HTTP_X_REWRITE_URL' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost');
+        $_SERVER = ['HTTP_X_REWRITE_URL' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost'];
         $server = new Zend_Soap_AutoDiscover();
         $uri = $server->getUri()->getUri();
         $this->assertNotContains("?wsdl", $uri);
         $this->assertEquals("http://localhost/my_script.php", $uri);
 
         // IIS with Microsoft Rewrite Module
-        $_SERVER = array('HTTP_X_ORIGINAL_URL' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost');
+        $_SERVER = ['HTTP_X_ORIGINAL_URL' => '/my_script.php?wsdl', 'SERVER_NAME' => 'localhost'];
         $server = new Zend_Soap_AutoDiscover();
         $uri = $server->getUri()->getUri();
         $this->assertNotContains("?wsdl", $uri);

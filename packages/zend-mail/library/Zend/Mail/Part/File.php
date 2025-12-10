@@ -39,8 +39,8 @@
  */
 class Zend_Mail_Part_File extends Zend_Mail_Part
 {
-    protected $_contentPos = array();
-    protected $_partPos = array();
+    protected $_contentPos = [];
+    protected $_partPos = [];
     protected $_fh;
 
     /**
@@ -80,7 +80,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
             fseek($this->_fh, $params['startPos']);
         }
         $header = '';
-        $endPos = isset($params['endPos']) ? $params['endPos'] : null;
+        $endPos = $params['endPos'] ?? null;
         while (($endPos === null || ftell($this->_fh) < $endPos) && trim($line = fgets($this->_fh))) {
             $header .= $line;
         }
@@ -107,7 +107,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
             throw new Zend_Mail_Exception('no boundary found in content type to split message');
         }
 
-        $part = array();
+        $part = [];
         $pos = $this->_contentPos[0];
         fseek($this->_fh, $pos);
         while (!feof($this->_fh) && ($endPos === null || $pos < $endPos)) {
@@ -133,7 +133,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
                     $part[1] = $lastPos;
                     $this->_partPos[] = $part;
                 }
-                $part = array($pos);
+                $part = [$pos];
             } else if ($line == '--' . $boundary . '--') {
                 $part[1] = $lastPos;
                 $this->_partPos[] = $part;
@@ -153,6 +153,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
      * @return string body
      * @throws Zend_Mail_Exception
      */
+    #[\Override]
     public function getContent($stream = null)
     {
         fseek($this->_fh, $this->_contentPos[0]);
@@ -170,6 +171,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
      *
      * @return int size
      */
+    #[\Override]
     public function getSize() {
         return $this->_contentPos[1] - $this->_contentPos[0];
     }
@@ -181,6 +183,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
      * @return Zend_Mail_Part wanted part
      * @throws Zend_Mail_Exception
      */
+    #[\Override]
     public function getPart($num)
     {
         --$num;
@@ -192,7 +195,7 @@ class Zend_Mail_Part_File extends Zend_Mail_Part
             throw new Zend_Mail_Exception('part not found');
         }
 
-        return new self(array('file' => $this->_fh, 'startPos' => $this->_partPos[$num][0],
-                              'endPos' => $this->_partPos[$num][1]));
+        return new self(['file' => $this->_fh, 'startPos' => $this->_partPos[$num][0],
+                              'endPos' => $this->_partPos[$num][1]]);
     }
 }

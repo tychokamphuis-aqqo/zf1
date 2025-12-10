@@ -54,7 +54,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Area('100','Area::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -68,7 +68,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Area('novalue',Zend_Measure_Area::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -82,7 +82,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
         try {
             $value = new Zend_Measure_Area('100',Zend_Measure_Area::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -234,7 +234,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Area('100',Zend_Measure_Area::STANDARD,'de');
             $value->setValue('-200.200,200','Area::UNKNOWN','de');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -249,7 +249,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Area('100',Zend_Measure_Area::STANDARD,'de');
             $value->setValue('novalue',Zend_Measure_Area::STANDARD,'de');
             $this->fail('Exception expected because of empty value');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -264,7 +264,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Area('100',Zend_Measure_Area::STANDARD,'de');
             $value->setValue('200',Zend_Measure_Area::STANDARD,'nolocale');
             $this->fail('Exception expected because of unknown locale');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }
@@ -323,7 +323,7 @@ class Zend_Measure_AreaTest extends PHPUnit_Framework_TestCase
             $value = new Zend_Measure_Area('-100',Zend_Measure_Area::STANDARD,'de');
             $value->setType('Area::UNKNOWN');
             $this->fail('Exception expected because of unknown type');
-        } catch (Zend_Measure_Exception $e) {
+        } catch (Zend_Measure_Exception) {
             // success
         }
     }

@@ -58,7 +58,7 @@ abstract class Zend_Db_Adapter_Pdo_TestCommon extends Zend_Db_Adapter_TestCommon
             $this->fail('Expected exception not thrown');
         } catch (Zend_Db_Adapter_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Adapter_Exception,
-                'Expecting object of type Zend_Db_Adapter_Exception, got ' . get_class($e));
+                'Expecting object of type Zend_Db_Adapter_Exception, got ' . $e::class);
         }
     }
 
@@ -74,7 +74,7 @@ abstract class Zend_Db_Adapter_Pdo_TestCommon extends Zend_Db_Adapter_TestCommon
             $this->fail('Expected exception not thrown');
         } catch (Zend_Db_Adapter_Exception $e) {
             $this->assertTrue($e instanceof Zend_Db_Adapter_Exception,
-                'Expecting object of type Zend_Db_Adapter_Exception, got ' . get_class($e));
+                'Expecting object of type Zend_Db_Adapter_Exception, got ' . $e::class);
         }
     }
 

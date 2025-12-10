@@ -48,7 +48,7 @@ class Zend_Service_SqlAzure_Management_AllTests
 
     public static function suite()
     {
-        $suite = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite = new PHPUnit_Framework_TestSuite(self::class);
         $suite->addTestSuite('Zend_Service_SqlAzure_Management_ManagementClientTest');
         
         return $suite;

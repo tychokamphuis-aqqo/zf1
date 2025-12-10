@@ -19,7 +19,7 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
-require_once dirname(__FILE__) . '/TestAbstract.php';
+require_once __DIR__ . '/TestAbstract.php';
 // require_once 'Zend/View/Helper/Navigation/Breadcrumbs.php';
 
 /**
@@ -127,7 +127,7 @@ class Zend_View_Helper_Navigation_BreadcrumbsTest
         $this->_helper->setIndent(8);
 
         $expected = '        <a';
-        $actual = substr($this->_helper->render(), 0, strlen($expected));
+        $actual = substr((string) $this->_helper->render(), 0, strlen($expected));
 
         $this->assertEquals($expected, $actual);
     }
@@ -139,17 +139,17 @@ class Zend_View_Helper_Navigation_BreadcrumbsTest
         $rendered1 = $this->_getExpected('bc/default.html');
         $rendered2 = 'Site 2';
 
-        $expected = array(
+        $expected = [
             'registered'       => $rendered1,
             'supplied'         => $rendered2,
             'registered_again' => $rendered1
-        );
+        ];
 
-        $actual = array(
+        $actual = [
             'registered'       => $this->_helper->render(),
             'supplied'         => $this->_helper->render($this->_nav2),
             'registered_again' => $this->_helper->render()
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -218,7 +218,7 @@ class Zend_View_Helper_Navigation_BreadcrumbsTest
 
     public function testRenderingPartialBySpecifyingAnArrayAsPartial()
     {
-        $this->_helper->setPartial(array('bc.phtml', 'default'));
+        $this->_helper->setPartial(['bc.phtml', 'default']);
 
         $expected = $this->_getExpected('bc/partial.html');
         $this->assertEquals($expected, $this->_helper->render());
@@ -226,25 +226,25 @@ class Zend_View_Helper_Navigation_BreadcrumbsTest
 
     public function testRenderingPartialShouldFailOnInvalidPartialArray()
     {
-        $this->_helper->setPartial(array('bc.phtml'));
+        $this->_helper->setPartial(['bc.phtml']);
 
         try {
             $this->_helper->render();
             $this->fail(
                 '$partial was invalid, but no Zend_View_Exception was thrown');
-        } catch (Zend_View_Exception $e) {
+        } catch (Zend_View_Exception) {
         }
     }
 
     public function testLastBreadcrumbShouldBeEscaped()
     {
-        $container = new Zend_Navigation(array(
-            array(
+        $container = new Zend_Navigation([
+            [
                 'label'  => 'Live & Learn',
                 'uri'    => '#',
                 'active' => true
-            )
-        ));
+            ]
+        ]);
 
         $expected = 'Live &amp; Learn';
         $actual = $this->_helper->setMinDepth(0)->render($container);
@@ -257,32 +257,32 @@ class Zend_View_Helper_Navigation_BreadcrumbsTest
      */
     public function testRenderingWithCustomHtmlAttribs()
     {
-        $container = new Zend_Navigation(array(
-            array(
+        $container = new Zend_Navigation([
+            [
                 'label'             => 'Page 1',
                 'uri'               => 'p1',
-                'customHtmlAttribs' => array(
+                'customHtmlAttribs' => [
                     'rel'   => 'nofollow',
                     'style' => 'font-weight: bold;',
-                ),
-                'pages'             => array(
-                    array(
+                ],
+                'pages'             => [
+                    [
                         'label'             => 'Page 2',
                         'uri'               => 'p2',
-                        'customHtmlAttribs' => array(
+                        'customHtmlAttribs' => [
                             'rel'   => 'nofollow',
-                        ),
-                        'pages'             => array(
-                            array(
+                        ],
+                        'pages'             => [
+                            [
                                 'label'             => 'Page 3',
                                 'uri'               => 'p3',
                                 'active'            => true,
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ));
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
         $expected = '<a href="p1" rel="nofollow" style="font-weight: bold;">Page 1</a>'
                   . ' &gt; '

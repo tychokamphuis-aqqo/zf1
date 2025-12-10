@@ -56,7 +56,7 @@ class Zend_Feed_ElementTest extends PHPUnit_Framework_TestCase
         $xml = $e->saveXml();
 
         $this->assertFalse(strpos($xml, 'pants'), '<pants> should not be in the xml output');
-        $this->assertTrue(strpos($xml, 'marina.horde.org') !== false, 'the url attribute should be set');
+        $this->assertTrue(str_contains($xml, 'marina.horde.org'), 'the url attribute should be set');
     }
 
     public function testStrings()

@@ -53,6 +53,7 @@ class Zend_Filter_File_UpperCase extends Zend_Filter_StringToUpper
      * @return string The given $value
      * @throws Zend_Filter_Exception
      */
+    #[\Override]
     public function filter($value)
     {
         if (!file_exists($value)) {

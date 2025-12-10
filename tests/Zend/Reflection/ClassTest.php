@@ -42,7 +42,7 @@ class Zend_Reflection_ClassTest extends PHPUnit_Framework_TestCase
     {
         // ensure we are only required this file once per runtime
         if (self::$_sampleClassFileRequired === false) {
-            $fileToRequire = dirname(__FILE__) . '/_files/TestSampleClass.php';
+            $fileToRequire = __DIR__ . '/_files/TestSampleClass.php';
             require_once $fileToRequire;
             self::$_sampleClassFileRequired = true;
         }
@@ -54,7 +54,7 @@ class Zend_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $reflectionClass = new Zend_Reflection_Class('Zend_Reflection_TestSampleClass2');
 
         $methodByName = $reflectionClass->getMethod('getProp1');
-        $this->assertEquals('Zend_Reflection_Method', get_class($methodByName));
+        $this->assertEquals('Zend_Reflection_Method', $methodByName::class);
 
         $methodsAll = $reflectionClass->getMethods();
         $this->assertEquals(3, count($methodsAll));
@@ -68,7 +68,7 @@ class Zend_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $reflectionClass = new Zend_Reflection_Class('Zend_Reflection_TestSampleClass2');
 
         $propertyByName = $reflectionClass->getProperty('_prop1');
-        $this->assertEquals('Zend_Reflection_Property', get_class($propertyByName));
+        $this->assertEquals('Zend_Reflection_Property', $propertyByName::class);
 
         $propertiesAll = $reflectionClass->getProperties();
         $this->assertEquals(2, count($propertiesAll));
@@ -82,7 +82,7 @@ class Zend_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $reflectionClass = new Zend_Reflection_Class('Zend_Reflection_TestSampleClass');
 
         $parent = $reflectionClass->getParentClass();
-        $this->assertEquals('Zend_Reflection_Class', get_class($parent));
+        $this->assertEquals('Zend_Reflection_Class', $parent::class);
         $this->assertEquals('ArrayObject', $parent->getName());
 
     }

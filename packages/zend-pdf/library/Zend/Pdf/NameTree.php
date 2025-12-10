@@ -41,7 +41,7 @@ class Zend_Pdf_NameTree implements ArrayAccess, Iterator, Countable
      *
      * @var array
      */
-    protected $_items = array();
+    protected $_items = [];
 
     /**
      * Object constructor
@@ -55,8 +55,8 @@ class Zend_Pdf_NameTree implements ArrayAccess, Iterator, Countable
             throw new Zend_Pdf_Exception('Name tree root must be a dictionary.');
         }
 
-        $intermediateNodes = array();
-        $leafNodes         = array();
+        $intermediateNodes = [];
+        $leafNodes         = [];
         if ($rootDictionary->Kids !== null) {
             $intermediateNodes[] = $rootDictionary;
         } else {
@@ -64,7 +64,7 @@ class Zend_Pdf_NameTree implements ArrayAccess, Iterator, Countable
         }
 
         while (count($intermediateNodes) != 0) {
-            $newIntermediateNodes = array();
+            $newIntermediateNodes = [];
             foreach ($intermediateNodes as $node) {
                 foreach ($node->Kids->items as $childNode) {
                     if ($childNode->Kids !== null) {
@@ -122,7 +122,7 @@ class Zend_Pdf_NameTree implements ArrayAccess, Iterator, Countable
     #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->_items);
+        return array_key_exists((string) $offset, $this->_items);
     }
 
     #[ReturnTypeWillChange]
@@ -152,7 +152,7 @@ class Zend_Pdf_NameTree implements ArrayAccess, Iterator, Countable
 
     public function clear()
     {
-        $this->_items = array();
+        $this->_items = [];
     }
 
     #[ReturnTypeWillChange]

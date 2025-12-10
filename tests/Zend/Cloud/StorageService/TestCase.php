@@ -87,7 +87,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
 
     public function testNoParams()
     {
-        $config = array(Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY => $this->_config->get(Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY));
+        $config = [Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY => $this->_config->get(Zend_Cloud_StorageService_Factory::STORAGE_ADAPTER_KEY)];
         $this->setExpectedException('Zend_Cloud_StorageService_Exception');
         $s = Zend_Cloud_StorageService_Factory::getAdapter($config);
     }
@@ -116,7 +116,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyNameText);
-            } catch (Zend_Cloud_Exception $ignoreMe) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -134,7 +134,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         $dummyNameText   = null;
         $dummyNameStream = null;
         try {
-            $originalFilename = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files/data/dummy_data.txt');
+            $originalFilename = realpath(__DIR__ . DIRECTORY_SEPARATOR . '_files/data/dummy_data.txt');
             $dummyNameStream  = $this->_dummyNamePrefix . 'ForFetchStream';
             $stream = fopen($originalFilename, 'r');
             $this->_clobberItem($stream, $dummyNameStream);
@@ -146,7 +146,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyNameStream);
-            } catch (Zend_Cloud_Exception $ignoreMe) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -173,7 +173,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyNameText);
-            } catch (Zend_Cloud_Exception $ignoreMe) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -189,7 +189,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         $dummyNameStream = $this->_dummyNamePrefix . 'ForStoreStream';
         try {
             // Test stream data
-            $originalFilename = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files/data/dummy_data.txt');
+            $originalFilename = realpath(__DIR__ . DIRECTORY_SEPARATOR . '_files/data/dummy_data.txt');
             $stream = fopen($originalFilename, 'r');
             $this->_commonStorage->storeItem($dummyNameStream, $stream);
             $this->_wait();
@@ -200,7 +200,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyNameStream);
-            } catch (Zend_Cloud_Exception $ignoreMe) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -231,7 +231,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyName);
-            } catch (Zend_Cloud_Exception $ignorme) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -268,7 +268,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
             try {
                 $this->_commonStorage->deleteItem($dummyName1);
                 $this->_commonStorage->deleteItem($dummyName2);
-            } catch (Zend_Cloud_Exception $ignoreme) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -303,7 +303,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
             try {
                 $this->_commonStorage->deleteItem($dummyName1);
                 $this->_commonStorage->deleteItem($dummyName2);
-            } catch (Zend_Cloud_Exception $ignoreme) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -323,7 +323,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
             $this->_clobberItem($data, $dummyName);
             $this->_wait();
 
-            $this->_commonStorage->storeMetadata($dummyName, array('zend' => 'zend'));
+            $this->_commonStorage->storeMetadata($dummyName, ['zend' => 'zend']);
             $this->_wait();
 
             // Hopefully we can assert more about the metadata in the future :/
@@ -332,7 +332,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
         } catch (Exception $e) {
             try {
                 $this->_commonStorage->deleteItem($dummyName);
-            } catch (Zend_Cloud_Exception $ignoreme) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }
@@ -360,7 +360,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
 
             $objects = $this->_commonStorage->listItems('');
 
-            $this->assertEquals(2, sizeof($objects));
+            $this->assertEquals(2, count($objects));
 
             // PHPUnit does an identical comparison for assertContains(), so we just
             // use assertTrue and in_array()
@@ -373,7 +373,7 @@ abstract class Zend_Cloud_StorageService_TestCase extends PHPUnit_Framework_Test
             try {
                 $this->_commonStorage->deleteItem($dummyName1);
                 $this->_commonStorage->deleteItem($dummyName2);
-            } catch (Zend_Cloud_Exception $ignoreme) {
+            } catch (Zend_Cloud_Exception) {
             }
             throw $e;
         }

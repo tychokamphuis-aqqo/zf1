@@ -56,19 +56,19 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('This adapter needs the zip extension');
         }
 
-        $files = array(
-            dirname(__FILE__) . '/../_files/compressed.zip',
-            dirname(__FILE__) . '/../_files/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/zip.tmp',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First',
-            dirname(__FILE__) . '/../_files/_compress/Compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress',
-            dirname(__FILE__) . '/../_files/_compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress'
-        );
+        $files = [
+            __DIR__ . '/../_files/compressed.zip',
+            __DIR__ . '/../_files/zipextracted.txt',
+            __DIR__ . '/../_files/zip.tmp',
+            __DIR__ . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second',
+            __DIR__ . '/../_files/_compress/Compress/First/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First',
+            __DIR__ . '/../_files/_compress/Compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress',
+            __DIR__ . '/../_files/_compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress'
+        ];
 
         foreach($files as $file) {
             if (file_exists($file)) {
@@ -90,19 +90,19 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $files = array(
-            dirname(__FILE__) . '/../_files/compressed.zip',
-            dirname(__FILE__) . '/../_files/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/zip.tmp',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/Second',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress/First',
-            dirname(__FILE__) . '/../_files/_compress/Compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress/Compress',
-            dirname(__FILE__) . '/../_files/_compress/zipextracted.txt',
-            dirname(__FILE__) . '/../_files/_compress'
-        );
+        $files = [
+            __DIR__ . '/../_files/compressed.zip',
+            __DIR__ . '/../_files/zipextracted.txt',
+            __DIR__ . '/../_files/zip.tmp',
+            __DIR__ . '/../_files/_compress/Compress/First/Second/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First/Second',
+            __DIR__ . '/../_files/_compress/Compress/First/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress/First',
+            __DIR__ . '/../_files/_compress/Compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress/Compress',
+            __DIR__ . '/../_files/_compress/zipextracted.txt',
+            __DIR__ . '/../_files/_compress'
+        ];
 
         foreach($files as $file) {
             if (file_exists($file)) {
@@ -130,19 +130,19 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testBasicUsage()
     {
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip',
-                'target'  => dirname(__FILE__) . '/../_files/zipextracted.txt'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip',
+                'target'  => __DIR__ . '/../_files/zipextracted.txt'
+            ]
         );
 
         $content = $filter->compress('compress me');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.zip', $content);
 
         $content = $filter->decompress($content);
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zipextracted.txt');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
+        $content = file_get_contents(__DIR__ . '/../_files/zipextracted.txt');
         $this->assertEquals('compress me', $content);
     }
 
@@ -154,15 +154,15 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testZipGetSetOptions()
     {
         $filter = new Zend_Filter_Compress_Zip();
-        $this->assertEquals(array('archive' => null, 'target' => null), $filter->getOptions());
+        $this->assertEquals(['archive' => null, 'target' => null], $filter->getOptions());
 
         $this->assertEquals(null, $filter->getOptions('archive'));
 
         $this->assertNull($filter->getOptions('nooption'));
-        $filter->setOptions(array('nooption' => 'foo'));
+        $filter->setOptions(['nooption' => 'foo']);
         $this->assertNull($filter->getOptions('nooption'));
 
-        $filter->setOptions(array('archive' => 'temp.txt'));
+        $filter->setOptions(['archive' => 'temp.txt']);
         $this->assertEquals('temp.txt', $filter->getOptions('archive'));
     }
 
@@ -209,21 +209,21 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testZipCompressFile()
     {
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip',
-                'target'  => dirname(__FILE__) . '/../_files/zipextracted.txt'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip',
+                'target'  => __DIR__ . '/../_files/zipextracted.txt'
+            ]
         );
-        file_put_contents(dirname(__FILE__) . '/../_files/zipextracted.txt', 'compress me');
+        file_put_contents(__DIR__ . '/../_files/zipextracted.txt', 'compress me');
 
-        $content = $filter->compress(dirname(__FILE__) . '/../_files/zipextracted.txt');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $content = $filter->compress(__DIR__ . '/../_files/zipextracted.txt');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.zip', $content);
 
         $content = $filter->decompress($content);
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..'
                             . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zipextracted.txt');
+        $content = file_get_contents(__DIR__ . '/../_files/zipextracted.txt');
         $this->assertEquals('compress me', $content);
     }
 
@@ -235,19 +235,19 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testCompressNonExistingTargetFile()
     {
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip',
-                'target'  => dirname(__FILE__) . '/../_files'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip',
+                'target'  => __DIR__ . '/../_files'
+            ]
         );
 
         $content = $filter->compress('compress me');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.zip', $content);
 
         $content = $filter->decompress($content);
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zip.tmp');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
+        $content = file_get_contents(__DIR__ . '/../_files/zip.tmp');
         $this->assertEquals('compress me', $content);
     }
 
@@ -259,30 +259,30 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testZipCompressDirectory()
     {
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip',
-                'target'  => dirname(__FILE__) . '/../_files/_compress'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip',
+                'target'  => __DIR__ . '/../_files/_compress'
+            ]
         );
-        $content = $filter->compress(dirname(__FILE__) . '/../_files/Compress');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $content = $filter->compress(__DIR__ . '/../_files/Compress');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.zip', $content);
 
-        mkdir(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..'
+        mkdir(__DIR__ . DIRECTORY_SEPARATOR . '..'
             . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . '_compress');
         $content = $filter->decompress($content);
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..'
                             . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . '_compress'
                             . DIRECTORY_SEPARATOR, $content);
 
-        $base = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $base = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
               . DIRECTORY_SEPARATOR . '_compress' . DIRECTORY_SEPARATOR . 'Compress' . DIRECTORY_SEPARATOR;
         $this->assertTrue(file_exists($base));
         $this->assertTrue(file_exists($base . 'zipextracted.txt'));
         $this->assertTrue(file_exists($base . 'First' . DIRECTORY_SEPARATOR . 'zipextracted.txt'));
         $this->assertTrue(file_exists($base . 'First' . DIRECTORY_SEPARATOR .
                           'Second' . DIRECTORY_SEPARATOR . 'zipextracted.txt'));
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/Compress/zipextracted.txt');
+        $content = file_get_contents(__DIR__ . '/../_files/Compress/zipextracted.txt');
         $this->assertEquals('compress me', $content);
     }
 
@@ -304,24 +304,24 @@ class Zend_Filter_Compress_ZipTest extends PHPUnit_Framework_TestCase
     public function testDecompressWillThrowExceptionWhenDecompressingWithNoTarget()
     {
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip',
-                'target'  => dirname(__FILE__) . '/../_files/_compress'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip',
+                'target'  => __DIR__ . '/../_files/_compress'
+            ]
         );
 
         $content = $filter->compress('compress me');
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files'
                             . DIRECTORY_SEPARATOR . 'compressed.zip', $content);
 
         $filter  = new Zend_Filter_Compress_Zip(
-            array(
-                'archive' => dirname(__FILE__) . '/../_files/compressed.zip'
-            )
+            [
+                'archive' => __DIR__ . '/../_files/compressed.zip'
+            ]
         );
         $content = $filter->decompress($content);
-        $this->assertEquals(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
-        $content = file_get_contents(dirname(__FILE__) . '/../_files/zip.tmp');
+        $this->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR, $content);
+        $content = file_get_contents(__DIR__ . '/../_files/zip.tmp');
         $this->assertEquals('compress me', $content);
     }
 }

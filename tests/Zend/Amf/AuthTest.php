@@ -293,7 +293,7 @@ class WrongPassword extends Zend_Amf_Auth_Abstract
     public function authenticate() {
         return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
                 null,
-                array('Wrong Password')
+                ['Wrong Password']
                 );
     }
 }
@@ -301,17 +301,11 @@ class WrongPassword extends Zend_Amf_Auth_Abstract
 class RightPassword extends Zend_Amf_Auth_Abstract
 {
     /**
-     * @var mixed
+     * @param mixed $name
+     * @param mixed $role
      */
-    protected $_name;
-    /**
-     * @var mixed
-     */
-    protected $_role;
-    public function __construct($name, $role)
+    public function __construct(protected $_name, protected $_role)
     {
-        $this->_name = $name;
-        $this->_role = $role;
     }
     public function authenticate()
     {

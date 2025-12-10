@@ -53,16 +53,16 @@ class Zend_Feed_Pubsubhubbub_SubscriberHttpTest extends PHPUnit_Framework_TestCa
 
     protected $_adapter = null;
 
-    protected $_config = array(
+    protected $_config = [
         'adapter'     => 'Zend_Http_Client_Adapter_Socket'
-    );
+    ];
 
     public function setUp()
     {
         if (defined('TESTS_Zend_Feed_Pubsubhubbub_BASEURI') &&
-            Zend_Uri_Http::check(TESTS_Zend_Feed_Pubsubhubbub_BASEURI)) {
-            $this->_baseuri = TESTS_Zend_Feed_Pubsubhubbub_BASEURI;
-            if (substr($this->_baseuri, -1) != '/') $this->_baseuri .= '/';
+            Zend_Uri_Http::check(\TESTS_ZEND_FEED_PUBSUBHUBBUB_BASEURI)) {
+            $this->_baseuri = \TESTS_ZEND_FEED_PUBSUBHUBBUB_BASEURI;
+            if (!str_ends_with((string) $this->_baseuri, '/')) $this->_baseuri .= '/';
             $name = $this->getName();
             if (($pos = strpos($name, ' ')) !== false) {
                 $name = substr($name, 0, $pos);
@@ -118,7 +118,7 @@ class Zend_Feed_Pubsubhubbub_SubscriberHttpTest extends PHPUnit_Framework_TestCa
     protected function _getCleanMock($className) {
         $class = new ReflectionClass($className);
         $methods = $class->getMethods();
-        $stubMethods = array();
+        $stubMethods = [];
         foreach ($methods as $method) {
             if ($method->isPublic() || ($method->isProtected()
             && $method->isAbstract())) {
@@ -128,7 +128,7 @@ class Zend_Feed_Pubsubhubbub_SubscriberHttpTest extends PHPUnit_Framework_TestCa
         $mocked = $this->getMock(
             $className,
             $stubMethods,
-            array(),
+            [],
             $className . '_SubscriberHttpTestMock_' . uniqid(),
             false
         );

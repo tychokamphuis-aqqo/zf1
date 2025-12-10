@@ -51,12 +51,12 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      * persistent => (boolean) Set TRUE to use a persistent connection
      * @var array
      */
-    protected $_config = array(
+    protected $_config = [
         'dbname'       => null,
         'username'     => null,
         'password'     => null,
         'persistent'   => false
-    );
+    ];
 
     /**
      * Keys are UPPERCASE SQL datatypes or the constants
@@ -69,14 +69,14 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      *
      * @var array Associative array of datatypes to values 0, 1, or 2.
      */
-    protected $_numericDataTypes = array(
+    protected $_numericDataTypes = [
         Zend_Db::INT_TYPE    => Zend_Db::INT_TYPE,
         Zend_Db::BIGINT_TYPE => Zend_Db::BIGINT_TYPE,
         Zend_Db::FLOAT_TYPE  => Zend_Db::FLOAT_TYPE,
         'BINARY_DOUBLE'      => Zend_Db::FLOAT_TYPE,
         'BINARY_FLOAT'       => Zend_Db::FLOAT_TYPE,
         'NUMBER'             => Zend_Db::FLOAT_TYPE,
-    );
+    ];
 
     /**
      * @var integer
@@ -223,6 +223,7 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      * @param string $value     Raw string
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -240,6 +241,7 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      * @param boolean $auto If true, heed the AUTO_QUOTE_IDENTIFIERS config option.
      * @return string The quoted identifier and alias.
      */
+    #[\Override]
     public function quoteTableAs($ident, $alias = null, $auto = false)
     {
         // Oracle doesn't allow the 'AS' keyword between the table identifier/expression and alias.
@@ -415,9 +417,9 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
         $constraint_type = 10;
         $position        = 11;
 
-        $desc = array();
-        foreach ($result as $key => $row) {
-            list ($primary, $primaryPosition, $identity) = array(false, null, false);
+        $desc = [];
+        foreach ($result as $row) {
+            [$primary, $primaryPosition, $identity] = [false, null, false];
             if ($row[$constraint_type] == 'P') {
                 $primary = true;
                 $primaryPosition = $row[$position];
@@ -426,7 +428,7 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
                  */
                 $identity = false;
             }
-            $desc[$this->foldCase($row[$column_name])] = array(
+            $desc[$this->foldCase($row[$column_name])] = [
                 'SCHEMA_NAME'      => $this->foldCase($row[$owner]),
                 'TABLE_NAME'       => $this->foldCase($row[$table_name]),
                 'COLUMN_NAME'      => $this->foldCase($row[$column_name]),
@@ -441,7 +443,7 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
                 'PRIMARY'          => $primary,
                 'PRIMARY_POSITION' => $primaryPosition,
                 'IDENTITY'         => $identity
-            );
+            ];
         }
         return $desc;
     }
@@ -503,28 +505,21 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      */
     public function setFetchMode($mode)
     {
-        switch ($mode) {
-            case Zend_Db::FETCH_NUM:   // seq array
-            case Zend_Db::FETCH_ASSOC: // assoc array
-            case Zend_Db::FETCH_BOTH:  // seq+assoc array
-            case Zend_Db::FETCH_OBJ:   // object
-                $this->_fetchMode = $mode;
-                break;
-            case Zend_Db::FETCH_BOUND: // bound to PHP variable
-                /**
-                 * @see Zend_Db_Adapter_Oracle_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
-                throw new Zend_Db_Adapter_Oracle_Exception('FETCH_BOUND is not supported yet');
-                break;
-            default:
-                /**
-                 * @see Zend_Db_Adapter_Oracle_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
-                throw new Zend_Db_Adapter_Oracle_Exception("Invalid fetch mode '$mode' specified");
-                break;
-        }
+        $this->_fetchMode = match ($mode) {
+            // object
+            Zend_Db::FETCH_NUM, Zend_Db::FETCH_ASSOC, Zend_Db::FETCH_BOTH, Zend_Db::FETCH_OBJ => $mode,
+            // bound to PHP variable
+            /**
+             * @see Zend_Db_Adapter_Oracle_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
+            Zend_Db::FETCH_BOUND => throw new Zend_Db_Adapter_Oracle_Exception('FETCH_BOUND is not supported yet'),
+            /**
+             * @see Zend_Db_Adapter_Oracle_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
+            default => throw new Zend_Db_Adapter_Oracle_Exception("Invalid fetch mode '$mode' specified"),
+        };
     }
 
     /**
@@ -579,20 +574,14 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      */
     private function _setExecuteMode($mode)
     {
-        switch($mode) {
-            case OCI_COMMIT_ON_SUCCESS:
-            case OCI_DEFAULT:
-            case OCI_DESCRIBE_ONLY:
-                $this->_execute_mode = $mode;
-                break;
-            default:
-                /**
-                 * @see Zend_Db_Adapter_Oracle_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
-                throw new Zend_Db_Adapter_Oracle_Exception("Invalid execution mode '$mode' specified");
-                break;
-        }
+        $this->_execute_mode = match ($mode) {
+            OCI_COMMIT_ON_SUCCESS, OCI_DEFAULT, OCI_DESCRIBE_ONLY => $mode,
+            /**
+             * @see Zend_Db_Adapter_Oracle_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Oracle/Exception.php';
+            default => throw new Zend_Db_Adapter_Oracle_Exception("Invalid execution mode '$mode' specified"),
+        };
     }
 
     /**
@@ -611,13 +600,10 @@ class Zend_Db_Adapter_Oracle extends Zend_Db_Adapter_Abstract
      */
     public function supportsParameters($type)
     {
-        switch ($type) {
-            case 'named':
-                return true;
-            case 'positional':
-            default:
-                return false;
-        }
+        return match ($type) {
+            'named' => true,
+            default => false,
+        };
     }
 
     /**

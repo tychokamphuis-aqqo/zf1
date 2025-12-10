@@ -44,7 +44,7 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        Zend_Uri::setConfig(array('allow_unwise' => false));
+        Zend_Uri::setConfig(['allow_unwise' => false]);
     }
 
     /**
@@ -61,12 +61,12 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
      */
     public function testSimpleFromString()
     {
-        $tests = array(
+        $tests = [
             'http://www.zend.com',
             'https://www.zend.com',
             'http://www.zend.com/path',
             'http://www.zend.com/path?query=value'
-        );
+        ];
 
         foreach ($tests as $uri) {
             $obj = Zend_Uri_Http::fromString($uri);
@@ -214,12 +214,12 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
          // First, make sure no exceptions are thrown
          try {
              $uri->setQuery('id=123&url=http://example.com/?bar=foo baz');
-         } catch (Exception $e) {
+         } catch (Exception) {
              $this->fail('setQuery() was expected to handle unencoded parameters, but failed');
          }
 
          // Second, make sure the query string was properly encoded
-         $parts = parse_url($uri->getUri());
+         $parts = parse_url((string) $uri->getUri());
          $this->assertEquals('id=123&url=http%3A%2F%2Fexample.com%2F%3Fbar%3Dfoo+baz', $parts['query']);
     }
 
@@ -229,14 +229,14 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionUnwiseQueryString()
     {
-        $unwise = array(
+        $unwise = [
             'http://example.com/?q={',
             'http://example.com/?q=}',
             'http://example.com/?q=|',
             'http://example.com/?q=\\',
             'http://example.com/?q=^',
             'http://example.com/?q=`',
-        );
+        ];
 
         foreach ($unwise as $uri) {
             $this->assertFalse(Zend_Uri::check($uri), "failed for URI $uri");
@@ -250,22 +250,22 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
      */
     public function testAllowUnwiseQueryString()
     {
-        $unwise = array(
+        $unwise = [
             'http://example.com/?q={',
             'http://example.com/?q=}',
             'http://example.com/?q=|',
             'http://example.com/?q=\\',
             'http://example.com/?q=^',
             'http://example.com/?q=`',
-        );
+        ];
 
-        Zend_Uri::setConfig(array('allow_unwise' => true));
+        Zend_Uri::setConfig(['allow_unwise' => true]);
 
         foreach ($unwise as $uri) {
             $this->assertTrue(Zend_Uri::check($uri), "failed for URI $uri");
         }
 
-        Zend_Uri::setConfig(array('allow_unwise' => false));
+        Zend_Uri::setConfig(['allow_unwise' => false]);
     }
 
     /**
@@ -306,7 +306,7 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
         try {
             $obj = Zend_Uri::factory($uri);
             $this->fail('Zend_Uri_Exception was expected but not thrown');
-        } catch (Zend_Uri_Exception $e) {
+        } catch (Zend_Uri_Exception) {
         }
     }
 
@@ -396,11 +396,11 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
     public function testGetQueryAsArrayReturnsCorrectArray()
     {
         $uri = Zend_Uri_Http::fromString('http://example.com/foo/?test=a&var[]=1&var[]=2&some[thing]=3');
-        $this->assertEquals(array(
+        $this->assertEquals([
             'test' => 'a',
-            'var'  => array(1, 2),
-            'some' => array('thing' => 3)
-        ), $uri->getQueryAsArray());
+            'var'  => [1, 2],
+            'some' => ['thing' => 3]
+        ], $uri->getQueryAsArray());
     }
 
     /**
@@ -409,16 +409,16 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
     public function testAddReplaceQueryParametersModifiesQueryAndReturnsOldQuery()
     {
         $uri = Zend_Uri_Http::fromString('http://example.com/foo/?a=1&b=2&c=3');
-        $this->assertEquals('a=1&b=2&c=3', $uri->addReplaceQueryParameters(array(
+        $this->assertEquals('a=1&b=2&c=3', $uri->addReplaceQueryParameters([
             'b' => 4,
             'd' => -1
-        )));
-        $this->assertEquals(array(
+        ]));
+        $this->assertEquals([
             'a' => 1,
             'b' => 4,
             'c' => 3,
             'd' => -1
-        ), $uri->getQueryAsArray());
+        ], $uri->getQueryAsArray());
         $this->assertEquals('a=1&b=4&c=3&d=-1', $uri->getQuery());
     }
 
@@ -428,11 +428,11 @@ class Zend_Uri_HttpTest extends PHPUnit_Framework_TestCase
     public function testRemoveQueryParametersModifiesQueryAndReturnsOldQuery()
     {
         $uri = Zend_Uri_Http::fromString('http://example.com/foo/?a=1&b=2&c=3&d=4');
-        $this->assertEquals('a=1&b=2&c=3&d=4', $uri->removeQueryParameters(array('b', 'd', 'e')));
-        $this->assertEquals(array(
+        $this->assertEquals('a=1&b=2&c=3&d=4', $uri->removeQueryParameters(['b', 'd', 'e']));
+        $this->assertEquals([
             'a' => 1,
             'c' => 3
-        ), $uri->getQueryAsArray());
+        ], $uri->getQueryAsArray());
         $this->assertEquals('a=1&c=3', $uri->getQuery());
     }
 

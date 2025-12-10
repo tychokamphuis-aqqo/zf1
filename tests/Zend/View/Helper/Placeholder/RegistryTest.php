@@ -120,7 +120,7 @@ class Zend_View_Helper_Placeholder_RegistryTest extends PHPUnit_Framework_TestCa
      */
     public function testSetContainerCreatesRegistryEntry()
     {
-        $foo = new Zend_View_Helper_Placeholder_Container(array('foo', 'bar'));
+        $foo = new Zend_View_Helper_Placeholder_Container(['foo', 'bar']);
         $this->assertFalse($this->registry->containerExists('foo'));
         $this->registry->setContainer('foo', $foo);
         $this->assertTrue($this->registry->containerExists('foo'));
@@ -131,7 +131,7 @@ class Zend_View_Helper_Placeholder_RegistryTest extends PHPUnit_Framework_TestCa
      */
     public function testSetContainerCreatesRegistersContainerInstance()
     {
-        $foo = new Zend_View_Helper_Placeholder_Container(array('foo', 'bar'));
+        $foo = new Zend_View_Helper_Placeholder_Container(['foo', 'bar']);
         $this->assertFalse($this->registry->containerExists('foo'));
         $this->registry->setContainer('foo', $foo);
         $container = $this->registry->getContainer('foo');
@@ -156,7 +156,7 @@ class Zend_View_Helper_Placeholder_RegistryTest extends PHPUnit_Framework_TestCa
         try {
             $this->registry->setContainerClass('Zend_View_Helper_Placeholder_RegistryTest_BogusContainer');
             $this->fail('Invalid container classes should not be accepted');
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -214,21 +214,18 @@ class Zend_View_Helper_Placeholder_RegistryTest extends PHPUnit_Framework_TestCa
     public function testSetValueCreateContainer()
     {
         $this->registry->setContainerClass('Zend_View_Helper_Placeholder_RegistryTest_Container');
-        $data = array(
+        $data = [
             'ZF-10793'
-        );
+        ];
         $container = $this->registry->createContainer('foo', $data);
-        $this->assertEquals(array('ZF-10793'), $container->data);
+        $this->assertEquals(['ZF-10793'], $container->data);
     }
 }
 
 class Zend_View_Helper_Placeholder_RegistryTest_Container extends Zend_View_Helper_Placeholder_Container_Abstract
 {
-    public $data = array();
-
-    public function __construct($data)
+    public function __construct(public $data)
     {
-        $this->data = $data;
     }
 }
 

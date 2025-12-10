@@ -41,7 +41,7 @@ class Zend_VersionTest extends PHPUnit_Framework_TestCase
 {
     public static function main()
     {
-        $suite  = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $suite  = new PHPUnit_Framework_TestSuite(self::class);
         $result = PHPUnit_TextUI_TestRunner::run($suite);
     }
 
@@ -56,7 +56,7 @@ class Zend_VersionTest extends PHPUnit_Framework_TestCase
         for ($i=0; $i <= 1; $i++) {
             for ($j=0; $j <= 13; $j++) {
                 for ($k=0; $k <= 20; $k++) {
-                    foreach (array('dev', 'pr', 'PR', 'alpha', 'a1', 'a2', 'beta', 'b1', 'b2', 'RC', 'RC1', 'RC2', 'RC3', '', 'pl1', 'PL1') as $rel) {
+                    foreach (['dev', 'pr', 'PR', 'alpha', 'a1', 'a2', 'beta', 'b1', 'b2', 'RC', 'RC1', 'RC2', 'RC3', '', 'pl1', 'PL1'] as $rel) {
                         $ver = "$i.$j.$k$rel";
                         $normalizedVersion = strtolower(Zend_Version::VERSION);
                         if (strtolower($ver) === $normalizedVersion

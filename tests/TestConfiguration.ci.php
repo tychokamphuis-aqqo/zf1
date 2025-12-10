@@ -115,4 +115,4 @@ defined('TESTS_ZEND_LDAP_ALT_PASSWORD') || define('TESTS_ZEND_LDAP_ALT_PASSWORD'
 defined('TESTS_ZEND_LDAP_WRITEABLE_SUBTREE') || define('TESTS_ZEND_LDAP_WRITEABLE_SUBTREE', 'ou=test,dc=example,dc=com');
 defined('TESTS_ZEND_LDAP_ONLINE_ENABLED') || define('TESTS_ZEND_LDAP_ONLINE_ENABLED', true);
 
-require_once dirname(__FILE__) . '/TestConfiguration.dist.php';
+require_once __DIR__ . '/TestConfiguration.dist.php';

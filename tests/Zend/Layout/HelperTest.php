@@ -130,13 +130,13 @@ class Zend_Layout_HelperTest extends PHPUnit_Framework_TestCase
         $layout = Zend_Layout::startMvc();
         $helper = new Zend_Layout_Controller_Action_Helper_Layout();
 
-        $helper->setOptions(array(
+        $helper->setOptions([
             'layout'     => 'foo.phtml',
-            'layoutPath' => dirname(__FILE__) . '/_files/layouts',
+            'layoutPath' => __DIR__ . '/_files/layouts',
             'contentKey' => 'foo'
-        ));
+        ]);
         $this->assertEquals('foo.phtml', $helper->getLayout());
-        $this->assertEquals(dirname(__FILE__) . '/_files/layouts', $helper->getLayoutPath());
+        $this->assertEquals(__DIR__ . '/_files/layouts', $helper->getLayoutPath());
         $this->assertEquals('foo', $helper->getContentKey());
     }
 }
@@ -146,6 +146,7 @@ class Zend_Layout_HelperTest extends PHPUnit_Framework_TestCase
  */
 class Zend_Layout_HelperTest_Layout extends Zend_Layout
 {
+    #[\Override]
     public static function resetMvcInstance()
     {
         self::$_mvcInstance = null;

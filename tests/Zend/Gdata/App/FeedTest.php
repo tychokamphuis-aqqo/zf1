@@ -127,8 +127,8 @@ class Zend_Gdata_App_FeedTest extends PHPUnit_Framework_TestCase
 
     public function testSetServicePropagatesToChildren() {
         // Setup
-        $entries = array(new Zend_Gdata_App_Entry(),
-                         new Zend_Gdata_App_Entry());
+        $entries = [new Zend_Gdata_App_Entry(),
+                         new Zend_Gdata_App_Entry()];
         foreach ($entries as $entry) {
             $this->feed->addEntry($entry);
         }
@@ -142,7 +142,7 @@ class Zend_Gdata_App_FeedTest extends PHPUnit_Framework_TestCase
             $this->fail('No feed service received');
         }
         $this->assertEquals('Zend_Gdata_App',
-                            get_class($service));
+                            $service::class);
 
         foreach ($entries as $entry) {
             $service = $entry->getService();
@@ -150,7 +150,7 @@ class Zend_Gdata_App_FeedTest extends PHPUnit_Framework_TestCase
                 $this->fail('No entry service received');
             }
             $this->assertEquals('Zend_Gdata_App',
-                                get_class($service));
+                                $service::class);
         }
 
         // Set null service instance and test for propagation

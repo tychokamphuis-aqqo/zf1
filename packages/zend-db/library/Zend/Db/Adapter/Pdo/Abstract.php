@@ -224,7 +224,8 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
      * @return Zend_Db_Statement_Pdo
      * @throws Zend_Db_Adapter_Exception To re-throw PDOException.
      */
-    public function query($sql, $bind = array())
+    #[\Override]
+    public function query($sql, $bind = [])
     {
         if (empty($bind) && $sql instanceof Zend_Db_Select) {
             $bind = $sql->getBind();
@@ -293,6 +294,7 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
      * @param string $value     Raw string
      * @return string           Quoted string
      */
+    #[\Override]
     protected function _quote($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -347,23 +349,14 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
             // require_once 'Zend/Db/Adapter/Exception.php';
             throw new Zend_Db_Adapter_Exception('The PDO extension is required for this adapter but the extension is not loaded');
         }
-        switch ($mode) {
-            case PDO::FETCH_LAZY:
-            case PDO::FETCH_ASSOC:
-            case PDO::FETCH_NUM:
-            case PDO::FETCH_BOTH:
-            case PDO::FETCH_NAMED:
-            case PDO::FETCH_OBJ:
-                $this->_fetchMode = $mode;
-                break;
-            default:
-                /**
-                 * @see Zend_Db_Adapter_Exception
-                 */
-                // require_once 'Zend/Db/Adapter/Exception.php';
-                throw new Zend_Db_Adapter_Exception("Invalid fetch mode '$mode' specified");
-                break;
-        }
+        $this->_fetchMode = match ($mode) {
+            PDO::FETCH_LAZY, PDO::FETCH_ASSOC, PDO::FETCH_NUM, PDO::FETCH_BOTH, PDO::FETCH_NAMED, PDO::FETCH_OBJ => $mode,
+            /**
+             * @see Zend_Db_Adapter_Exception
+             */
+            // require_once 'Zend/Db/Adapter/Exception.php';
+            default => throw new Zend_Db_Adapter_Exception("Invalid fetch mode '$mode' specified"),
+        };
     }
 
     /**
@@ -374,12 +367,9 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
      */
     public function supportsParameters($type)
     {
-        switch ($type) {
-            case 'positional':
-            case 'named':
-            default:
-                return true;
-        }
+        return match ($type) {
+            default => true,
+        };
     }
 
     /**
@@ -392,12 +382,12 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
         $this->_connect();
         try {
             $version = $this->_connection->getAttribute(PDO::ATTR_SERVER_VERSION);
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             // In case of the driver doesn't support getting attributes
             return null;
         }
         $matches = null;
-        if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', $version, $matches)) {
+        if (preg_match('/((?:[0-9]{1,2}\.){1,3}[0-9]{1,2})/', (string) $version, $matches)) {
             return $matches[1];
         } else {
             return null;

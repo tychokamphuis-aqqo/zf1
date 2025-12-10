@@ -59,6 +59,7 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
      * @return void
      * @throws Zend_Db_Statement_Sqlsrv_Exception
      */
+    #[\Override]
     protected function _prepare($sql)
     {
         $connection = $this->_adapter->getConnection();
@@ -160,10 +161,10 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
             return false;
         }
 
-        return array(
+        return [
             $error[0]['code'],
             $error[0]['message'],
-        );
+        ];
     }
 
 
@@ -174,7 +175,7 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
      * @return bool
      * @throws Zend_Db_Statement_Exception
      */
-    public function _execute(array $params = null)
+    public function _execute(?array $params = null)
     {
         $connection = $this->_adapter->getConnection();
         if (!$this->_stmt) {
@@ -183,13 +184,13 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
 
         if ($params !== null) {
             if (!is_array($params)) {
-                $params = array($params);
+                $params = [$params];
             }
             $error = false;
 
             // make all params passed by reference
-            $params_ = array();
-            $temp    = array();
+            $params_ = [];
+            $temp    = [];
             $i       = 1;
             foreach ($params as $param) {
                 $temp[$i]  = $param;
@@ -285,6 +286,7 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
      * @return string
      * @throws Zend_Db_Statement_Exception
      */
+    #[\Override]
     public function fetchColumn($col = 0)
     {
         if (!$this->_stmt) {
@@ -318,7 +320,8 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
      * @return mixed One object instance of the specified class.
      * @throws Zend_Db_Statement_Exception
      */
-    public function fetchObject($class = 'stdClass', array $config = array())
+    #[\Override]
+    public function fetchObject($class = 'stdClass', array $config = [])
     {
         if (!$this->_stmt) {
             return false;
@@ -423,10 +426,11 @@ class Zend_Db_Statement_Sqlsrv extends Zend_Db_Statement
      * is used, the final result removes the extra column
      * 'zend_db_rownum'
      */
+    #[\Override]
     public function fetchAll($style = null, $col = null)
     {
         $data = parent::fetchAll($style, $col);
-        $results = array();
+        $results = [];
         $remove = $this->_adapter->foldCase('ZEND_DB_ROWNUM');
 
         foreach ($data as $row) {

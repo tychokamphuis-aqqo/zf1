@@ -82,7 +82,7 @@ class Zend_Form_Decorator_FormTest extends PHPUnit_Framework_TestCase
     {
         // require_once 'Zend/View.php';
         $view = new Zend_View();
-        $view->addHelperPath(dirname(__FILE__) . '/../../../../library/Zend/View/Helper');
+        $view->addHelperPath(__DIR__ . '/../../../../library/Zend/View/Helper');
         return $view;
     }
 
@@ -99,12 +99,12 @@ class Zend_Form_Decorator_FormTest extends PHPUnit_Framework_TestCase
 
         // require_once 'Zend/Form/DisplayGroup.php';
         // require_once 'Zend/Loader/PluginLoader.php';
-        $attribs = array(
+        $attribs = [
             'enctype' => 'ascii',
             'charset' => 'us-ascii'
-        );
-        $loader = new Zend_Loader_PluginLoader(array('Zend_Form_Decorator' => 'Zend/Form/Decorator/'));
-        $displayGroup = new Zend_Form_DisplayGroup('foo', $loader, array('attribs' => $attribs));
+        ];
+        $loader = new Zend_Loader_PluginLoader(['Zend_Form_Decorator' => 'Zend/Form/Decorator/']);
+        $displayGroup = new Zend_Form_DisplayGroup('foo', $loader, ['attribs' => $attribs]);
         $this->decorator->setElement($displayGroup);
         $options = $this->decorator->getOptions();
         $this->assertTrue(isset($options['enctype']));

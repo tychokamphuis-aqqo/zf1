@@ -38,11 +38,13 @@ require_once 'Zend/Db/Statement/Pdo/TestCommon.php';
 class Zend_Db_Statement_Pdo_MssqlTest extends Zend_Db_Statement_Pdo_TestCommon
 {
 
+    #[\Override]
     public function testStatementGetColumnMeta()
     {
         $this->markTestSkipped($this->getDriver() . ' does not support meta data.');
     }
 
+    #[\Override]
     public function testStatementExecuteWithParams()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -53,6 +55,7 @@ class Zend_Db_Statement_Pdo_MssqlTest extends Zend_Db_Statement_Pdo_TestCommon
         $this->_db->getConnection()->exec("SET IDENTITY_INSERT $products OFF");
     }
 
+    #[\Override]
     public function testStatementBindParamByPosition()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -63,6 +66,7 @@ class Zend_Db_Statement_Pdo_MssqlTest extends Zend_Db_Statement_Pdo_TestCommon
         $this->_db->getConnection()->exec("SET IDENTITY_INSERT $products OFF");
     }
 
+    #[\Override]
     public function testStatementBindParamByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -73,6 +77,7 @@ class Zend_Db_Statement_Pdo_MssqlTest extends Zend_Db_Statement_Pdo_TestCommon
         $this->_db->getConnection()->exec("SET IDENTITY_INSERT $products OFF");
     }
 
+    #[\Override]
     public function testStatementBindValueByPosition()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');
@@ -83,6 +88,7 @@ class Zend_Db_Statement_Pdo_MssqlTest extends Zend_Db_Statement_Pdo_TestCommon
         $this->_db->getConnection()->exec("SET IDENTITY_INSERT $products OFF");
     }
 
+    #[\Override]
     public function testStatementBindValueByName()
     {
         $products = $this->_db->quoteIdentifier('zfproducts');

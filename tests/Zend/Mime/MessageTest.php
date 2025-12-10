@@ -49,7 +49,7 @@ class Zend_Mime_MessageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($p));
         $this->assertTrue(count($p) == 0);
 
-        $p2 = array();
+        $p2 = [];
         $p2[] = new Zend_Mime_Part('This is a test');
         $p2[] = new Zend_Mime_Part('This is another test');
         $msg->setParts($p2);
@@ -82,16 +82,16 @@ class Zend_Mime_MessageTest extends PHPUnit_Framework_TestCase
         $res = $msg->generateMessage();
         $mime = $msg->getMime();
         $boundary = $mime->boundary();
-        $p1 = strpos($res, $boundary);
+        $p1 = strpos($res, (string) $boundary);
         // $boundary must appear once for every mime part
         $this->assertTrue($p1 !== false);
         if ($p1) {
-            $p2 = strpos($res, $boundary, $p1 + strlen($boundary));
+            $p2 = strpos($res, (string) $boundary, $p1 + strlen((string) $boundary));
             $this->assertTrue($p2 !== false);
         }
         // check if the two test messages appear:
-        $this->assertTrue(strpos($res, 'This is a test') !== false);
-        $this->assertTrue(strpos($res, 'This is another test') !== false);
+        $this->assertTrue(str_contains($res, 'This is a test'));
+        $this->assertTrue(str_contains($res, 'This is another test'));
         // ... more in ZMailTest
     }
 

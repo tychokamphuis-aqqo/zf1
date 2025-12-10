@@ -68,7 +68,7 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
             if (TESTS_ZEND_MAIL_TEMPDIR != null) {
                 $this->_tmpdir = TESTS_ZEND_MAIL_TEMPDIR;
             } else {
-                $this->_tmpdir = dirname(__FILE__) . '/_files/test.tmp/';
+                $this->_tmpdir = __DIR__ . '/_files/test.tmp/';
             }
             if (!file_exists($this->_tmpdir)) {
                 mkdir($this->_tmpdir);
@@ -85,7 +85,7 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
             }
         }
 
-        $this->_mboxOriginalFile = dirname(__FILE__) . '/_files/test.mbox/INBOX';
+        $this->_mboxOriginalFile = __DIR__ . '/_files/test.mbox/INBOX';
         $this->_mboxFile = $this->_tmpdir . 'INBOX';
 
         copy($this->_mboxOriginalFile, $this->_mboxFile);
@@ -100,7 +100,7 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
 
     public function testFetchHeader()
     {
-        $mail = new Zend_Mail_Storage_Mbox_OldMessage(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox_OldMessage(['filename' => $this->_mboxFile]);
 
         $subject = $mail->getMessage(1)->subject;
         $this->assertEquals('Simple Message', $subject);
@@ -118,7 +118,7 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
 
     public function testFetchMessageHeader()
     {
-        $mail = new Zend_Mail_Storage_Mbox_OldMessage(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox_OldMessage(['filename' => $this->_mboxFile]);
 
         $subject = $mail->getMessage(1)->subject;
         $this->assertEquals('Simple Message', $subject);
@@ -126,10 +126,10 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
 
     public function testFetchMessageBody()
     {
-        $mail = new Zend_Mail_Storage_Mbox_OldMessage(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox_OldMessage(['filename' => $this->_mboxFile]);
 
         $content = $mail->getMessage(3)->getContent();
-        list($content, ) = explode("\n", $content, 2);
+        [$content, ] = explode("\n", $content, 2);
         $this->assertEquals('Fair river! in thy bright, clear flow', trim($content));
     }
 
@@ -137,9 +137,9 @@ class Zend_Mail_MboxMessageOldTest extends PHPUnit_Framework_TestCase
     public function testShortMbox()
     {
         $fh = fopen($this->_mboxFile, 'w');
-        fputs($fh, "From \r\nSubject: test\r\nFrom \r\nSubject: test2\r\n");
+        fwrite($fh, "From \r\nSubject: test\r\nFrom \r\nSubject: test2\r\n");
         fclose($fh);
-        $mail = new Zend_Mail_Storage_Mbox_OldMessage(array('filename' => $this->_mboxFile));
+        $mail = new Zend_Mail_Storage_Mbox_OldMessage(['filename' => $this->_mboxFile]);
         $this->assertEquals($mail->countMessages(), 2);
         $this->assertEquals($mail->getMessage(1)->subject, 'test');
         $this->assertEquals($mail->getMessage(1)->getContent(), '');

@@ -20,7 +20,7 @@
  * @version    $Id$
  */
 
-require_once dirname(__FILE__) . '/TestAbstract.php';
+require_once __DIR__ . '/TestAbstract.php';
 // require_once 'Zend/Controller/Front.php';
 // require_once 'Zend/Controller/Request/Http.php';
 // require_once 'Zend/View/Helper/Navigation/Sitemap.php';
@@ -42,7 +42,7 @@ class Zend_View_Helper_Navigation_SitemapTest
     protected $_front;
     protected $_oldRequest;
     protected $_oldRouter;
-    protected $_oldServer = array();
+    protected $_oldServer = [];
 
     /**
      * Class name for view helper to test
@@ -58,6 +58,7 @@ class Zend_View_Helper_Navigation_SitemapTest
      */
     protected $_helper;
 
+    #[\Override]
     protected function setUp()
     {
         date_default_timezone_set('Europe/Berlin');
@@ -91,6 +92,7 @@ class Zend_View_Helper_Navigation_SitemapTest
         $this->_helper->setFormatOutput(true);
     }
 
+    #[\Override]
     protected function tearDown()
     {
         if (null !== $this->_oldRequest) {
@@ -148,16 +150,16 @@ class Zend_View_Helper_Navigation_SitemapTest
         $rendered1 = $this->_getExpected('sitemap/default1.xml');
         $rendered2 = $this->_getExpected('sitemap/default2.xml');
 
-        $expected = array(
+        $expected = [
             'registered'       => $rendered1,
             'supplied'         => $rendered2,
             'registered_again' => $rendered1
-        );
-        $actual = array(
+        ];
+        $actual = [
             'registered'       => $this->_helper->render(),
             'supplied'         => $this->_helper->render($this->_nav2),
             'registered_again' => $this->_helper->render()
-        );
+        ];
 
         $this->assertEquals($expected, $actual);
     }
@@ -217,7 +219,7 @@ class Zend_View_Helper_Navigation_SitemapTest
     public function testThrowExceptionOnInvalidLoc()
     {
         $nav = clone $this->_nav2;
-        $nav->addPage(array('label' => 'Invalid', 'uri' => 'http://w..'));
+        $nav->addPage(['label' => 'Invalid', 'uri' => 'http://w..']);
 
         try {
             $this->_helper->render($nav);
@@ -236,7 +238,7 @@ class Zend_View_Helper_Navigation_SitemapTest
     public function testDisablingValidators()
     {
         $nav = clone $this->_nav2;
-        $nav->addPage(array('label' => 'Invalid', 'uri' => 'http://w.'));
+        $nav->addPage(['label' => 'Invalid', 'uri' => 'http://w.']);
         $this->_helper->setUseSitemapValidators(false);
 
         $expected = $this->_getExpected('sitemap/invalid.xml');
@@ -285,7 +287,7 @@ class Zend_View_Helper_Navigation_SitemapTest
         $nav = clone $this->_nav2;
         $this->_helper->setUseSitemapValidators(false);
         $this->_helper->setUseSchemaValidation(true);
-        $nav->addPage(array('label' => 'Invalid', 'uri' => 'http://w.'));
+        $nav->addPage(['label' => 'Invalid', 'uri' => 'http://w.']);
 
         try {
             $this->_helper->render($nav);
